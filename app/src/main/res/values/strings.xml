@@ -92,4 +92,6 @@
     </string>
     <string name="action_settings">Settings</string>
     <string name="save">SAVE</string>
+    <string name="enter_a_subject_here_optional">Enter a subject here (optional)</string>
+    <string name="write_your_note_here_then_hit_save">Write your note here then hit SAVE.</string>
 </resources>

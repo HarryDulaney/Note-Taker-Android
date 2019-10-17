@@ -30,33 +30,32 @@
 
     <EditText
         android:id="@+id/editSubject"
-        android:text="Enter A Subject (optional)"
-        android:textColor="@color/colorPrimaryGrey"
+        android:hint="@string/enter_a_subject_here_optional"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginStart="@dimen/fab_margin"
         android:ems="18"
         android:inputType="textEmailSubject"
         app:layout_constraintTop_toBottomOf="@id/subHeader"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <MultiAutoCompleteTextView
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/notesTextView"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:layout_marginStart="@dimen/fab_margin"
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginTop="@dimen/fab_margin"
-        android:clickable="false"
-        android:foregroundGravity="top"
         android:gravity="start"
-        android:inputType="text"
+        android:inputType="textMultiLine"
         android:scrollbars="vertical"
+        android:selectAllOnFocus="false"
         android:singleLine="false"
-        android:text="Note Here"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:typeface="normal"
+        android:hint="@string/write_your_note_here_then_hit_save"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editSubject" />
+        app:layout_constraintTop_toBottomOf="@id/editSubject"
+        />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/navbar"
@@ -103,7 +102,7 @@
             android:layout_marginStart="@dimen/icon_distance"
             android:layout_marginLeft="@dimen/icon_distance"
             android:background="#00FFFFFF"
-            android:layout_marginBottom="@dimen/fab_margin"
+            android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/imageButtonNote"
             app:layout_constraintStart_toEndOf="@+id/imageButtonNote"
