@@ -71,11 +71,11 @@
         app:layout_constraintStart_toStartOf="parent" >
 
         <ImageButton
-            android:id="@+id/imageButtonSettings"
+            android:id="@+id/imageButtonList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="@dimen/icon_distance"
+            android:layout_marginRight="@dimen/icon_distance"
             android:background="#00FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imageButtonNote"
@@ -97,13 +97,13 @@
             app:srcCompat="@drawable/note_icon" />
 
         <ImageButton
-            android:id="@+id/imageButtonList"
+            android:id="@+id/imageButtonSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:layout_marginLeft="17dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginStart="@dimen/icon_distance"
+            android:layout_marginLeft="@dimen/icon_distance"
             android:background="#00FFFFFF"
+            android:layout_marginBottom="@dimen/fab_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/imageButtonNote"
             app:layout_constraintStart_toEndOf="@+id/imageButtonNote"

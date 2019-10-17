@@ -4,4 +4,5 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="header_label">55dp</dimen>
     <dimen name="subheader_label">30dp</dimen>
+    <dimen name="icon_distance">48dp</dimen>
 </resources>
