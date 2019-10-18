@@ -12,6 +12,8 @@ import java.util.ArrayList;
 
 public class NoteDataSource {
 
+    private final String TAG = this.getClass().getSimpleName();
+
     private SQLiteDatabase database;
     private DBHelper dbHelper;
 
@@ -52,7 +54,7 @@ public class NoteDataSource {
 
         } catch (Exception ex) {
 
-           Log.e("Insert Note Exception",ex.toString());
+           Log.e(TAG,String.valueOf(ex));
            ex.printStackTrace();
 
         }
@@ -63,12 +65,12 @@ public class NoteDataSource {
      * @param note update it's attributes in the database
      * @return true for success and false for failure to update
      */
-    public boolean updateContact(Note note) {
+    boolean updateContact(Note note) {
 
         boolean didSucceed = false;
 
         try {
-            Long rowId = (long) note.getNoteID();
+            long rowId = (long) note.getNoteID();
             ContentValues updateValues = new ContentValues();
 
             updateValues.put("notename",note.getNoteName());
@@ -79,12 +81,12 @@ public class NoteDataSource {
 
         } catch (Exception ex) {
 
-            Log.e("updateContact Exception",ex.toString());
+            Log.e(TAG,String.valueOf(ex));
         }
         return didSucceed;
     }
 
-    public int getLastContactId() {
+    int getLastContactId() {
         int lastId = -1;
         try {
             String query = "Select MAX(_id) from note";
@@ -120,7 +122,7 @@ public class NoteDataSource {
             cursor.close();
 
         } catch (Exception ex) {
-            contactNames = new ArrayList<String>();
+            contactNames = new ArrayList<>();
         }
 
         return contactNames;
@@ -154,7 +156,7 @@ public class NoteDataSource {
         return contacts;
 
     }
-    public Note getSpecificContact(int noteID){
+    Note getSpecificContact(int noteID){
         Note note = new Note();
         String query = "SELECT * FROM note WHERE _id =" + noteID;
         Cursor cursor = database.rawQuery(query,null);
@@ -171,7 +173,7 @@ public class NoteDataSource {
         return note;
 
     }
-    public boolean delete(int noteID) {
+    boolean delete(int noteID) {
         boolean didDelete = false;
         try {
             didDelete = database.delete("contact", "_id=" + noteID, null) > 0;
