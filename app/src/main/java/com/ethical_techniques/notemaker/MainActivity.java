@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -22,6 +24,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Bundle extras = getIntent().getExtras();
+
+        if(extras != null){
+            initNote(extras.getInt("noteID"));
+        }else {
+
+            currentNote = new Note();
+        }
+
 
         initNotesButton();
         initListButton();
@@ -74,31 +86,21 @@ public class MainActivity extends AppCompatActivity {
             ds.close();
 
         } catch (Exception e) {
-            Toast.makeText(this,"Load Contact Failed",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Load Note Failed",Toast.LENGTH_LONG).show();
         }
 
-        EditText editName = (EditText) findViewById(R.id.editName);
-        EditText editAddress = (EditText) findViewById(R.id.editAddress);
+        EditText editName = findViewById(R.id.editTitle);
+        EditText editSubject = findViewById(R.id.editSubject);
+        EditText editNote = findViewById(R.id.editNotes);
 
 
+        editName.setText(currentNote.getNoteName());
+        editSubject.setText(currentNote.getSubject());
+        editNote.setText(currentNote.getContent());
 
-        editName.setText(currentContact.getContactName());
-        editAddress.setText(currentContact.getStreetAddress());
-
-
-        //If the loaded contact is a a bff switch is set to on
-        friendSwitch.setChecked(currentContact.isBestFriend() == 1);
-
-        ImageButton picture = (ImageButton)findViewById(R.id.imageContact);
-        if(currentContact.getPicture() != null) {
-            picture.setImageBitmap(currentContact.getPicture());
-        }
-        else {
-            picture.setImageResource(R.drawable.photoicon);
-        }
     }
     private void initSaveButton(){
-        Button saveButton = (Button)findViewById(R.id.buttonSave);
+        Button saveButton = (Button)findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -109,15 +111,15 @@ public class MainActivity extends AppCompatActivity {
                 try{
                     dataSource.open();
 
-                    if(currentContact.getContactID() == -1) {
-                        wasSuccess = dataSource.insertContact(currentContact);
+                    if(currentNote.getNoteID() == -1) {
+                        wasSuccess = dataSource.insertNote(currentNote);
 
                         if(wasSuccess) {
                             int newId = dataSource.getLastContactId();
-                            currentContact.setContactID(newId);}
+                            currentNote.setNoteID(newId);}
 
                     }else {
-                        wasSuccess = dataSource.updateContact(currentContact);
+                        wasSuccess = dataSource.updateContact(currentNote);
 
                     }
                     dataSource.close();
@@ -125,32 +127,18 @@ public class MainActivity extends AppCompatActivity {
                     wasSuccess = false;
 
                 }
-
-                if(wasSuccess) {
-                    ToggleButton editToggle = (ToggleButton) findViewById(R.id.toggleButtonEdit);
-                    editToggle.toggle();
-                    setForEditing(false);
-                }
             }
         });
     }
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        EditText editName = (EditText) findViewById(R.id.editName);
+        EditText editName = (EditText) findViewById(R.id.editTitle);
+        assert imm != null;
         imm.hideSoftInputFromWindow(editName.getWindowToken(), 0);
-        EditText editAddress = (EditText) findViewById(R.id.editAddress);
-        imm.hideSoftInputFromWindow(editAddress.getWindowToken(), 0);
-        EditText editCity = (EditText) findViewById(R.id.editCity);
-        imm.hideSoftInputFromWindow(editCity.getWindowToken(), 0);
-        EditText editState= (EditText) findViewById(R.id.editState);
-        imm.hideSoftInputFromWindow(editState.getWindowToken(), 0);
-        EditText editZip = (EditText) findViewById(R.id.editZip);
-        imm.hideSoftInputFromWindow(editZip.getWindowToken(), 0);
-        EditText editHome = (EditText) findViewById(R.id.editHome);
-        imm.hideSoftInputFromWindow(editHome.getWindowToken(), 0);
-        EditText editCell = (EditText) findViewById(R.id.editCell);
-        imm.hideSoftInputFromWindow(editCell.getWindowToken(), 0);
-        EditText editEMail = (EditText) findViewById(R.id.editEMail);
-        imm.hideSoftInputFromWindow(editEMail.getWindowToken(), 0);
+        EditText editSubject = findViewById(R.id.editSubject);
+        imm.hideSoftInputFromWindow(editSubject.getWindowToken(),0);
+        EditText editNote = findViewById(R.id.editNotes);
+        imm.hideSoftInputFromWindow(editNote.getWindowToken(),0);
+
     }
 }
