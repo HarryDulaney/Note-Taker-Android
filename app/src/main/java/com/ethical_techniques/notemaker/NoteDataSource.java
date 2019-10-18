@@ -46,7 +46,7 @@ public class NoteDataSource {
 
             initialValues.put("notename", note.getNoteName());
             initialValues.put("subject", note.getSubject());
-            initialValues.put("noteContents",note.getContent());
+            initialValues.put("noteContent",note.getContent());
 
 
 
@@ -65,7 +65,7 @@ public class NoteDataSource {
      * @param note update it's attributes in the database
      * @return true for success and false for failure to update
      */
-    boolean updateContact(Note note) {
+    boolean updateNote(Note note) {
 
         boolean didSucceed = false;
 
@@ -156,7 +156,7 @@ public class NoteDataSource {
         return contacts;
 
     }
-    Note getSpecificContact(int noteID){
+    Note getSpecificNote(int noteID){
         Note note = new Note();
         String query = "SELECT * FROM note WHERE _id =" + noteID;
         Cursor cursor = database.rawQuery(query,null);
@@ -164,6 +164,10 @@ public class NoteDataSource {
         if (cursor.moveToFirst()) {
 
             note.setNoteID(cursor.getInt(0));
+            note.setNoteName(cursor.getString(1));
+            note.setSubject(cursor.getString(2));
+            note.setNoteContent(cursor.getString(3));
+
 
 
             cursor.close();
@@ -176,7 +180,7 @@ public class NoteDataSource {
     boolean delete(int noteID) {
         boolean didDelete = false;
         try {
-            didDelete = database.delete("contact", "_id=" + noteID, null) > 0;
+            didDelete = database.delete("note", "_id=" + noteID, null) > 0;
         } catch (Exception e) {
             //Do nothing -return value already set to false
         }

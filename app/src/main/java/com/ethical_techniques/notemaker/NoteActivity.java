@@ -86,7 +86,7 @@ public class NoteActivity extends AppCompatActivity {
         NoteDataSource ds = new NoteDataSource(NoteActivity.this);
         try{
             ds.open();
-            currentNote = ds.getSpecificContact(id);
+            currentNote = ds.getSpecificNote(id);
             ds.close();
 
         } catch (Exception e) {
@@ -170,7 +170,7 @@ public class NoteActivity extends AppCompatActivity {
                             }
 
                         } else {
-                            wasSuccess = dataSource.updateContact(currentNote);
+                            wasSuccess = dataSource.updateNote(currentNote);
 
                         }
                         dataSource.close();
