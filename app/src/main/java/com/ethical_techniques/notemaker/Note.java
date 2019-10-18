@@ -13,6 +13,7 @@ import java.util.Calendar;
 public class Note {
 
     private int noteID;
+    private String noteName;
     private String subject;
     private String noteContent;
     private Calendar dateCreated;
@@ -55,7 +56,15 @@ public class Note {
         return dateCreated;
     }
 
-    public void setDateCreated(Calendar d) {
-        this.dateCreated = d;
+    public void setDateCreated(Calendar c) {
+        this.dateCreated = c; }
+
+    public String getNoteName() {
+        return noteName;
     }
+
+    public void setNoteName(String noteName) {
+        this.noteName = noteName;
+    }
+
 }
