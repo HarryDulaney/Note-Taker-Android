@@ -1,6 +1,5 @@
 package com.ethical_techniques.notemaker;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +39,17 @@ public class NoteAdapter extends ArrayAdapter<Note> {
                     v = vi.inflate(R.layout.list_item, null);
                 }
 
+                TextView noteName = v.findViewById(R.id.textNoteName);
+                TextView noteSubject = v.findViewById(R.id.textNoteSubject);
+                TextView noteBody = v.findViewById(R.id.textNoteBody);
+
+                noteName.setText(note.getNoteName());
+                noteSubject.setText(note.getSubject());
+                noteBody.setText(note.getContent());
+
+                Button b = v.findViewById(R.id.buttonDeleteNote);
+                b.setVisibility(View.INVISIBLE);
+
 
             }catch(Exception e3){
                 e3.printStackTrace();
@@ -47,27 +57,28 @@ public class NoteAdapter extends ArrayAdapter<Note> {
             }
             return v;
         }
-        public void showDelete(final int position, final View convertView,
-                               final Context context, final Note note){
-            View v = convertView;
-            final Button b = v.findViewById(R.id.buttonDeleteNote);
-            if(b.getVisibility() == View.INVISIBLE) {
-                b.setVisibility(View.VISIBLE);
-                b.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        hideDelete(position,convertView,context);
-                        items.remove(note);
-                        deleteOption(note.getNoteID(),context);
+    public void showDelete(final int position, final View convertView,
+                           final Context context, final Note note){
+        View v = convertView;
+        final Button b = (Button) v.findViewById(R.id.buttonDeleteNote);
+        if(b.getVisibility() == View.INVISIBLE) {
+            b.setVisibility(View.VISIBLE);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    hideDelete(position,convertView,context);
+                    items.remove(note);
+                    deleteOption(note.getNoteID(),context);
 
 
-                    }
-                });
-            }else{
-                hideDelete(position,convertView,context);
-            }
-
+                }
+            });
+        }else{
+            hideDelete(position,convertView,context);
         }
+
+    }
+
         private void deleteOption(int noteToDelete, Context context){
             NoteDataSource db = new NoteDataSource(context);
             try{
@@ -75,7 +86,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
                 db.delete(noteToDelete);
                 db.close();
             }catch (Exception e){
-                Toast.makeText(adapterContext,"Delete contact failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(adapterContext,"Delete note failed", Toast.LENGTH_LONG).show();
             }
             this.notifyDataSetChanged();
 
