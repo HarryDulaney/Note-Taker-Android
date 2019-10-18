@@ -1,5 +1,6 @@
 package com.ethical_techniques.notemaker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
                 if (v ==  null){
                     LayoutInflater vi = (LayoutInflater)
                             adapterContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    assert vi != null;
                     v = vi.inflate(R.layout.list_item, null);
                 }
 
@@ -85,4 +87,4 @@ public class NoteAdapter extends ArrayAdapter<Note> {
             b.setOnClickListener(null);
         }
     }
-}
+
