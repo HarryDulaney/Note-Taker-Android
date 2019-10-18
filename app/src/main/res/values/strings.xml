@@ -9,4 +9,9 @@
     <string name="notemaker">NoteMaker</string>
     <string name="title_activity_list">ListActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="add_contact">New Note</string>
+    <string name="empty_note">Empty Note</string>
+    <string name="no_subject">no subject</string>
+    <string name="note_name">Note Name</string>
+    <string name="delete">DELETE</string>
 </resources>

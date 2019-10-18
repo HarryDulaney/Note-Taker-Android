@@ -77,7 +77,7 @@ public class NoteDataSource {
             updateValues.put("subject", note.getSubject());
             updateValues.put("notecontent",note.getContent());
 
-            didSucceed = database.update("contact", updateValues, "_id=" + rowId, null) > 0;
+            didSucceed = database.update("note", updateValues, "_id=" + rowId, null) > 0;
 
         } catch (Exception ex) {
 
@@ -86,7 +86,7 @@ public class NoteDataSource {
         return didSucceed;
     }
 
-    int getLastContactId() {
+    int getLastNoteId() {
         int lastId = -1;
         try {
             String query = "Select MAX(_id) from note";
@@ -105,31 +105,31 @@ public class NoteDataSource {
 
     public ArrayList<String> getNoteName() {
 
-        ArrayList<String> contactNames = new ArrayList<>();
+        ArrayList<String> noteNames = new ArrayList<>();
 
         try {
-            String query = "Select notetitle from note";
+            String query = "Select notename from note";
             Cursor cursor = database.rawQuery(query, null);
 
             cursor.moveToFirst();
 
             while (!cursor.isAfterLast()) {
 
-                contactNames.add(cursor.getString(0));
+                noteNames.add(cursor.getString(0));
                 cursor.moveToNext();
 
             }
             cursor.close();
 
         } catch (Exception ex) {
-            contactNames = new ArrayList<>();
+            noteNames = new ArrayList<>();
         }
 
-        return contactNames;
+        return noteNames;
     }
 
-    public ArrayList<Note> getContacts(String sortField, String sortOrder) {
-        ArrayList<Note> contacts = new ArrayList<>();
+    public ArrayList<Note> getNotes(String sortField, String sortOrder) {
+        ArrayList<Note> notes = new ArrayList<>();
 
         try {
             String query = "SELECT * FROM note ORDER BY " + sortField + " " + sortOrder;
@@ -142,7 +142,12 @@ public class NoteDataSource {
             while (!cursor.isAfterLast()) {
                 newNote = new Note();
 
-                contacts.add(newNote);
+                 newNote.setNoteID(cursor.getInt(0));
+                 newNote.setNoteName(cursor.getString(1));
+                 newNote.setSubject(cursor.getString(2));
+                 newNote.setNoteContent(cursor.getString(3));
+
+                notes.add(newNote);
                 cursor.moveToNext();
             }
             cursor.close();
@@ -150,10 +155,10 @@ public class NoteDataSource {
 
         } catch (Exception e) {
 
-            contacts = new ArrayList<>();
+            notes = new ArrayList<>();
 
         }
-        return contacts;
+        return notes;
 
     }
     Note getSpecificNote(int noteID){

@@ -1,5 +1,6 @@
 package com.ethical_techniques.notemaker;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -34,6 +36,38 @@ public class ListActivity extends AppCompatActivity {
         initNotesButton();
         initSettingsButton();
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        String sortBy = getSharedPreferences("MyContactListPreferences",
+                Context.MODE_PRIVATE).getString("sortfield", "contactname");
+
+        String sortOrder = getSharedPreferences("MyContactListPreferences",
+                Context.MODE_PRIVATE).getString("sortorder","ASC");
+
+
+        NoteDataSource ds = new NoteDataSource(this);
+
+        try {
+            ds.open();
+            notes = ds.getContacts(sortBy,sortOrder);
+            ds.close();
+
+            if(notes.size() > 0){
+                ListView listview = (ListView) findViewById(R.id.listViewNotes);
+                adapter = new NoteAdapter(this,notes);
+                listview.setAdapter(adapter);
+            }else{
+                Intent intent = new Intent(ListActivity.this,NoteActivity.class);
+                startActivity(intent);
+            }
+
+        }catch (Exception e){
+            Toast.makeText(this,"Error retrieving contacts",Toast.LENGTH_LONG).show();
+
+        }
+    }
 
     private void initItemClick() {
         ListView listview = (ListView)findViewById(R.id.listViewNotes);
@@ -41,13 +75,13 @@ public class ListActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View itemClicked, int position, long id) {
-                Note selectedContact = notes.get(position);
+                Note selectedNote = notes.get(position);
                 if(isDeleting){
-                    adapter.showDelete(position,itemClicked,ListActivity.this,selectedContact);
+                    adapter.showDelete(position,itemClicked,ListActivity.this,selectedNote);
                 }else {
 
                     Intent intent = new Intent(ListActivity.this, NoteActivity.class);
-                    intent.putExtra("contactid", selectedContact.getNoteID());
+                    intent.putExtra("noteid", selectedNote.getNoteID());
                     startActivity(intent);
                 }
 

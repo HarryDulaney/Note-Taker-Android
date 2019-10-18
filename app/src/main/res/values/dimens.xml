@@ -1,8 +1,8 @@
 <resources>
     <dimen name="app_bar_height">180dp</dimen>
-    <dimen name="fab_margin">5dp</dimen>
-    <dimen name="text_margin">16dp</dimen>
+    <dimen name="fab_margin">5sp</dimen>
+    <dimen name="text_margin">16sp</dimen>
     <dimen name="header_label">35sp</dimen>
-    <dimen name="subheader_label">30dp</dimen>
-    <dimen name="icon_distance">48dp</dimen>
+    <dimen name="subheader_label">30sp</dimen>
+    <dimen name="icon_distance">48sp</dimen>
 </resources>

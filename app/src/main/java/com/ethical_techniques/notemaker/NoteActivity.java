@@ -30,7 +30,7 @@ public class NoteActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
 
         if(extras != null){
-            initNote(extras.getInt("noteID"));
+            initNote(extras.getInt("noteid"));
         }else {
 
             currentNote = new Note();
@@ -148,7 +148,26 @@ public class NoteActivity extends AppCompatActivity {
             }
         });
 
-    }
+    final EditText etNoteBody = findViewById(R.id.editNotes);
+        etNoteBody.addTextChangedListener(new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            currentNote.setSubject(etNoteBody.getText().toString());
+
+        }
+    });
+
+}
         private void initSaveButton () {
             Button saveButton = (Button) findViewById(R.id.saveButton);
             saveButton.setOnClickListener(new View.OnClickListener() {
@@ -165,7 +184,7 @@ public class NoteActivity extends AppCompatActivity {
                             wasSuccess = dataSource.insertNote(currentNote);
 
                             if (wasSuccess) {
-                                int newId = dataSource.getLastContactId();
+                                int newId = dataSource.getLastNoteId();
                                 currentNote.setNoteID(newId);
                             }
 

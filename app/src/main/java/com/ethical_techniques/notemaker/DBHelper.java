@@ -12,7 +12,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_NOTE =
             "create table note (_id integer primary key autoincrement, "
-                    + "notename text not null, subject text, notecontent text);";
+                    + "notename text not null, subject text, notecontent text,"
+                    + "datecreated text);";
 
 
     public DBHelper(Context context) {
