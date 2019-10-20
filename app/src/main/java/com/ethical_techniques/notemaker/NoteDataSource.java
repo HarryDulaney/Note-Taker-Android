@@ -8,6 +8,7 @@ import android.util.Log;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class NoteDataSource {
@@ -24,12 +25,12 @@ public class NoteDataSource {
     }
 
 
-    public void open() throws SQLException {
+     void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
 
     }
 
-    public void close() {
+     void close() {
         dbHelper.close();
     }
 
@@ -38,7 +39,7 @@ public class NoteDataSource {
      * @param note inserts new note into the database.
      * @return true for success and false for failure to insert note obj
      */
-    public boolean insertNote(Note note) {
+     boolean insertNote(Note note) {
         boolean didSucceed = false;
         try {
 
@@ -46,9 +47,8 @@ public class NoteDataSource {
 
             initialValues.put("notename", note.getNoteName());
             initialValues.put("subject", note.getSubject());
-            initialValues.put("noteContent",note.getContent());
-
-
+            initialValues.put("notecontent",note.getContent());
+            initialValues.put("datecreated",String.valueOf(note.getDateCreated().getTimeInMillis()));
 
             didSucceed = database.insert("note", null, initialValues) > 0;
 
@@ -76,6 +76,7 @@ public class NoteDataSource {
             updateValues.put("notename",note.getNoteName());
             updateValues.put("subject", note.getSubject());
             updateValues.put("notecontent",note.getContent());
+            updateValues.put("datecreated",String.valueOf(note.getDateCreated().getTimeInMillis()));
 
             didSucceed = database.update("note", updateValues, "_id=" + rowId, null) > 0;
 
@@ -86,6 +87,9 @@ public class NoteDataSource {
         return didSucceed;
     }
 
+    /**
+     * @return the last noteID that was inserted into the database
+     */
     int getLastNoteId() {
         int lastId = -1;
         try {
@@ -128,26 +132,29 @@ public class NoteDataSource {
         return noteNames;
     }
 
-    public ArrayList<Note> getNotes(String sortField, String sortOrder) {
+        ArrayList<Note> getNotes() {
         ArrayList<Note> notes = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM note ORDER BY " + sortField + " " + sortOrder;
+            String query = "SELECT * FROM note";
 
             Cursor cursor = database.rawQuery(query, null);
 
-            Note newNote;
+            Note note;
             cursor.moveToFirst();
 
             while (!cursor.isAfterLast()) {
-                newNote = new Note();
+                note = new Note();
 
-                 newNote.setNoteID(cursor.getInt(0));
-                 newNote.setNoteName(cursor.getString(1));
-                 newNote.setSubject(cursor.getString(2));
-                 newNote.setNoteContent(cursor.getString(3));
+                 note.setNoteID(cursor.getInt(0));
+                 note.setNoteName(cursor.getString(1));
+                 note.setSubject(cursor.getString(2));
+                 note.setNoteContent(cursor.getString(3));
+                 Calendar calendar = Calendar.getInstance();
+                 calendar.setTimeInMillis(Long.valueOf(cursor.getString(4)));
+                 note.setDateCreated(calendar);
 
-                notes.add(newNote);
+                notes.add(note);
                 cursor.moveToNext();
             }
             cursor.close();
@@ -172,11 +179,11 @@ public class NoteDataSource {
             note.setNoteName(cursor.getString(1));
             note.setSubject(cursor.getString(2));
             note.setNoteContent(cursor.getString(3));
-
-
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(Long.valueOf(cursor.getString(4)));
+            note.setDateCreated(calendar);
 
             cursor.close();
-
         }
 
         return note;

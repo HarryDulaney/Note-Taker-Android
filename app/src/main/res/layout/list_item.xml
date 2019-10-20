@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
 
     <TextView
         android:id="@+id/textNoteName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/note_name"
-        android:textSize="20sp"
+        android:layout_marginStart="5sp"
         android:layout_marginLeft="5sp"
+        android:text="@string/note_name"
+        android:textSize="18sp"
         app:layout_constraintLeft_toLeftOf="@+id/textNoteSubject"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="5sp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <TextView
         android:id="@+id/textNoteSubject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no_subject"
+        android:layout_marginStart="5sp"
+        android:layout_marginLeft="5sp"
         android:layout_marginTop="5sp"
-        android:layout_marginLeft="15sp"
-        app:layout_constraintLeft_toRightOf="@+id/textNoteName"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="15sp" />
+        android:text="@string/no_subject"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textNoteName" />
 
     <TextView
         android:id="@+id/textNoteBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:text="@string/empty_note"
         android:textSize="15sp"
         android:layout_marginLeft="5sp"
         android:layout_marginStart="5sp"
-        app:layout_constraintTop_toBottomOf="@id/textNoteSubject" />
-
+        app:layout_constraintTop_toBottomOf="@+id/textNoteSubject" />
 
     <Button
         android:id="@+id/buttonDeleteNote"
@@ -52,6 +53,19 @@
         android:text="@string/delete"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/dateCreatedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44sp"
+        android:layout_marginLeft="44sp"
+        android:layout_marginTop="3sp"
+        android:text="DATE"
+        app:layout_constraintEnd_toStartOf="@+id/buttonDeleteNote"
+        app:layout_constraintHorizontal_bias="0.867"
+        app:layout_constraintStart_toEndOf="@+id/textNoteSubject"
         app:layout_constraintTop_toTopOf="parent" />
 
 

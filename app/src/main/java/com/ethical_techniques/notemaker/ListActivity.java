@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 
 public class ListActivity extends AppCompatActivity {
 
-
+    private final String TAG = this.getClass().getName();
     Boolean isDeleting = false;
     ArrayList<Note> notes;
     NoteAdapter adapter;
@@ -36,26 +37,32 @@ public class ListActivity extends AppCompatActivity {
         initNotesButton();
         initSettingsButton();
     }
+
+    /**
+     * Loads user preferences from SharedPreferences.
+     * Connects to the DB, if no notes exist it creates an Intent to open
+     * NoteActivity.
+     */
     @Override
     public void onResume() {
         super.onResume();
 
-        String sortBy = getSharedPreferences("MyContactListPreferences",
-                Context.MODE_PRIVATE).getString("sortfield", "contactname");
+       /* String sortBy = getSharedPreferences("NoteMakerPreferences",
+                Context.MODE_PRIVATE).getString("sortfield", "notename");
 
-        String sortOrder = getSharedPreferences("MyContactListPreferences",
+        String sortOrder = getSharedPreferences("NoteMakerPreferences",
                 Context.MODE_PRIVATE).getString("sortorder","ASC");
+*/
 
-
-        NoteDataSource ds = new NoteDataSource(this);
+        NoteDataSource nds = new NoteDataSource(this);
 
         try {
-            ds.open();
-            notes = ds.getContacts(sortBy,sortOrder);
-            ds.close();
+            nds.open();
+            notes = nds.getNotes();
+            nds.close();
 
             if(notes.size() > 0){
-                ListView listview = (ListView) findViewById(R.id.listViewNotes);
+                ListView listview = findViewById(R.id.listViewNotes);
                 adapter = new NoteAdapter(this,notes);
                 listview.setAdapter(adapter);
             }else{
@@ -64,13 +71,20 @@ public class ListActivity extends AppCompatActivity {
             }
 
         }catch (Exception e){
-            Toast.makeText(this,"Error retrieving contacts",Toast.LENGTH_LONG).show();
+            Log.e(TAG,"Error in onResume, inspect the NoteDataSource. ");
+            Toast.makeText(this,"Error retrieving notes, please reload. ",Toast.LENGTH_LONG).show();
 
         }
     }
 
+    /**
+     * Defines behavior for event that user double clicks on the Note in List
+     * If the delete button is not active an Intent is created which stores the noteID in
+     * Extra which we can access from the onCreate() of the NoteActivity
+     * the clicked note.
+     */
     private void initItemClick() {
-        ListView listview = (ListView)findViewById(R.id.listViewNotes);
+        ListView listview = findViewById(R.id.listViewNotes);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
             @Override
@@ -88,8 +102,12 @@ public class ListActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Opens the NoteActivity when the user clicks on the NewNote Button
+     */
     private void initAddNoteButton(){
-        Button newContact = (Button)findViewById(R.id.buttonAdd);
+        Button newContact = findViewById(R.id.buttonAdd);
         newContact.setOnClickListener(new View.OnClickListener() {
 
 
@@ -101,8 +119,12 @@ public class ListActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Sets the event behavior for the toolbar delete button
+     */
     private void initDeleteButton(){
-        final Button deleteButton = (Button)findViewById(R.id.buttonDelete);
+        final Button deleteButton = findViewById(R.id.buttonDelete);
         deleteButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
