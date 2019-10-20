@@ -21,8 +21,6 @@ public class Note {
 
     public Note(){
         noteID = -1;
-        noteContent = null;
-        dateCreated = Calendar.getInstance();
     }
 
 

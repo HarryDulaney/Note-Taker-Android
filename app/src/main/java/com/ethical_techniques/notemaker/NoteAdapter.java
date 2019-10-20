@@ -1,6 +1,7 @@
 package com.ethical_techniques.notemaker;
 
 import android.content.Context;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,6 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 
 public class NoteAdapter extends ArrayAdapter<Note> {
-
 
         private ArrayList<Note> items;
         private Context adapterContext;
@@ -42,10 +42,12 @@ public class NoteAdapter extends ArrayAdapter<Note> {
                 TextView noteName = v.findViewById(R.id.textNoteName);
                 TextView noteSubject = v.findViewById(R.id.textNoteSubject);
                 TextView noteBody = v.findViewById(R.id.textNoteBody);
+                TextView dateCreated = v.findViewById(R.id.dateCreatedText);
 
                 noteName.setText(note.getNoteName());
                 noteSubject.setText(note.getSubject());
                 noteBody.setText(note.getContent());
+                dateCreated.setText(DateFormat.format("MM/dd/yyyy", note.getDateCreated()));
 
                 Button b = v.findViewById(R.id.buttonDeleteNote);
                 b.setVisibility(View.INVISIBLE);

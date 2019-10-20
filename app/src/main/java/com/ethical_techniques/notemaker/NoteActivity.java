@@ -5,16 +5,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.Calendar;
 
 public class NoteActivity extends AppCompatActivity {
 
@@ -27,15 +33,16 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         Bundle extras = getIntent().getExtras();
 
         if(extras != null){
+            //Load the note uses the noteID
             initNote(extras.getInt("noteid"));
         }else {
-
+            //create a new blank note
             currentNote = new Note();
         }
-
 
         initNotesButton();
         initListButton();
@@ -81,6 +88,11 @@ public class NoteActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Opens a connection to the database and uses getSpecificNote() to retrieve the
+     * Note and then sets the TextViews for with the current notes values
+     * @param id identifier for the note
+     */
     private void initNote(int id){
 
         NoteDataSource ds = new NoteDataSource(NoteActivity.this);
@@ -90,7 +102,7 @@ public class NoteActivity extends AppCompatActivity {
             ds.close();
 
         } catch (Exception e) {
-            Log.e(TAG,String.valueOf(e));
+            Log.w(TAG,e);
             Snackbar.make(findViewById(R.id.note_activity),
                     "Something went wrong loading your note, please try again",
                     Snackbar.LENGTH_INDEFINITE);
@@ -98,15 +110,20 @@ public class NoteActivity extends AppCompatActivity {
 
         EditText editName = findViewById(R.id.editTitle);
         EditText editSubject = findViewById(R.id.editSubject);
-        EditText editNote = findViewById(R.id.editNotes);
+        EditText editNote = (EditText) findViewById(R.id.editNotes);
+        TextView dateCreated = findViewById(R.id.dateCreatedText);
 
 
         editName.setText(currentNote.getNoteName());
         editSubject.setText(currentNote.getSubject());
         editNote.setText(currentNote.getContent());
+        dateCreated.setText(DateFormat.format("MM/dd/yyyy",currentNote.getDateCreated()));
 
     }
 
+    /**
+     * Sets event listener TextWatcher to each of the input fields in the NoteActivity
+     */
     private void initTextChangedEvents() {
         final EditText etNoteName = findViewById(R.id.editTitle);
         etNoteName.addTextChangedListener(new TextWatcher() {
@@ -120,6 +137,11 @@ public class NoteActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
+
+            /**
+             * updates the current Note with the users input
+             * @param editable reference to the editTitle EditText
+             */
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -148,7 +170,7 @@ public class NoteActivity extends AppCompatActivity {
             }
         });
 
-    final EditText etNoteBody = findViewById(R.id.editNotes);
+    final EditText etNoteBody =(EditText) findViewById(R.id.editNotes);
         etNoteBody.addTextChangedListener(new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -162,52 +184,72 @@ public class NoteActivity extends AppCompatActivity {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            currentNote.setSubject(etNoteBody.getText().toString());
+            currentNote.setNoteContent(etNoteBody.getText().toString());
 
         }
     });
 
+
 }
+
         private void initSaveButton () {
-            Button saveButton = (Button) findViewById(R.id.saveButton);
+
+            Button saveButton = findViewById(R.id.saveButton);
             saveButton.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
-                    hideKeyboard();
-                    boolean wasSuccess = false;
-                    NoteDataSource dataSource = new NoteDataSource(NoteActivity.this);
-                    try {
-                        dataSource.open();
 
-                        if (currentNote.getNoteID() == -1) {
-                            wasSuccess = dataSource.insertNote(currentNote);
+                    if (currentNote.getNoteName() == null || currentNote.getContent() == null) {
+                        Toast.makeText(getBaseContext(), "Make sure to fill in the name and the " +
+                                "\n note content fields of the note before saving", Toast.LENGTH_LONG).show();
+                    }else {
 
-                            if (wasSuccess) {
-                                int newId = dataSource.getLastNoteId();
-                                currentNote.setNoteID(newId);
+                        currentNote.setDateCreated(Calendar.getInstance());
+
+                        hideKeyboard();
+                        boolean wasSuccess = false;
+                        NoteDataSource dataSource = new NoteDataSource(NoteActivity.this);
+                        try {
+                            dataSource.open();
+
+                            if (currentNote.getNoteID() == -1) {
+                                wasSuccess = dataSource.insertNote(currentNote);
+
+                                if (wasSuccess) {
+                                    int newId = dataSource.getLastNoteId();
+                                    currentNote.setNoteID(newId);
+                                }
+
+                            } else {
+                                wasSuccess = dataSource.updateNote(currentNote);
+
                             }
-
-                        } else {
-                            wasSuccess = dataSource.updateNote(currentNote);
+                            dataSource.close();
+                        } catch (Exception e1) {
+                            Log.w(TAG, e1);
+                            wasSuccess = false;
 
                         }
-                        dataSource.close();
-                    } catch (Exception e1) {
-                        Log.e(TAG, String.valueOf(e1));
 
+                        if (wasSuccess) {
+                            Toast.makeText(getBaseContext(), "Success, Your new note was saved. " +
+                                    "\nClick on the List icon on the navigation bar to manage your notes. ", Toast.LENGTH_LONG).show();
+                           }
+                        }
                     }
-                }
             });
+
         }
+
         private void hideKeyboard(){
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            EditText editName = (EditText) findViewById(R.id.editTitle);
+            EditText editName = findViewById(R.id.editTitle);
             assert imm != null;
             imm.hideSoftInputFromWindow(editName.getWindowToken(), 0);
             EditText editSubject = findViewById(R.id.editSubject);
             imm.hideSoftInputFromWindow(editSubject.getWindowToken(), 0);
-            EditText editNote = findViewById(R.id.editNotes);
+            EditText editNote = (EditText) findViewById(R.id.editNotes);
             imm.hideSoftInputFromWindow(editNote.getWindowToken(), 0);
 
         }
