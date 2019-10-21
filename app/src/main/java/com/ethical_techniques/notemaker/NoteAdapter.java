@@ -1,5 +1,6 @@
 package com.ethical_techniques.notemaker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -19,11 +20,14 @@ public class NoteAdapter extends ArrayAdapter<Note> {
         private ArrayList<Note> items;
         private Context adapterContext;
 
+
         public NoteAdapter(Context context, ArrayList<Note> items){
             super(context, R.layout.list_item,items);
             adapterContext = context;
             this.items = items;
         }
+
+
         @NonNull
         @Override
         public View getView(int position, View convertView, @NonNull ViewGroup parent){
@@ -35,6 +39,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
                 if (v ==  null){
                     LayoutInflater vi = (LayoutInflater)
                             adapterContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
                     assert vi != null;
                     v = vi.inflate(R.layout.list_item, null);
                 }

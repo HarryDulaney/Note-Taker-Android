@@ -88,7 +88,8 @@ public class NoteDataSource {
     }
 
     /**
-     * @return the last noteID that was inserted into the database
+     * @return the ID aka.'noteID', of the last note
+     *  to be inserted into the database
      */
     int getLastNoteId() {
         int lastId = -1;
@@ -106,7 +107,10 @@ public class NoteDataSource {
         return lastId;
     }
 
-
+    /**
+     *
+     * @return ArrayList containing the Note Name for each saved instances of note
+     */
     public ArrayList<String> getNoteName() {
 
         ArrayList<String> noteNames = new ArrayList<>();
@@ -119,7 +123,7 @@ public class NoteDataSource {
 
             while (!cursor.isAfterLast()) {
 
-                noteNames.add(cursor.getString(0));
+                noteNames.add(cursor.getString(1));
                 cursor.moveToNext();
 
             }
