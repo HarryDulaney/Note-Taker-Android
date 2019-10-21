@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+
 public class ListActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getName();
@@ -28,7 +29,6 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-
 
         initItemClick();
         initAddNoteButton();
@@ -47,20 +47,23 @@ public class ListActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
-       /* String sortBy = getSharedPreferences("NoteMakerPreferences",
+        String sortBy = getSharedPreferences("NoteMakerPreferences",
                 Context.MODE_PRIVATE).getString("sortfield", "notename");
 
         String sortOrder = getSharedPreferences("NoteMakerPreferences",
                 Context.MODE_PRIVATE).getString("sortorder","ASC");
-*/
 
+        //Instantiate 'DBO' database object
         NoteDataSource nds = new NoteDataSource(this);
 
         try {
-            nds.open();
-            notes = nds.getNotes();
-            nds.close();
+            nds.open();                     //Open connection to DB
+            notes = nds.getNotes();         // Retrieve ArrayList of all note obj's from the DB
+            nds.close();                    //Close connection to the DB
 
+            /*If the DB returned some notes in the ArrayList, initialize ListView and set the adapter
+            * else if the notes ArrayList is empty, start the NoteActivity
+            */
             if(notes.size() > 0){
                 ListView listview = findViewById(R.id.listViewNotes);
                 adapter = new NoteAdapter(this,notes);
@@ -78,10 +81,9 @@ public class ListActivity extends AppCompatActivity {
     }
 
     /**
-     * Defines behavior for event that user double clicks on the Note in List
+     * Defines behavior for event that user double clicks on a Note in List
      * If the delete button is not active an Intent is created which stores the noteID in
-     * Extra which we can access from the onCreate() of the NoteActivity
-     * the clicked note.
+     * Extra which we will use from to tell the NoteActivity which note to open
      */
     private void initItemClick() {
         ListView listview = findViewById(R.id.listViewNotes);
@@ -104,7 +106,7 @@ public class ListActivity extends AppCompatActivity {
     }
 
     /**
-     * Opens the NoteActivity when the user clicks on the NewNote Button
+     * Opens the NoteActivity(Blank) when the user clicks on the 'New Note' Button
      */
     private void initAddNoteButton(){
         Button newContact = findViewById(R.id.buttonAdd);
@@ -121,7 +123,8 @@ public class ListActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets the event behavior for the toolbar delete button
+     * Sets the event behavior for the toolbar DELETE button
+     * When clicked it
      */
     private void initDeleteButton(){
         final Button deleteButton = findViewById(R.id.buttonDelete);

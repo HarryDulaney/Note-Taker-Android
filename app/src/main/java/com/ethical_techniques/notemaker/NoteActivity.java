@@ -33,7 +33,7 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        //Bundle , if initialized, comes from ListActivity.onItemClicked
         Bundle extras = getIntent().getExtras();
 
         if(extras != null){
@@ -139,7 +139,7 @@ public class NoteActivity extends AppCompatActivity {
             }
 
             /**
-             * updates the current Note with the users input
+             * Updates the current Note with the users input
              * @param editable reference to the editTitle EditText
              */
 
