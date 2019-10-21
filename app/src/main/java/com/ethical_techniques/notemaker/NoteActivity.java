@@ -33,11 +33,14 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Bundle , if initialized, comes from ListActivity.onItemClicked
+        /*
+         * Bundle stores the noteID of the note which the user clicked
+         * on in ListActivity.
+         */
         Bundle extras = getIntent().getExtras();
 
         if(extras != null){
-            //Load the note uses the noteID
+            //Load the note using the noteID
             initNote(extras.getInt("noteid"));
         }else {
             //create a new blank note
@@ -66,12 +69,10 @@ public class NoteActivity extends AppCompatActivity {
                 Intent intent = new Intent(NoteActivity.this,ListActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-
             }
 
 
         });
-
     }
     private void initSettingsButton(){
         ImageButton settingButton = findViewById(R.id.imageButtonSettings);
@@ -90,7 +91,7 @@ public class NoteActivity extends AppCompatActivity {
 
     /**
      * Opens a connection to the database and uses getSpecificNote() to retrieve the
-     * Note and then sets the TextViews for with the current notes values
+     * Note and then sets the TextViews with the current note values
      * @param id identifier for the note
      */
     private void initNote(int id){
