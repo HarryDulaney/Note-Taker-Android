@@ -5,20 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
 
@@ -112,13 +109,11 @@ public class NoteActivity extends AppCompatActivity {
         EditText editName = findViewById(R.id.editTitle);
         EditText editSubject = findViewById(R.id.editSubject);
         EditText editNote = (EditText) findViewById(R.id.editNotes);
-        TextView dateCreated = findViewById(R.id.dateCreatedText);
 
 
         editName.setText(currentNote.getNoteName());
         editSubject.setText(currentNote.getSubject());
         editNote.setText(currentNote.getContent());
-        dateCreated.setText(DateFormat.format("MM/dd/yyyy",currentNote.getDateCreated()));
 
     }
 
@@ -235,7 +230,8 @@ public class NoteActivity extends AppCompatActivity {
 
                         if (wasSuccess) {
                             Toast.makeText(getBaseContext(), "Success, Your new note was saved. " +
-                                    "\nClick on the List icon on the navigation bar to manage your notes. ", Toast.LENGTH_LONG).show();
+                                    "\nClick on the List icon on the navigation bar to manage your notes. ",
+                                    Toast.LENGTH_LONG).show();
                            }
                         }
                     }

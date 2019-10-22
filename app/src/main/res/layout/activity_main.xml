@@ -2,44 +2,48 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/note_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/note_activity"
     tools:context=".NoteActivity">
+
 
     <TextView
         android:id="@+id/mainHeader"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/notemaker"
-        android:textAllCaps="false"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/header_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <EditText
         android:id="@+id/editTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_a_title"
+        android:layout_marginStart="@dimen/fab_margin"
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginTop="@dimen/fab_margin"
         android:ems="18"
+        android:hint="@string/enter_a_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainHeader"
-        android:layout_marginStart="@dimen/fab_margin" />
+        app:layout_constraintTop_toBottomOf="@+id/mainHeader" />
 
     <EditText
         android:id="@+id/editSubject"
-        android:hint="@string/enter_a_subject_here_optional"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
         android:ems="18"
+        android:hint="@string/enter_a_subject_here_optional"
         android:inputType="textEmailSubject"
-        app:layout_constraintTop_toBottomOf="@id/editTitle"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTitle" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/editNotes"
@@ -49,27 +53,29 @@
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginTop="@dimen/fab_margin"
         android:gravity="start"
+        android:hint="@string/write_your_note_here_then_hit_save"
         android:inputType="textMultiLine"
         android:scrollbars="vertical"
         android:selectAllOnFocus="false"
         android:singleLine="false"
-        android:hint="@string/write_your_note_here_then_hit_save"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editSubject"
-        />
+        app:layout_constraintTop_toBottomOf="@id/editSubject" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/navbar"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/colorPrimaryGrey"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryNavBar"
         android:clickable="false"
         android:clipChildren="false"
         android:clipToPadding="false"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" >
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
             android:id="@+id/imageButtonList"
@@ -103,7 +109,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="48dp"
             android:layout_marginLeft="@dimen/icon_distance"
-            android:layout_marginBottom="8dp"
             android:background="#00FFFFFF"
             android:scaleType="center"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -117,12 +122,59 @@
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/save"
-        android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginStart="@dimen/fab_margin"
-        app:layout_constraintTop_toBottomOf="@+id/editNotes"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginTop="10sp"
+        android:text="@string/save"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editNotes" />
 
+    <TextView
+        android:id="@+id/textPrioritySelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginEnd="65dp"
+        android:layout_marginRight="65dp"
+        android:text="@string/priority_level"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editNotes" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupPriority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textPrioritySelect">
+
+        <RadioButton
+            android:id="@+id/radioHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:text="High" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:text="Med." />
+
+        <RadioButton
+            android:id="@+id/radioButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="3dp"
+            android:text="Low" />
+
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

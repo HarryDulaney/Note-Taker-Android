@@ -12,7 +12,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -21,6 +24,7 @@ public class ListActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getName();
     Boolean isDeleting = false;
+    Boolean isExpanded = false;
     ArrayList<Note> notes;
     NoteAdapter adapter;
 
@@ -87,6 +91,22 @@ public class ListActivity extends AppCompatActivity {
      */
     private void initItemClick() {
         ListView listview = findViewById(R.id.listViewNotes);
+
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Note selectedNote = notes.get(position);
+
+                Intent intent = new Intent(ListActivity.this, NoteActivity.class);
+                intent.putExtra("noteid", selectedNote.getNoteID());
+                startActivity(intent);
+
+
+                return false;
+            }
+        });
+
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
             @Override
@@ -94,11 +114,15 @@ public class ListActivity extends AppCompatActivity {
                 Note selectedNote = notes.get(position);
                 if(isDeleting){
                     adapter.showDelete(position,itemClicked,ListActivity.this,selectedNote);
-                }else {
 
-                    Intent intent = new Intent(ListActivity.this, NoteActivity.class);
-                    intent.putExtra("noteid", selectedNote.getNoteID());
-                    startActivity(intent);
+                }else if(!selectedNote.getExpanded()){
+                    adapter.showExpandedNote(itemClicked);
+                    selectedNote.setExpanded(true);
+
+                }else{
+                    adapter.closeExpandedNote(itemClicked);
+                    selectedNote.setExpanded(false);
+
                 }
 
             }

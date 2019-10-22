@@ -17,10 +17,12 @@ public class Note {
     private String subject;
     private String noteContent;
     private Calendar dateCreated;
+    private Boolean isExpanded;
 
 
     public Note(){
         noteID = -1;
+        isExpanded = false;
     }
 
 
@@ -64,5 +66,14 @@ public class Note {
     public void setNoteName(String noteName) {
         this.noteName = noteName;
     }
+
+    public Boolean getExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(Boolean expanded) {
+        isExpanded = expanded;
+    }
+
 
 }

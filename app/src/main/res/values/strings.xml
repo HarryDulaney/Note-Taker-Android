@@ -6,7 +6,7 @@
     <string name="enter_a_subject_here_optional">Enter a subject (optional)</string>
     <string name="write_your_note_here_then_hit_save">Write your note here then hit SAVE.</string>
     <string name="enter_a_title">Enter a Title</string>
-    <string name="notemaker">NoteMaker</string>
+    <string name="notemaker">NOTEMAKER</string>
     <string name="title_activity_list">ListActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="add_contact">New Note</string>
@@ -14,4 +14,15 @@
     <string name="no_subject">no subject</string>
     <string name="note_name">Note Name</string>
     <string name="delete">DELETE</string>
+    <string name="sort_order_settings">Sort Order</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="theme_selector">THEME SELECTOR</string>
+    <string name="priority_level">Set Priority Level</string>
+    <string name="head_in_the_clouds">Head In The Clouds (Default)</string>
+    <string name="settings_controls">Settings</string>
+    <string name="sort_by">Sort By</string>
+    <string name="high">High</string>
+    <string name="medium">Medium</string>
+    <string name="low">Low</string>
 </resources>

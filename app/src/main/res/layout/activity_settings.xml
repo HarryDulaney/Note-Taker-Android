@@ -20,51 +20,55 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/settingsHeader"
+                    android:text="@string/settings_controls"
+                    android:textSize="@dimen/header_label"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"/>
+
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/sort_contact_by"
-                    android:id="@+id/textContactSort"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
+                    android:text="@string/sort_by"
+                    android:id="@+id/textSortBy"
+                    android:layout_below="@+id/settingsHeader"
                     android:layout_marginLeft="15dp"
                     android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp"/>
+                    android:layout_marginTop="20dp"
+                    android:layout_centerHorizontal="true"/>
 
                 <RadioGroup
                     android:id="@+id/radioGroupSortBy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/textContactSort"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginLeft="35dp"
-                    android:layout_marginStart="35dp"
-                    android:layout_marginTop="10dp">
+                    android:layout_below="@+id/textSortBy"
+                    android:layout_marginTop="10dp"
+                    android:layout_centerHorizontal="true">
 
                     <RadioButton
-                        android:id="@+id/radioName"
+                        android:id="@+id/radioHigh"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/name_settings"
+                        android:text="@string/high"
                         android:layout_weight="1" />
-
                     <RadioButton
-                        android:id="@+id/radioCity"
+                        android:id="@+id/radioLow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/city_settings"
+                        android:text="@string/medium"
                         android:layout_weight="1" />
-
                     <RadioButton
-                        android:id="@+id/radioBirthday"
+                        android:id="@+id/radioMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/birthday_settings"
+                        android:text="@string/low"
                         android:layout_weight="1" />
-
                 </RadioGroup>
 
                 <TextView
@@ -74,28 +78,21 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/sort_order_settings"
                     android:layout_below="@+id/radioGroupSortBy"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp" />
 
                 <RadioGroup
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textViewSortOrder"
                     android:id="@+id/radioGroupSortOrder"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginLeft="35dp"
-                    android:layout_marginStart="35dp"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp" >
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/ascending"
-
                         android:id="@+id/radioAscending"
                         android:layout_weight="1" />
 
@@ -112,56 +109,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Background Color"
+                    android:text="@string/theme_selector"
                     android:layout_below="@+id/radioGroupSortOrder"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp" />
 
                 <RadioGroup
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/colorPreferenceTextView"
                     android:id="@+id/radioGroupColorChooser"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginLeft="35dp"
-                    android:layout_marginStart="35dp"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp" >
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Standard"
+                        android:text="@string/head_in_the_clouds"
                         android:id="@+id/radioNormal"
                         android:layout_weight="1" />
-
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Bright Yellow"
-                        android:id="@+id/radioYellow"
-                        android:layout_weight="1" />
-
-                    <RadioButton
-                        android:id="@+id/radioGreen"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Neon Green"
-                        android:layout_weight="1"/>
-
-                    <RadioButton
-                        android:id="@+id/radioBlue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Very Blue"
-                        android:layout_weight="1"/>
-
-
                 </RadioGroup>
-
             </RelativeLayout>
 
         </ScrollView>
@@ -169,12 +136,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/navbar"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/colorPrimaryGrey"
+        android:background="@color/colorPrimaryNavBar"
         android:clickable="false"
         android:clipChildren="false"
         android:clipToPadding="false"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -211,7 +180,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="48dp"
             android:layout_marginLeft="@dimen/icon_distance"
-            android:layout_marginBottom="8dp"
             android:background="#00FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/imageButtonNote"

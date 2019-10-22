@@ -85,6 +85,18 @@ public class NoteAdapter extends ArrayAdapter<Note> {
         }
 
     }
+    public void showExpandedNote(final View convertView){
+
+            View view = convertView;
+            final TextView noteContent = view.findViewById(R.id.textNoteBody);
+            noteContent.setVisibility(View.VISIBLE);
+    }
+    public void closeExpandedNote(View convertView) {
+            View view = convertView;
+            final TextView noteContent = view.findViewById(R.id.textNoteBody);
+            noteContent.setVisibility(View.GONE);
+    }
+
 
         private void deleteOption(int noteToDelete, Context context){
             NoteDataSource db = new NoteDataSource(context);
@@ -104,5 +116,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
             b.setVisibility(View.INVISIBLE);
             b.setOnClickListener(null);
         }
-    }
+
+
+}
 
