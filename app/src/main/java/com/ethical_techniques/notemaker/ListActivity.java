@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Text;
@@ -52,7 +51,7 @@ public class ListActivity extends AppCompatActivity {
         super.onResume();
 
         String sortBy = getSharedPreferences("NoteMakerPreferences",
-                Context.MODE_PRIVATE).getString("sortfield", "notename");
+                Context.MODE_PRIVATE).getString("sortfield", "priority");
 
         String sortOrder = getSharedPreferences("NoteMakerPreferences",
                 Context.MODE_PRIVATE).getString("sortorder","ASC");
@@ -62,7 +61,7 @@ public class ListActivity extends AppCompatActivity {
 
         try {
             nds.open();                     //Open connection to DB
-            notes = nds.getNotes();         // Retrieve ArrayList of all note obj's from the DB
+            notes = nds.getNotes(sortBy,sortOrder);         // Retrieve ArrayList of all note obj's from the DB
             nds.close();                    //Close connection to the DB
 
             /*If the DB returned some notes in the ArrayList, initialize ListView and set the adapter
