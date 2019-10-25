@@ -107,40 +107,12 @@ public class NoteDataSource {
         return lastId;
     }
 
-    /**
-     *
-     * @return ArrayList containing the Note Name for each saved instances of note
-     */
-    public ArrayList<String> getNoteName() {
+    public ArrayList<Note> getNotes(String sortField, String sortOrder) {
 
-        ArrayList<String> noteNames = new ArrayList<>();
-
-        try {
-            String query = "Select notename from note";
-            Cursor cursor = database.rawQuery(query, null);
-
-            cursor.moveToFirst();
-
-            while (!cursor.isAfterLast()) {
-
-                noteNames.add(cursor.getString(1));
-                cursor.moveToNext();
-
-            }
-            cursor.close();
-
-        } catch (Exception ex) {
-            noteNames = new ArrayList<>();
-        }
-
-        return noteNames;
-    }
-
-        ArrayList<Note> getNotes() {
         ArrayList<Note> notes = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM note";
+            String query = "SELECT * FROM note ORDER BY " + sortField + " " + sortOrder;
 
             Cursor cursor = database.rawQuery(query, null);
 
@@ -150,13 +122,14 @@ public class NoteDataSource {
             while (!cursor.isAfterLast()) {
                 note = new Note();
 
-                 note.setNoteID(cursor.getInt(0));
-                 note.setNoteName(cursor.getString(1));
-                 note.setSubject(cursor.getString(2));
-                 note.setNoteContent(cursor.getString(3));
-                 Calendar calendar = Calendar.getInstance();
-                 calendar.setTimeInMillis(Long.valueOf(cursor.getString(4)));
-                 note.setDateCreated(calendar);
+                note.setNoteID(cursor.getInt(0));
+                note.setNoteName(cursor.getString(1));
+                note.setSubject(cursor.getString(2));
+                note.setNoteContent(cursor.getString(3));
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(Long.valueOf(cursor.getString(4)));
+                note.setDateCreated(calendar);
+                note.setPriorityLevel(cursor.getString(5));
 
                 notes.add(note);
                 cursor.moveToNext();
@@ -172,6 +145,7 @@ public class NoteDataSource {
         return notes;
 
     }
+
     Note getSpecificNote(int noteID){
         Note note = new Note();
         String query = "SELECT * FROM note WHERE _id =" + noteID;
