@@ -27,7 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void initSortByClick(){
-        RadioGroup rgSortBy = (RadioGroup) findViewById(R.id.radioGroupSortBy);
+        RadioGroup rgSortBy = findViewById(R.id.radioGroupSortBy);
         rgSortBy.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
 
@@ -35,22 +35,17 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
 
-                RadioButton rbHigh = (RadioButton) findViewById(R.id.radioHigh);
-                RadioButton rbMedium = (RadioButton) findViewById(R.id.radioMedium);
+                RadioButton rbPriority = (RadioButton) findViewById(R.id.radioPriorityLevel);
 
 
-                if (rbHigh.isChecked()) {
+                if (rbPriority.isChecked()) {
                     getSharedPreferences("NoteMakerPreferences",
                             Context.MODE_PRIVATE).edit()
-                            .putString("sortfield", "high").commit();
-                } else if (rbMedium.isChecked()) {
-                    getSharedPreferences("NoteMakerPreferences",
-                            Context.MODE_PRIVATE).edit()
-                            .putString("sortfield", "medium").commit();
+                            .putString("sortfield", "priority").commit();
                 } else {
                     getSharedPreferences("NoteMakerPreferences",
                             Context.MODE_PRIVATE).edit()
-                            .putString("sortfield", "low").commit();
+                            .putString("sortfield", "priority").commit();
                 }
             }
 
@@ -81,23 +76,20 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void initSettings() {
         String sortBy = getSharedPreferences("NoteMakerPreferences",
-                Context.MODE_PRIVATE).getString("sortfield", "prioritylevel");
+                Context.MODE_PRIVATE).getString("sortfield", "priority");
 
         String sortOrder = getSharedPreferences("NoteMakerPreferences",
                 Context.MODE_PRIVATE).getString("sortorder", "ASC");
 
 
-        RadioButton rbHigh = findViewById(R.id.radioHigh);
-        RadioButton rbMedium = findViewById(R.id.radioMedium);
-        RadioButton rbLow = findViewById(R.id.radioLow);
+        RadioButton rbPriority = findViewById(R.id.radioPriorityLevel);
 
-        if (sortBy.equalsIgnoreCase("high")) {
-            rbHigh.setChecked(true);
 
-        } else if (sortBy.equalsIgnoreCase("medium")) {
-            rbMedium.setChecked(true);
+        if (sortBy.equalsIgnoreCase("priority")) {
+            rbPriority.setChecked(true);
+
         } else {
-            rbLow.setChecked(true);
+            rbPriority.setChecked(true);
         }
 
         RadioButton rbAscending = findViewById(R.id.radioAscending);

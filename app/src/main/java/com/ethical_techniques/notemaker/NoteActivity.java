@@ -3,6 +3,7 @@ package com.ethical_techniques.notemaker;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -11,6 +12,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +32,7 @@ public class NoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         /*
          * Bundle stores the noteID of the note which the user clicked
@@ -109,11 +113,22 @@ public class NoteActivity extends AppCompatActivity {
         EditText editName = findViewById(R.id.editTitle);
         EditText editSubject = findViewById(R.id.editSubject);
         EditText editNote = (EditText) findViewById(R.id.editNotes);
-
+        RadioButton rbHigh = findViewById(R.id.radioHigh);
+        RadioButton rbMedium = findViewById(R.id.radioMedium);
+        RadioButton rbLow = findViewById(R.id.radioLow);
 
         editName.setText(currentNote.getNoteName());
         editSubject.setText(currentNote.getSubject());
         editNote.setText(currentNote.getContent());
+
+        if(currentNote.getPriorityLevel() == "A"){
+            rbHigh.setChecked(true);
+        }else if(currentNote.getPriorityLevel() == "B"){
+            rbMedium.setChecked(true);
+        }else{
+            rbLow.setChecked(true);
+        }
+
 
     }
 
@@ -200,6 +215,19 @@ public class NoteActivity extends AppCompatActivity {
                         Toast.makeText(getBaseContext(), "Make sure to fill in the name and the " +
                                 "\n note content fields of the note before saving", Toast.LENGTH_LONG).show();
                     }else {
+
+                        RadioButton rbHigh = findViewById(R.id.radioHigh);
+                        RadioButton rbMedium = findViewById(R.id.radioMedium);
+
+                        if(rbHigh.isChecked()){
+                            currentNote.setPriorityLevel("A");
+
+                        }else if(rbMedium.isChecked()){
+                            currentNote.setPriorityLevel("B");
+
+                        }else{
+                            currentNote.setPriorityLevel("C");
+                        }
 
                         currentNote.setDateCreated(Calendar.getInstance());
 
