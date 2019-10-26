@@ -10,9 +10,9 @@ This is the main screen for inputing your note
 
 <div align="center">
   <img src="https://github.com/Nothingrhymeswithorange/Note-Taker_Android/blob/master/doc-resources/Note_List_2.png" height=300px
-       padding="10px">
+       padding="25px">
     <img src="https://github.com/Nothingrhymeswithorange/Note-Taker_Android/blob/master/doc-resources/Note_App_list.png" height=300px
-       padding="10px">
+       padding="25px">
 </div>
 
 <div align="center">
