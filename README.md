@@ -8,6 +8,13 @@
 This is the main screen for inputing your note
 </div>
 
+<div align="center">
+  <img src="https://github.com/Nothingrhymeswithorange/Note-Taker_Android/blob/master/doc-resources/Note_List_2.png" height=300px
+       padding="10px">
+    <img src="https://github.com/Nothingrhymeswithorange/Note-Taker_Android/blob/master/doc-resources/Note_App_list.png" height=300px
+       padding="10px">
+</div>
 
-
-
+<div align="center">
+This is the list of saved notes which is populated using a custom ArrayAdapter
+</div>
