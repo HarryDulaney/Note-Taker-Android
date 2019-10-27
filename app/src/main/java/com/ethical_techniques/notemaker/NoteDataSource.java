@@ -132,7 +132,7 @@ public class NoteDataSource {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(Long.valueOf(cursor.getString(4)));
                 note.setDateCreated(calendar);
-                note.setPriorityLevel(cursor.getString(5));
+                note.setPriorityLevel(cursor.getInt(5));
 
                 notes.add(note);
                 cursor.moveToNext();
@@ -163,6 +163,7 @@ public class NoteDataSource {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(Long.valueOf(cursor.getString(4)));
             note.setDateCreated(calendar);
+            note.setPriorityLevel(cursor.getInt(5));
 
             cursor.close();
         }

@@ -3,11 +3,11 @@ package com.ethical_techniques.notemaker;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,6 +52,7 @@ public class NoteActivity extends AppCompatActivity {
         initListButton();
         initSettingsButton();
         initTextChangedEvents();
+        initRadioButtons();
         initSaveButton();
     }
 
@@ -63,7 +64,7 @@ public class NoteActivity extends AppCompatActivity {
     }
     private void initListButton(){
         ImageButton listButton = findViewById(R.id.imageButtonList);
-        listButton.setOnClickListener(new View.OnClickListener(){
+        listButton.setOnClickListener(new OnClickListener(){
 
             @Override
             public void onClick(View v) {
@@ -77,7 +78,7 @@ public class NoteActivity extends AppCompatActivity {
     }
     private void initSettingsButton(){
         ImageButton settingButton = findViewById(R.id.imageButtonSettings);
-        settingButton.setOnClickListener(new View.OnClickListener(){
+        settingButton.setOnClickListener(new OnClickListener(){
 
             @Override
             public void onClick(View v) {
@@ -94,6 +95,7 @@ public class NoteActivity extends AppCompatActivity {
      * Opens a connection to the database and uses getSpecificNote() to retrieve the
      * Note and then sets the TextViews with the current note values
      * @param id identifier for the note
+     *
      */
     private void initNote(int id){
 
@@ -117,13 +119,16 @@ public class NoteActivity extends AppCompatActivity {
         RadioButton rbMedium = findViewById(R.id.radioMedium);
         RadioButton rbLow = findViewById(R.id.radioLow);
 
+
         editName.setText(currentNote.getNoteName());
         editSubject.setText(currentNote.getSubject());
         editNote.setText(currentNote.getContent());
 
-        if(currentNote.getPriorityLevel() == "A"){
+
+        //Check the correct radiobutton for the Note being loaded
+        if(currentNote.getPriorityLevel() == 3){
             rbHigh.setChecked(true);
-        }else if(currentNote.getPriorityLevel() == "B"){
+        }else if(currentNote.getPriorityLevel() == 2){
             rbMedium.setChecked(true);
         }else{
             rbLow.setChecked(true);
@@ -202,11 +207,37 @@ public class NoteActivity extends AppCompatActivity {
 
 
 }
+    private void initRadioButtons(){
+
+        final RadioGroup radioButtons = findViewById(R.id.radioGroupPriority);
+        final RadioButton rbHigh = findViewById(R.id.radioHigh);
+        final RadioButton rbMedium = findViewById(R.id.radioMedium);
+        radioButtons.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                RadioButton selectedButton = findViewById(checkedId);
+
+                if (selectedButton.getId() == rbHigh.getId()) {
+                    currentNote.setPriorityLevel(3);
+
+                } else if (selectedButton.getId() == rbMedium.getId()) {
+                    currentNote.setPriorityLevel(2);
+
+                } else {
+                    currentNote.setPriorityLevel(1);
+                }
+            }
+
+        });
+
+    }
 
         private void initSaveButton () {
 
             Button saveButton = findViewById(R.id.saveButton);
-            saveButton.setOnClickListener(new View.OnClickListener() {
+            saveButton.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
@@ -215,19 +246,6 @@ public class NoteActivity extends AppCompatActivity {
                         Toast.makeText(getBaseContext(), "Make sure to fill in the name and the " +
                                 "\n note content fields of the note before saving", Toast.LENGTH_LONG).show();
                     }else {
-
-                        RadioButton rbHigh = findViewById(R.id.radioHigh);
-                        RadioButton rbMedium = findViewById(R.id.radioMedium);
-
-                        if(rbHigh.isChecked()){
-                            currentNote.setPriorityLevel("A");
-
-                        }else if(rbMedium.isChecked()){
-                            currentNote.setPriorityLevel("B");
-
-                        }else{
-                            currentNote.setPriorityLevel("C");
-                        }
 
                         currentNote.setDateCreated(Calendar.getInstance());
 

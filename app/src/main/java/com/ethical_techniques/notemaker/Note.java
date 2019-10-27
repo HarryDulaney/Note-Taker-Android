@@ -18,11 +18,12 @@ public class Note {
     private String noteContent;
     private Calendar dateCreated;
     private Boolean isExpanded;
-    private String priorityLevel;
+    private int priorityLevel;
 
     public Note(){
         noteID = -1;
         isExpanded = false;
+        priorityLevel = 0;
     }
 
 
@@ -76,11 +77,11 @@ public class Note {
     }
 
 
-    public String getPriorityLevel() {
+    public int getPriorityLevel() {
         return priorityLevel;
     }
 
-    public void setPriorityLevel(String priorityLevel) {
+    public void setPriorityLevel(int priorityLevel) {
         this.priorityLevel = priorityLevel;
     }
 }
