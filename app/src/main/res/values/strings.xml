@@ -15,8 +15,8 @@
     <string name="note_name">Note Name</string>
     <string name="delete">DELETE</string>
     <string name="sort_order_settings">Sort Order</string>
-    <string name="ascending">Ascending</string>
-    <string name="descending">Descending</string>
+    <string name="ascending">Low to High</string>
+    <string name="descending">High to Low</string>
     <string name="theme_selector">THEME SELECTOR</string>
     <string name="priority_level">Set Priority Level</string>
     <string name="head_in_the_clouds">Head In The Clouds (Default)</string>
