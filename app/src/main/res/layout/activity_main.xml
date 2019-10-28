@@ -155,6 +155,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="#ff0000"
             android:padding="2dp"
             android:text="High" />
 
@@ -164,6 +165,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="2dp"
+            android:textColor="#ffa550"
             android:text="Medium" />
 
         <RadioButton
