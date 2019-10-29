@@ -50,9 +50,13 @@ public class NoteAdapter extends ArrayAdapter<Note> {
                 TextView dateCreated = v.findViewById(R.id.dateCreatedText);
 
                 noteName.setText(note.getNoteName());
+
+
                 noteSubject.setText(note.getSubject());
                 noteBody.setText(note.getContent());
                 dateCreated.setText(DateFormat.format("MM/dd/yyyy", note.getDateCreated()));
+
+
 
                 Button b = v.findViewById(R.id.buttonDeleteNote);
                 b.setVisibility(View.INVISIBLE);

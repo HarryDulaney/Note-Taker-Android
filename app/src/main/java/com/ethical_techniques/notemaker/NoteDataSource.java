@@ -111,7 +111,6 @@ public class NoteDataSource {
     }
 
     public ArrayList<Note> getNotes(String sortField, String sortOrder) {
-
         ArrayList<Note> notes = new ArrayList<>();
 
         try {
