@@ -234,7 +234,12 @@ public class NoteActivity extends AppCompatActivity {
 
     }
 
-        private void initSaveButton () {
+    /**
+     * Initializes the Save button and sets the behavior to call on
+     * the Database Object. Checks if the Note is a new note using the default ID
+     * value of -1.
+     */
+    private void initSaveButton () {
 
             Button saveButton = findViewById(R.id.saveButton);
             saveButton.setOnClickListener(new OnClickListener() {
@@ -285,7 +290,7 @@ public class NoteActivity extends AppCompatActivity {
 
         }
 
-        private void hideKeyboard(){
+    private void hideKeyboard(){
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             EditText editName = findViewById(R.id.editTitle);
             assert imm != null;
