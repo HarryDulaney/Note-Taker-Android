@@ -36,6 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
 
                 RadioButton rbPriority = (RadioButton) findViewById(R.id.radioPriorityLevel);
+                //RadioButton rbDate = findViewById();
 
 
                 if (rbPriority.isChecked()) {
@@ -45,7 +46,7 @@ public class SettingsActivity extends AppCompatActivity {
                 } else {
                     getSharedPreferences("NoteMakerPreferences",
                             Context.MODE_PRIVATE).edit()
-                            .putString("sortfield", "priority").commit();
+                            .putString("sortfield", "datecreated").commit();
                 }
             }
 
@@ -74,6 +75,10 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Reads in Shared Preferences and sets the radiobuttons to the proper
+     * settings
+     */
     private void initSettings() {
         String sortBy = getSharedPreferences("NoteMakerPreferences",
                 Context.MODE_PRIVATE).getString("sortfield", "priority");
@@ -83,13 +88,13 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         RadioButton rbPriority = findViewById(R.id.radioPriorityLevel);
-
+        //RadioButton rbDate = findViewById(R.id.radioPriorityLevel);
 
         if (sortBy.equalsIgnoreCase("priority")) {
             rbPriority.setChecked(true);
 
         } else {
-            rbPriority.setChecked(true);
+            //rbDate.setChecked(true);
         }
 
         RadioButton rbAscending = findViewById(R.id.radioAscending);
