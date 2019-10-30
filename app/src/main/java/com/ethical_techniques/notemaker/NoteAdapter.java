@@ -1,7 +1,8 @@
 package com.ethical_techniques.notemaker;
 
-import android.annotation.SuppressLint;
+
 import android.content.Context;
+import android.graphics.Color;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,13 +51,19 @@ public class NoteAdapter extends ArrayAdapter<Note> {
                 TextView dateCreated = v.findViewById(R.id.dateCreatedText);
 
                 noteName.setText(note.getNoteName());
-
+                if(note.getPriorityLevel() == 3){
+                    noteName.setTextColor(Color.rgb(255,0,0));
+                }
+                else if(note.getPriorityLevel() == 2){
+                    noteName.setTextColor(Color.rgb(255,165,0));
+                }
+                else{
+                    //Do Nothing
+                }
 
                 noteSubject.setText(note.getSubject());
                 noteBody.setText(note.getContent());
                 dateCreated.setText(DateFormat.format("MM/dd/yyyy", note.getDateCreated()));
-
-
 
                 Button b = v.findViewById(R.id.buttonDeleteNote);
                 b.setVisibility(View.INVISIBLE);

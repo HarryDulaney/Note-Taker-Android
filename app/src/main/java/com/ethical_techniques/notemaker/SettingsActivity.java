@@ -26,6 +26,10 @@ public class SettingsActivity extends AppCompatActivity {
         initSettings();
     }
 
+    /**
+     * Initializes the sortBy RadioGroup. Sets listener to check
+     * the users choice and then commits it to persistent memory
+     */
     private void initSortByClick(){
         RadioGroup rgSortBy = findViewById(R.id.radioGroupSortBy);
         rgSortBy.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -35,7 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
 
-                RadioButton rbPriority = (RadioButton) findViewById(R.id.radioPriorityLevel);
+                RadioButton rbPriority = findViewById(R.id.radioPriorityLevel);
                 //RadioButton rbDate = findViewById();
 
 
@@ -52,6 +56,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         });
     }
+
+    /**
+     * Initializes the sort order RadioGroup.
+     * User selection is checked then committed to persistent memory
+     */
     private void initSortOrderClick(){
         RadioGroup rgSortOrder = findViewById(R.id.radioGroupSortOrder);
         rgSortOrder.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
@@ -76,25 +85,26 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * Reads in Shared Preferences and sets the radiobuttons to the proper
-     * settings
+     * Reads in Shared Preferences from memory and sets the RadioButtons to the
+     * user specific settings
      */
     private void initSettings() {
+        //Creates string to hold default value 'priority' for sortBy.
         String sortBy = getSharedPreferences("NoteMakerPreferences",
                 Context.MODE_PRIVATE).getString("sortfield", "priority");
-
+        //Default String value for sortOrder 'Ascending'
         String sortOrder = getSharedPreferences("NoteMakerPreferences",
                 Context.MODE_PRIVATE).getString("sortorder", "ASC");
 
 
         RadioButton rbPriority = findViewById(R.id.radioPriorityLevel);
-        //RadioButton rbDate = findViewById(R.id.radioPriorityLevel);
+        RadioButton rbDate = findViewById(R.id.radioSetByDate);
 
         if (sortBy.equalsIgnoreCase("priority")) {
             rbPriority.setChecked(true);
 
         } else {
-            //rbDate.setChecked(true);
+            rbDate.setChecked(true);
         }
 
         RadioButton rbAscending = findViewById(R.id.radioAscending);
@@ -108,9 +118,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
     }
-
-
-
 
     private void initNotesButton() {
         ImageButton noteButton = findViewById(R.id.imageButtonNote);

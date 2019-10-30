@@ -1,5 +1,6 @@
 package com.ethical_techniques.notemaker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,10 +50,10 @@ public class ListActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-
+        //Retrieves SharedPreference 'sortfield' defaults to 'priority'
         String sortBy = getSharedPreferences("NoteMakerPreferences",
                 Context.MODE_PRIVATE).getString("sortfield", "priority");
-
+        //Retrieves SharedPreference 'sortorder' defaults to 'Ascending'
         String sortOrder = getSharedPreferences("NoteMakerPreferences",
                 Context.MODE_PRIVATE).getString("sortorder","ASC");
 
@@ -153,6 +154,8 @@ public class ListActivity extends AppCompatActivity {
         final Button deleteButton = findViewById(R.id.buttonDelete);
         deleteButton.setOnClickListener(new View.OnClickListener(){
 
+
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
 
