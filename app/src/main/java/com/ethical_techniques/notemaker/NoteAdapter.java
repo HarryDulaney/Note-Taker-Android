@@ -1,6 +1,5 @@
 package com.ethical_techniques.notemaker;
 
-
 import android.content.Context;
 import android.graphics.Color;
 import android.text.format.DateFormat;
@@ -11,8 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
+
+import com.ethical_techniques.notemaker.model.Note;
 
 import java.util.ArrayList;
 

@@ -1,0 +1,22 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:visibility="visible">
+
+    <PreferenceCategory app:title="@string/Notes_list_set">
+
+        <ListPreference
+            app:entries="@array/sort_order_entries"
+            app:entryValues="@array/sort_order_values"
+            app:key="@string/SORT_ORDER_PREF_ID"
+            app:title="@string/SORT_ORDER"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            app:entries="@array/sort_by_entries"
+            app:entryValues="@array/sort_by_values"
+            app:key="@string/SORT_BY_PREF_ID"
+            app:title="@string/SORT_BY"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

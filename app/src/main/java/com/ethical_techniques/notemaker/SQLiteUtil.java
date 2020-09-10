@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class DBHelper extends SQLiteOpenHelper {
+public class SQLiteUtil extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "MyNotes.db";
     private static final int DATABASE_VERSION = 3;
@@ -16,7 +16,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     + "datecreated text, priority integer);";
 
 
-    public DBHelper(Context context) {
+    public SQLiteUtil(Context context) {
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
 
     }
@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w(DBHelper.class.getName(),
+        Log.w(SQLiteUtil.class.getName(),
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will alter table data");
             db.execSQL("DROP TABLE IF EXISTS note");

@@ -3,11 +3,20 @@ package com.ethical_techniques.notemaker;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.drm.DrmStore;
 import android.os.Bundle;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
+
 
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -15,9 +24,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.ethical_techniques.notemaker.model.Note;
 
 import java.util.ArrayList;
+
+import static android.view.View.*;
 
 
 public class ListActivity extends AppCompatActivity {
@@ -27,19 +38,52 @@ public class ListActivity extends AppCompatActivity {
     Boolean isExpanded = false;
     ArrayList<Note> notes;
     NoteAdapter adapter;
-
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        toolbar = findViewById(R.id.action_bar_top);
+        initToolBar();
+
         initItemClick();
         initAddNoteButton();
         initDeleteButton();
-        initListButton();
-        initNotesButton();
-        initSettingsButton();
+    }
+
+    private void initToolBar() {
+        if (toolbar != null) {
+            toolbar.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    switch (menuItem.getItemId()) {
+                        case R.id.action_bar_settings:
+                            // User chose the "Settings" item, show the app settings UI...
+                            Intent intent = new Intent(ListActivity.this, SettingsActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            return true;
+
+                        case R.id.action_bar_list:
+                            return true;
+
+                        case R.id.action_bar_new:
+                            Intent intent2 = new Intent(ListActivity.this, NoteActivity.class);
+                            intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent2);
+                            return true;
+
+                        default:
+                            return false;
+
+                    }
+
+                }
+            });
+
+        }
     }
 
     /**
@@ -50,36 +94,38 @@ public class ListActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        //Retrieves SharedPreference 'sortfield' defaults to 'priority'
-        String sortBy = getSharedPreferences("NoteMakerPreferences",
-                Context.MODE_PRIVATE).getString("sortfield", "priority");
-        //Retrieves SharedPreference 'sortorder' defaults to 'Ascending'
-        String sortOrder = getSharedPreferences("NoteMakerPreferences",
-                Context.MODE_PRIVATE).getString("sortorder","ASC");
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        //Retrieve Sort By from sp
+        String sortBy = sp.getString("sort.by.preference", getString(R.string.SORT_BY_DATE));
+
+        //Retrieves Sort Order from sp
+        String sortOrder = sp.getString("sort.order.preference", getString(R.string.SORT_ORDER_LOW_TO_HIGH));
 
         //Instantiate 'DBO' database object
         NoteDataSource nds = new NoteDataSource(this);
 
         try {
             nds.open();                     //Open connection to DB
-            notes = nds.getNotes(sortBy,sortOrder);         // Retrieve ArrayList of all note obj's from the DB
+            notes = nds.getNotes(sortBy, sortOrder);         // Retrieve ArrayList of all note obj's from the DB
             nds.close();                    //Close connection to the DB
 
             /*If the DB returned some notes in the ArrayList, initialize ListView and set the adapter
-            * else if the notes ArrayList is empty, start the NoteActivity
-            */
-            if(notes.size() > 0){
+             * else if the notes ArrayList is empty, start the NoteActivity
+             */
+            if (notes.size() > 0) {
                 ListView listview = findViewById(R.id.listViewNotes);
-                adapter = new NoteAdapter(this,notes);
+                adapter = new NoteAdapter(this, notes);
                 listview.setAdapter(adapter);
-            }else{
-                Intent intent = new Intent(ListActivity.this,NoteActivity.class);
+            } else {
+                Intent intent = new Intent(ListActivity.this, NoteActivity.class);
                 startActivity(intent);
             }
 
-        }catch (Exception e){
-            Log.e(TAG,"Error in onResume, inspect the NoteDataSource. ");
-            Toast.makeText(this,"Error retrieving notes, please reload. ",Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.e(TAG, "Error in onResume, inspect the NoteDataSource. ");
+            Toast.makeText(this, "Error retrieving notes, please reload. ", Toast.LENGTH_LONG).show();
 
         }
     }
@@ -97,29 +143,25 @@ public class ListActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Note selectedNote = notes.get(position);
-
                 Intent intent = new Intent(ListActivity.this, NoteActivity.class);
                 intent.putExtra("noteid", selectedNote.getNoteID());
                 startActivity(intent);
-
-
-                return false;
+                return true;
             }
         });
 
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View itemClicked, int position, long id) {
                 Note selectedNote = notes.get(position);
-                if(isDeleting){
-                    adapter.showDelete(position,itemClicked,ListActivity.this,selectedNote);
+                if (isDeleting) {
+                    adapter.showDelete(position, itemClicked, ListActivity.this, selectedNote);
 
-                }else if(!selectedNote.getExpanded()){
+                } else if (!selectedNote.getExpanded()) {
                     adapter.showExpandedNote(itemClicked);
                     selectedNote.setExpanded(true);
 
-                }else{
+                } else {
                     adapter.closeExpandedNote(itemClicked);
                     selectedNote.setExpanded(false);
 
@@ -132,15 +174,13 @@ public class ListActivity extends AppCompatActivity {
     /**
      * Opens the NoteActivity(Blank) when the user clicks on the 'New Note' Button
      */
-    private void initAddNoteButton(){
+    private void initAddNoteButton() {
         Button newContact = findViewById(R.id.buttonAdd);
-        newContact.setOnClickListener(new View.OnClickListener() {
-
-
+        newContact.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ListActivity.this,NoteActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(ListActivity.this, NoteActivity.class);
+                ListActivity.this.startActivity(intent);
 
             }
         });
@@ -150,61 +190,26 @@ public class ListActivity extends AppCompatActivity {
      * Sets the event behavior for the toolbar DELETE button
      * When clicked it
      */
-    private void initDeleteButton(){
+    private void initDeleteButton() {
         final Button deleteButton = findViewById(R.id.buttonDelete);
-        deleteButton.setOnClickListener(new View.OnClickListener(){
+        deleteButton.setOnClickListener(new OnClickListener() {
 
 
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
 
-                if(isDeleting){
+                if (isDeleting) {
                     deleteButton.setText("Delete");
                     isDeleting = false;
                     adapter.notifyDataSetChanged();
 
-                }else{
+                } else {
                     deleteButton.setText("Done Deleting");
                     isDeleting = true;
                 }
             }
         });
     }
-
-    private void initNotesButton() {
-        ImageButton noteButton = findViewById(R.id.imageButtonNote);
-        noteButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ListActivity.this, NoteActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-
-            }
-        });
-
-    }
-    private void initListButton(){
-        ImageButton listButton = findViewById(R.id.imageButtonList);
-        listButton.setEnabled(false);
-
-    }
-    private void initSettingsButton(){
-        ImageButton settingButton = findViewById(R.id.imageButtonSettings);
-        settingButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ListActivity.this,SettingsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        });
-
-
-    }
-
 
 }

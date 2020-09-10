@@ -1,30 +1,78 @@
 <resources>
-    <string name="app_name">NoteMaker</string>
+    <string name="app_name">The Note App</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="action_settings">Settings</string>
     <string name="save">SAVE</string>
     <string name="enter_a_subject_here_optional">Enter a subject (optional)</string>
     <string name="write_your_note_here_then_hit_save">Write your note here then hit SAVE.</string>
     <string name="enter_a_title">Enter a Title</string>
-    <string name="notemaker">NOTEMAKER</string>
-    <string name="title_activity_list">ListActivity</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="notemaker">The Note App</string>
+    <string name="title_activity_list">Your Notes</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="add_contact">New Note</string>
     <string name="empty_note">Lors epsum oprotunet skopstompem reevelenas tos vuptum</string>
     <string name="no_subject">no subject</string>
     <string name="note_name">Note Name</string>
     <string name="delete">DELETE</string>
-    <string name="sort_order_settings">Sort Order</string>
-    <string name="ascending">Low to High</string>
-    <string name="descending">High to Low</string>
+
     <string name="theme_selector">THEME SELECTOR</string>
     <string name="priority_level">Set Priority Level</string>
     <string name="head_in_the_clouds">Head In The Clouds (Default)</string>
     <string name="settings_controls">Settings</string>
-    <string name="sort_by">Sort By</string>
+
+    <string name="navbarImageButtonSettingContDescrip">The NavBar ImageButton for Settings Screen</string>
+    <string name="navbarImageButtonNoteContentDescrip">The NavBar ImageButton for Edit Note Screen</string>
+    <string name="navbarImageBttonListContentDesc">The NavBar ImageButton for Note List Screen</string>
+
+    <!-- Preferences Constants -->
+
+    <string name="SORT_BY_PREF_ID">sort.by.preference</string>
+    <string name="SORT_ORDER_PREF_ID">sort.order.preference</string>
+
+    <string name="SORT_BY_DATE">datecreated</string>
+    <string name="SORT_BY_PRIORITY">priority</string>
+
+    <string name="SORT_ORDER_HIGH_TO_LOW">DESC</string>
+    <string name="SORT_ORDER_LOW_TO_HIGH">ASC</string>
+
+    <string name="USER_PREFERENCES">"global.application.preferences"</string>
+    <string name="USER_PREFERENCES_SORTING">"global.sorting.preferences"</string>
+
+    <string name="ascending">Low to High</string>
+    <string name="descending">High to Low</string>
     <string name="high">High</string>
     <string name="medium">Medium</string>
     <string name="low">Low</string>
     <string name="priority">Priority</string>
     <string name="date_created">Date Created</string>
+
+
+    <string name="SORT_BY">Sort By:</string>
+    <string name="SORT_ORDER">Sort Order:</string>
+    <string name="settings_navigation_button_conent_desc">Settings Navigation Button</string>
+    <string name="create_a_new_note_navigation_button">Create a New Note Navigation Button</string>
+    <string name="list_of_notes_navigation_button">List of Notes navigation button</string>
+    <string name="title_activity_settings2">SettingsActivity2</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="Notes_list_set">Notes List Settings</string>
+    <string name="settings">Settings</string>
+    <string name="note_list">Note List</string>
+    <string name="new_note">New Note</string>
+    <string name="navigate_to_the_settings_menu">Navigate to the Settings Menu</string>
+    <string name="navigate_to_the_new_note_activity">Navigate to the new Note activity</string>
+    <string name="navigate_to_the_notes_list">Navigate to the Notes list</string>
 </resources>

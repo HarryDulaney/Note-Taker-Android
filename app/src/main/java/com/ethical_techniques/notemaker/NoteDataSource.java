@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.ethical_techniques.notemaker.model.Note;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,22 +18,22 @@ public class NoteDataSource {
     private final String TAG = this.getClass().getSimpleName();
 
     private SQLiteDatabase database;
-    private DBHelper dbHelper;
+    private SQLiteUtil SQLiteUtil;
 
 
     NoteDataSource(Context context){
-        dbHelper = new DBHelper(context);
+        SQLiteUtil = new SQLiteUtil(context);
 
     }
 
 
      void open() throws SQLException {
-        database = dbHelper.getWritableDatabase();
+        database = SQLiteUtil.getWritableDatabase();
 
     }
 
      void close() {
-        dbHelper.close();
+        SQLiteUtil.close();
     }
 
 
@@ -63,7 +65,7 @@ public class NoteDataSource {
     }
 
     /**
-     * @param note update it's attributes in the database
+     * @param note the note object to
      * @return true for success and false for failure to update
      */
     boolean updateNote(Note note) {

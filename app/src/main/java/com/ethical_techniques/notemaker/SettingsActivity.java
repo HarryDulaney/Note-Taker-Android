@@ -1,151 +1,66 @@
 package com.ethical_techniques.notemaker;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import com.ethical_techniques.notemaker.model.SettingsFragment;
+
+import java.util.Set;
 
 public class SettingsActivity extends AppCompatActivity {
+
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        initSortOrderClick();
-        initSortByClick();
-        initListButton();
-        initNotesButton();
-        initSettingsButton();
-        initSettings();
+        setContentView(R.layout.settings_activity);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.settings, new SettingsFragment())
+                .commit();
+
+        toolbar = findViewById(R.id.action_bar_top);
+        initToolBar();
+
+
     }
 
-    /**
-     * Initializes the sortBy RadioGroup. Sets listener to check
-     * the users choice and then commits it to persistent memory
-     */
-    private void initSortByClick(){
-        RadioGroup rgSortBy = findViewById(R.id.radioGroupSortBy);
-        rgSortBy.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+    private void initToolBar() {
+        if (toolbar != null) {
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    switch (menuItem.getItemId()) {
+                        case R.id.action_bar_settings:
+                            return true;
 
+                        case R.id.action_bar_list:
+                            Intent intent = new Intent(SettingsActivity.this, ListActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            return true;
 
-            @SuppressLint("ApplySharedPref")
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                        case R.id.action_bar_new:
+                            Intent intent2 = new Intent(SettingsActivity.this, NoteActivity.class);
+                            intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent2);
+                            return true;
 
-                RadioButton rbPriority = findViewById(R.id.radioPriorityLevel);
-                //RadioButton rbDate = findViewById();
+                        default:
+                            return false;
 
-
-                if (rbPriority.isChecked()) {
-                    getSharedPreferences("NoteMakerPreferences",
-                            Context.MODE_PRIVATE).edit()
-                            .putString("sortfield", "priority").commit();
-                } else {
-                    getSharedPreferences("NoteMakerPreferences",
-                            Context.MODE_PRIVATE).edit()
-                            .putString("sortfield", "datecreated").commit();
-                }
-            }
-
-        });
-    }
-
-    /**
-     * Initializes the sort order RadioGroup.
-     * User selection is checked then committed to persistent memory
-     */
-    private void initSortOrderClick(){
-        RadioGroup rgSortOrder = findViewById(R.id.radioGroupSortOrder);
-        rgSortOrder.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
-
-            @SuppressLint("ApplySharedPref")
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                RadioButton rbAscending = findViewById(R.id.radioAscending);
-                if (rbAscending.isChecked()){
-                    getSharedPreferences("NoteMakerPreferences",
-                            Context.MODE_PRIVATE).edit()
-                            .putString("sortorder","ASC").commit();
-                }else {
-                    getSharedPreferences("NoteMakerPreferences",
-                            Context.MODE_PRIVATE).edit()
-                            .putString("sortorder","DESC").commit();
+                    }
 
                 }
+            });
 
-            }
-        });
-    }
-
-    /**
-     * Reads in Shared Preferences from memory and sets the RadioButtons to the
-     * user specific settings
-     */
-    private void initSettings() {
-        //Creates string to hold default value 'priority' for sortBy.
-        String sortBy = getSharedPreferences("NoteMakerPreferences",
-                Context.MODE_PRIVATE).getString("sortfield", "priority");
-        //Default String value for sortOrder 'Ascending'
-        String sortOrder = getSharedPreferences("NoteMakerPreferences",
-                Context.MODE_PRIVATE).getString("sortorder", "ASC");
-
-
-        RadioButton rbPriority = findViewById(R.id.radioPriorityLevel);
-        RadioButton rbDate = findViewById(R.id.radioSetByDate);
-
-        if (sortBy.equalsIgnoreCase("priority")) {
-            rbPriority.setChecked(true);
-
-        } else {
-            rbDate.setChecked(true);
         }
-
-        RadioButton rbAscending = findViewById(R.id.radioAscending);
-        RadioButton rbDescending = findViewById(R.id.radioDescending);
-
-        if (sortOrder.equalsIgnoreCase(("ASC"))) {
-            rbAscending.setChecked(true);
-
-        } else {
-            rbDescending.setChecked(true);
-        }
-
     }
 
-    private void initNotesButton() {
-        ImageButton noteButton = findViewById(R.id.imageButtonNote);
-        noteButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SettingsActivity.this, NoteActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        });
-    }
-    private void initListButton(){
-        ImageButton listButton = findViewById(R.id.imageButtonList);
-        listButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view){
-                Intent intent = new Intent(SettingsActivity.this,ListActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        });
-
-    }
-    private void initSettingsButton(){
-        ImageButton settingButton = findViewById(R.id.imageButtonSettings);
-        settingButton.setEnabled(false);
-    }
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#0000E7</color>
-    <color name="colorPrimaryDark">#3949AB</color>
-    <color name="colorPrimaryNavBar">#6AA5FF</color>
-    <color name="colorAccent">#9559D6</color>
-    <color name="colorPrimaryToolBar">#7524FF</color>
-    <color name="colorPriorityHigh">#ff0000</color>
-    <color name="colorPriorityMedium">#ffff00</color>
+    <color name="colorPrimary">#006064</color>
+    <color name="colorPrimaryDark">#01579B</color>
+    <color name="colorPrimaryNavBar">#00000000</color>
+    <color name="colorAccent">#4A148C</color>
+    <color name="colorPrimaryToolBar">#880E4F</color>
+    <color name="colorPriorityHigh">#B71C1C</color>
+    <color name="colorPriorityMedium">#FF6F00</color>
 </resources>

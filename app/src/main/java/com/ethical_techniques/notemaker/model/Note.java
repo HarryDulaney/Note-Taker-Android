@@ -1,4 +1,4 @@
-package com.ethical_techniques.notemaker;
+package com.ethical_techniques.notemaker.model;
 
 import java.util.Calendar;
 

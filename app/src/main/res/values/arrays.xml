@@ -1,0 +1,36 @@
+<resources>
+    <!-- Sort By Preference -->
+    <string-array name="sort_by_entries">
+        <item>Date</item>
+        <item>Priority</item>
+        <item>Note Title</item>
+    </string-array>
+
+    <string-array name="sort_by_values">
+        <item>@string/SORT_BY_DATE</item>
+        <item>@string/SORT_BY_PRIORITY</item>
+        <item>@string/SORT_BY_NOTENAME</item>
+    </string-array>
+
+    <!-- Sort Order Preference -->
+    <string-array name="sort_order_entries">
+        <item>High to Low</item>
+        <item>Low to High</item>
+    </string-array>
+
+    <string-array name="sort_order_values">
+        <item>@string/SORT_ORDER_HIGH_TO_LOW</item>
+        <item>@string/SORT_ORDER_LOW_TO_HIGH</item>
+    </string-array>
+    <string name="SORT_BY_NOTENAME">notename</string>
+    <!-- Reply Preference -->
+    <string-array name="reply_entries">
+        <item>Reply</item>
+        <item>Reply to all</item>
+    </string-array>
+
+    <string-array name="reply_values">
+        <item>reply</item>
+        <item>reply_all</item>
+    </string-array>
+</resources>
