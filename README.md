@@ -1,4 +1,4 @@
-# Note-Taker_Android
+# Notes-4-Android
 ## This is a straight-forward application for making and saving Notes/ Reminders. It was a project assignment my Mobile App Development class
 <div align="center">
 This is the main screen for inputing your note  <a href="https://github.com/Nothingrhymeswithorange/Note-Taker_Android/blob/master/app/src/main/java/com/ethical_techniques/notemaker/NoteActivity.java">NoteActivity</a>
@@ -9,7 +9,7 @@ This is the main screen for inputing your note  <a href="https://github.com/Noth
 <br>
 
 <div align="center">
-This is the list of saved notes which is populated using a custom ArrayAdapter (<a href="https://github.com/Nothingrhymeswithorange/Note-Taker_Android/blob/master/app/src/main/java/com/ethical_techniques/notemaker/ListActivity.java">List Activity</a></div>
+This is the list of saved notes which is populated using a custom ArrayAdapter <a href="https://github.com/Nothingrhymeswithorange/Note-Taker_Android/blob/master/app/src/main/java/com/ethical_techniques/notemaker/ListActivity.java">List Activity</a></div>
 <div align="center">
   <img src="https://github.com/Nothingrhymeswithorange/Note-Taker_Android/blob/master/doc-resources/Note_List_2.png" height=300px
        hspace="20">
