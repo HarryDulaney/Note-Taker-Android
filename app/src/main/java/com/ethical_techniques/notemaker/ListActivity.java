@@ -49,38 +49,34 @@ public class ListActivity extends AppCompatActivity {
         initToolBar();
 
         initItemClick();
-        initAddNoteButton();
         initDeleteButton();
     }
 
     private void initToolBar() {
         if (toolbar != null) {
-            toolbar.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-                    switch (menuItem.getItemId()) {
-                        case R.id.action_bar_settings:
-                            // User chose the "Settings" item, show the app settings UI...
-                            Intent intent = new Intent(ListActivity.this, SettingsActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            return true;
+            toolbar.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getItemId()) {
+                    case R.id.action_bar_settings:
+                        // User chose the "Settings" item, show the app settings UI...
+                        Intent intent = new Intent(ListActivity.this, SettingsActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        return true;
 
-                        case R.id.action_bar_list:
-                            return true;
+                    case R.id.action_bar_list:
+                        return true;
 
-                        case R.id.action_bar_new:
-                            Intent intent2 = new Intent(ListActivity.this, NoteActivity.class);
-                            intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent2);
-                            return true;
+                    case R.id.action_bar_new:
+                        Intent intent2 = new Intent(ListActivity.this, NoteActivity.class);
+                        intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent2);
+                        return true;
 
-                        default:
-                            return false;
-
-                    }
+                    default:
+                        return false;
 
                 }
+
             });
 
         }
@@ -131,58 +127,37 @@ public class ListActivity extends AppCompatActivity {
     }
 
     /**
-     * Defines behavior for event that user double clicks on a Note in List
+     * Defines behavior for event that user long clicks on a Note in List
      * If the delete button is not active an Intent is created which stores the noteID in
      * Extra which we will use from to tell the NoteActivity which note to open
      */
     private void initItemClick() {
         ListView listview = findViewById(R.id.listViewNotes);
 
-        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        listview.setOnItemLongClickListener((AdapterView<?> parent, View view, int position, long id) -> {
 
-                Note selectedNote = notes.get(position);
-                Intent intent = new Intent(ListActivity.this, NoteActivity.class);
-                intent.putExtra("noteid", selectedNote.getNoteID());
-                startActivity(intent);
-                return true;
-            }
+            Note selectedNote = notes.get(position);
+            Intent intent = new Intent(ListActivity.this, NoteActivity.class);
+            intent.putExtra("noteid", selectedNote.getNoteID());
+            startActivity(intent);
+            return true;
         });
 
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View itemClicked, int position, long id) {
-                Note selectedNote = notes.get(position);
-                if (isDeleting) {
-                    adapter.showDelete(position, itemClicked, ListActivity.this, selectedNote);
+        listview.setOnItemClickListener((AdapterView<?> parent, View itemClicked, int position, long id) -> {
+            Note selectedNote = notes.get(position);
+            if (isDeleting) {
+                adapter.showDelete(position, itemClicked, ListActivity.this, selectedNote);
 
-                } else if (!selectedNote.getExpanded()) {
-                    adapter.showExpandedNote(itemClicked);
-                    selectedNote.setExpanded(true);
+            } else if (!selectedNote.getExpanded()) {
+                adapter.showExpandedNote(itemClicked);
+                selectedNote.setExpanded(true);
 
-                } else {
-                    adapter.closeExpandedNote(itemClicked);
-                    selectedNote.setExpanded(false);
-
-                }
+            } else {
+                adapter.closeExpandedNote(itemClicked);
+                selectedNote.setExpanded(false);
 
             }
-        });
-    }
 
-    /**
-     * Opens the NoteActivity(Blank) when the user clicks on the 'New Note' Button
-     */
-    private void initAddNoteButton() {
-        Button newContact = findViewById(R.id.buttonAdd);
-        newContact.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ListActivity.this, NoteActivity.class);
-                ListActivity.this.startActivity(intent);
-
-            }
         });
     }
 
@@ -192,22 +167,16 @@ public class ListActivity extends AppCompatActivity {
      */
     private void initDeleteButton() {
         final Button deleteButton = findViewById(R.id.buttonDelete);
-        deleteButton.setOnClickListener(new OnClickListener() {
+        deleteButton.setOnClickListener((View v) -> {
 
+            if (isDeleting) {
+                deleteButton.setText("Delete");
+                isDeleting = false;
+                adapter.notifyDataSetChanged();
 
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onClick(View v) {
-
-                if (isDeleting) {
-                    deleteButton.setText("Delete");
-                    isDeleting = false;
-                    adapter.notifyDataSetChanged();
-
-                } else {
-                    deleteButton.setText("Done Deleting");
-                    isDeleting = true;
-                }
+            } else {
+                deleteButton.setText("Done Deleting");
+                isDeleting = true;
             }
         });
     }

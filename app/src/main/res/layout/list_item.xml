@@ -1,36 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:clickable="true"
+    android:focusable="true"
+    android:longClickable="true"
+    android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
 
 
     <TextView
         android:id="@+id/textNoteName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5sp"
-        android:layout_marginLeft="5sp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:text="@string/note_name"
-        android:textColor="#000000"
+        android:textColor="@color/hgdivTextOne"
         android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/dateCreatedText"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/textNoteSubject"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <TextView
         android:id="@+id/textNoteSubject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5sp"
-        android:layout_marginLeft="5sp"
-        android:layout_marginTop="5sp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/no_subject"
+        android:textColor="@color/hgdivTextOne"
         android:textSize="15sp"
-        android:textColor="#000000"
+        android:textStyle="italic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textNoteName" />
 
@@ -38,14 +48,18 @@
         android:id="@+id/textNoteBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
+        android:layout_marginTop="4dp"
+        android:contentDescription="@string/the_note_preview_in_list_mode"
+        android:longClickable="true"
+        android:padding="@dimen/padding_surround"
         android:text="@string/empty_note"
-        android:textColor="#000000"
+        android:textColor="@color/hgdivTextOne"
         android:textSize="20sp"
-
-        app:layout_constraintTop_toBottomOf="@+id/textNoteSubject"
-        tools:layout_editor_absoluteX="5dp" />
+        android:typeface="sans"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textNoteSubject" />
 
     <Button
         android:id="@+id/buttonDeleteNote"
@@ -66,11 +80,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="44sp"
         android:layout_marginLeft="44sp"
-        android:layout_marginTop="3sp"
-        android:text="DATE"
-        android:textColor="#000000"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:text="@string/d_a_t_e"
+        android:textAllCaps="true"
+        android:textColor="@color/hgdivTextOne"
         app:layout_constraintEnd_toStartOf="@+id/buttonDeleteNote"
-        app:layout_constraintHorizontal_bias="0.867"
+        app:layout_constraintHorizontal_bias="0.932"
         app:layout_constraintStart_toEndOf="@+id/textNoteSubject"
         app:layout_constraintTop_toTopOf="parent" />
 

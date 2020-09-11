@@ -122,7 +122,7 @@ public class NoteActivity extends AppCompatActivity {
         editNote.setText(currentNote.getContent());
 
 
-        //Check the correct radiobutton for the Note being loaded
+        // Set priority to value from preferences
         if (currentNote.getPriorityLevel() == 3) {
             rbHigh.setChecked(true);
         } else if (currentNote.getPriorityLevel() == 2) {

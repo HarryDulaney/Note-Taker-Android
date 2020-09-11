@@ -75,4 +75,6 @@
     <string name="navigate_to_the_settings_menu">Navigate to the Settings Menu</string>
     <string name="navigate_to_the_new_note_activity">Navigate to the new Note activity</string>
     <string name="navigate_to_the_notes_list">Navigate to the Notes list</string>
+    <string name="d_a_t_e">DATE</string>
+    <string name="the_note_preview_in_list_mode">The note preview in list mode</string>
 </resources>

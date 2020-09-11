@@ -7,4 +7,8 @@
     <color name="colorPrimaryToolBar">#880E4F</color>
     <color name="colorPriorityHigh">#B71C1C</color>
     <color name="colorPriorityMedium">#FF6F00</color>
+    <color name="hgdivOnePrimary">#1A237E</color>
+    <color name="hgdivDarkItems">#FFFFFF</color>
+    <color name="hgdivDarkBGOne">#303F9F</color>
+    <color name="hgdivTextOne">#F3E5F5</color>
 </resources>
