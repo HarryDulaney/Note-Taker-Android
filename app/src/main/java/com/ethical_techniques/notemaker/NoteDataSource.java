@@ -131,7 +131,7 @@ public class NoteDataSource {
                 note.setSubject(cursor.getString(2));
                 note.setNoteContent(cursor.getString(3));
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(Long.valueOf(cursor.getString(4)));
+                calendar.setTimeInMillis(Long.parseLong(cursor.getString(4)));
                 note.setDateCreated(calendar);
                 note.setPriorityLevel(cursor.getInt(5));
 

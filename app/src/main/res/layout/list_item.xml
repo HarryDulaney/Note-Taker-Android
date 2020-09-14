@@ -5,9 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
-    android:clickable="true"
-    android:focusable="true"
-    android:longClickable="true"
+    android:longClickable="false"
     android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
 
 
@@ -26,7 +24,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/dateCreatedText"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/textNoteSubject"
+        app:layout_constraintLeft_toLeftOf="@id/textNoteSubject"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,7 +40,7 @@
         android:textSize="15sp"
         android:textStyle="italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textNoteName" />
+        app:layout_constraintTop_toBottomOf="@id/textNoteName" />
 
     <TextView
         android:id="@+id/textNoteBody"
@@ -59,19 +57,20 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textNoteSubject" />
+        app:layout_constraintTop_toBottomOf="@id/textNoteSubject" />
 
     <Button
         android:id="@+id/buttonDeleteNote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginTop="8dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:text="@string/delete"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.904"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -81,14 +80,12 @@
         android:layout_marginStart="44sp"
         android:layout_marginLeft="44sp"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
         android:text="@string/d_a_t_e"
         android:textAllCaps="true"
         android:textColor="@color/hgdivTextOne"
-        app:layout_constraintEnd_toStartOf="@+id/buttonDeleteNote"
-        app:layout_constraintHorizontal_bias="0.932"
-        app:layout_constraintStart_toEndOf="@+id/textNoteSubject"
+        app:layout_constraintEnd_toStartOf="@id/buttonDeleteNote"
+        app:layout_constraintHorizontal_bias="0.741"
+        app:layout_constraintStart_toEndOf="@id/textNoteSubject"
         app:layout_constraintTop_toTopOf="parent" />
 
 

@@ -3,9 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#AD000000"
-    android:orientation="horizontal"
-    android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
+    android:background="#FFFFFF"
+    android:orientation="horizontal">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/action_bar_top"
@@ -16,10 +15,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/options_menu"
-        app:title="@string/app_name" />
+        app:title="@string/app_name"
+        app:titleTextColor="@color/hgdivDarkItems"/>
 
     <FrameLayout
-        android:id="@+id/settings"
+        android:id="@id/settings"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

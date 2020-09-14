@@ -51,7 +51,6 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         app:layout_constraintTop_toBottomOf="@+id/list_actions_bar">
-
     </ListView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

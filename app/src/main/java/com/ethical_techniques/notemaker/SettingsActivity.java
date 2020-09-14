@@ -24,8 +24,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.action_bar_top);
         initToolBar();
-
-
     }
 
     private void initToolBar() {

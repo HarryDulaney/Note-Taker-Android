@@ -52,13 +52,13 @@ public class NoteAdapter extends ArrayAdapter<Note> {
 
                 noteName.setText(note.getNoteName());
                 if(note.getPriorityLevel() == 3){
-                    noteName.setTextColor(Color.rgb(255,0,0));
+                    noteName.setTextColor(Color.RED);
                 }
                 else if(note.getPriorityLevel() == 2){
-                    noteName.setTextColor(Color.rgb(255,165,0));
+                    noteName.setTextColor(Color.BLUE);
                 }
                 else{
-                    //Do Nothing
+                    noteName.setTextColor(Color.BLACK);
                 }
 
                 noteSubject.setText(note.getSubject());
@@ -77,8 +77,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
         }
     public void showDelete(final int position, final View convertView,
                            final Context context, final Note note){
-        View v = convertView;
-        final Button b = (Button) v.findViewById(R.id.buttonDeleteNote);
+        final Button b = convertView.findViewById(R.id.buttonDeleteNote);
         if(b.getVisibility() == View.INVISIBLE) {
             b.setVisibility(View.VISIBLE);
             b.setOnClickListener(new View.OnClickListener() {
@@ -98,13 +97,11 @@ public class NoteAdapter extends ArrayAdapter<Note> {
     }
     public void showExpandedNote(final View convertView){
 
-            View view = convertView;
-            final TextView noteContent = view.findViewById(R.id.textNoteBody);
+        final TextView noteContent = convertView.findViewById(R.id.textNoteBody);
             noteContent.setVisibility(View.VISIBLE);
     }
     public void closeExpandedNote(View convertView) {
-            View view = convertView;
-            final TextView noteContent = view.findViewById(R.id.textNoteBody);
+        final TextView noteContent = convertView.findViewById(R.id.textNoteBody);
             noteContent.setVisibility(View.GONE);
     }
 
@@ -122,12 +119,10 @@ public class NoteAdapter extends ArrayAdapter<Note> {
 
         }
         public void hideDelete(int position,View convertView, Context context) {
-            View v = convertView;
-            final Button b = (Button) v.findViewById(R.id.buttonDeleteNote);
+            final Button b = convertView.findViewById(R.id.buttonDeleteNote);
             b.setVisibility(View.INVISIBLE);
             b.setOnClickListener(null);
         }
 
 
 }
-
