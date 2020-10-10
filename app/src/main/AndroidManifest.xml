@@ -3,25 +3,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ethical_techniques.notemaker">
 
+    <supports-screens
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="false"
+        android:xlargeScreens="true" />
+
     <application
         android:allowBackup="true"
-        android:icon="@drawable/note_round_launch_icon"
+        android:icon="@drawable/ic_notebook_edit_outline_black_36dp"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/note_round_launch_icon"
+        android:roundIcon="@drawable/ic_notebook_edit_outline_black_48dp"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
+        <!-- The Main Activity -->
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
-        <activity
-            android:name=".NoteActivity"
-            android:label="@string/title_activity_list" />
-        <activity android:name=".ListActivity">
+            android:name=".MainActivity"
+            android:label="@string/title_note_activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity> <!-- The Settings Activity -->
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" /> <!-- The List Activity -->
+        <activity
+            android:name=".ListActivity"
+            android:label="@string/title_activity_list" />
+        <activity
+            android:name=".CategoryListActivity"
+            android:label="Categories" />
+        <activity
+            android:name="CreateCategoryActivity"
+            android:label="New Category"
+            android:parentActivityName=".CategoryListActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CategoryListActivity" />
         </activity>
     </application>
 

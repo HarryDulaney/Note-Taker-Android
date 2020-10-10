@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_notes"
+            android:icon="@drawable/ic_view_list_grey600_48dp"
+            android:title="@string/my_notes" />
+        <item
+            android:id="@+id/nav_new_note"
+            android:icon="@drawable/ic_file_plus_grey600_48dp"
+            android:title="@string/new_note" />
+        <item
+            android:id="@+id/nav_edit_categories"
+            android:icon="@drawable/ic_playlist_plus_grey600_48dp"
+            android:enabled="false"
+            android:title="@string/create_edit_categories" />
+    </group>
+    <item android:title="@string/export">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/send" />
+        </menu>
+    </item>
+</menu>

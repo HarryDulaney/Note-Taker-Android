@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/categoryRecycleFragment"
+    android:background="@color/hgdivDarkItems"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/categoryName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/category_name"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Delete Button-->
+    <ImageButton
+        android:id="@+id/buttonDeleteCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/extraSmMargin"
+        android:layout_marginRight="@dimen/extraSmMargin"
+        android:adjustViewBounds="false"
+        android:background="#FFFFFF"
+        android:contentDescription="@string/delete_button_for_this_note"
+        android:cropToPadding="true"
+        android:focusable="false"
+        android:paddingLeft="8sp"
+        android:paddingRight="8sp"
+        android:scaleType="centerInside"
+        android:src="@android:drawable/ic_delete"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/categoryEditOpenButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="handleCategoryEdit"
+        android:text="@string/edit_list" />
+
+
+</RelativeLayout>

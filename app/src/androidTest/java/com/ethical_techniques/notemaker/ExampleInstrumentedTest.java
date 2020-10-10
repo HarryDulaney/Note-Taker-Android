@@ -1,12 +1,22 @@
 package com.ethical_techniques.notemaker;
 
 import android.content.Context;
+import android.graphics.Color;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import com.ethical_techniques.notemaker.DAL.*;
+import com.ethical_techniques.notemaker.note.Category;
+import com.ethical_techniques.notemaker.note.Note;
+import com.ethical_techniques.notemaker.note.PRIORITY;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -17,11 +27,22 @@ import static org.junit.Assert.*;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+
+    @Before
+    public void testObjects() {
+        List<Note> notes = new ArrayList<>();
+        List<Category> categories = new ArrayList<>();
+
+        int category = new Category(11,"To Do's", Color.valueOf(Color.CYAN));
+        Note note = new Note(17,"Test Note",category,"This is a test Note", Calendar.getInstance(), PRIORITY.HIGH);
+
+    }
+
     @Test
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.ethical_techniques.notemaker", appContext.getPackageName());
+//        assertEquals();
     }
 }

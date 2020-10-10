@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/note_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkBackgroundPrimary"
+    android:fitsSystemWindows="true"
+    android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity">
+
+
+    <ImageButton
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/extraSmMargin"
+        android:background="@color/colorPrimaryNavBar"
+        android:contentDescription="@string/save"
+        android:onClick="handleSaveNote"
+        android:src="@drawable/ic_content_save_white_48dp" />
+
+    <Spinner
+        android:id="@+id/categorySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/editTitle"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_toStartOf="@id/ratingBar"
+        android:layout_toLeftOf="@id/ratingBar"
+        android:layout_toEndOf="@id/saveButton"
+        android:layout_toRightOf="@id/saveButton"
+        android:autofillHints=""
+        android:focusable="auto"
+        android:focusableInTouchMode="true"
+        android:prompt="@string/no_category"
+        android:spinnerMode="dropdown" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="@dimen/extraSmMargin"
+        android:layout_marginLeft="@dimen/extraSmMargin"
+        android:layout_marginTop="@dimen/extraSmMargin"
+        android:layout_marginEnd="@dimen/extraSmMargin"
+        android:layout_marginRight="@dimen/extraSmMargin"
+        android:layout_marginBottom="@dimen/extraSmMargin"
+        android:isIndicator="false"
+        android:max="1"
+        android:numStars="1"
+        android:onClick="handlePriorityClicked"
+        android:progressTint="#FFEB3B"
+        android:stepSize="1.0" />
+
+    <EditText
+        android:id="@+id/editTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ratingBar"
+        android:layout_margin="@dimen/extraSmMargin"
+        android:autofillHints=""
+        android:ems="18"
+        android:hint="@string/enter_a_title"
+        android:inputType="textCapWords"
+        android:textSize="19sp" />
+
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/editNotes"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/editTitle"
+        android:layout_margin="@dimen/smallMargin"
+        android:focusable="true"
+        android:gravity="start"
+        android:hint="@string/write_your_note_here_then_hit_save"
+        android:inputType="textMultiLine"
+        android:scrollbars="vertical"
+        android:selectAllOnFocus="false"
+        android:textAlignment="viewStart"
+        android:textSize="18sp" />
+
+
+</RelativeLayout>

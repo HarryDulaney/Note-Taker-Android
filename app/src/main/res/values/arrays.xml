@@ -3,7 +3,7 @@
     <string-array name="sort_by_entries">
         <item>Date</item>
         <item>Priority</item>
-        <item>Note Title</item>
+        <item>Title</item>
     </string-array>
 
     <string-array name="sort_by_values">
@@ -23,4 +23,5 @@
         <item>@string/SORT_ORDER_LOW_TO_HIGH</item>
     </string-array>
     <string name="SORT_BY_NOTENAME">notename</string>
+
 </resources>

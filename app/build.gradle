@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'androidx.navigation.safeargs'
 
 android {
     compileSdkVersion 29
@@ -25,30 +26,47 @@ android {
 
 
 dependencies {
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.navigation:navigation-fragment:2.3.0'
+    implementation 'androidx.navigation:navigation-ui:2.3.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
     def room_version = "2.2.5"
     def playservices_version = "18.1.0"
     def material_version = "1.2.1"
     def andx_pref_version = "1.1.1"
     def appcompat_version = "1.2.0"
+    def nav_version = "2.3.0"
     def constr_lay_version = "2.0.1"
     def firebase_version = "19.4.0"
+    def colorpickerversion = "1.1.6"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.constraintlayout:constraintlayout:$constr_lay_version"
     implementation "com.google.android.material:material:$material_version"
     implementation "androidx.preference:preference:$andx_pref_version"
-    implementation "com.google.firebase:firebase-auth:$firebase_version"
+    implementation "com.github.duanhong169:colorpicker:$colorpickerversion"
+
+    /* implementation "com.google.firebase:firebase-auth:$firebase_version" */
     implementation "com.google.android.gms:play-services-auth:$playservices_version"
-    implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
+    /* implementation "androidx.room:room-runtime:$room_version" */
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
+    // Navigation Feature module Support
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+    /* annotationProcessor "androidx.room:room-compiler:$room_version" */
+
     // optional - RxJava support for Room
-    implementation "androidx.room:room-rxjava2:$room_version"
+   /* implementation "androidx.room:room-rxjava2:$room_version"
     // optional - Guava support for Room, including Optional and ListenableFuture
     implementation "androidx.room:room-guava:$room_version"
     // optional - Test helpers
-    testImplementation "androidx.room:room-testing:$room_version"
+    testImplementation "androidx.room:room-testing:$room_version" */
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+
 }

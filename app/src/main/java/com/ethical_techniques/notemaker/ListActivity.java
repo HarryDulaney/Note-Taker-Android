@@ -4,79 +4,157 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
-
-import com.ethical_techniques.notemaker.model.Note;
-
-import java.util.ArrayList;
+import androidx.recyclerview.widget.RecyclerView;
 
 
-public class ListActivity extends AppCompatActivity {
+import com.ethical_techniques.notemaker.DAL.DBUtil;
+import com.ethical_techniques.notemaker.DAL.DataSource;
+import com.ethical_techniques.notemaker.decorators.SpacingItemDecoration;
+import com.ethical_techniques.notemaker.note.Note;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
+
+
+public class ListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = this.getClass().getName();
-    Boolean isDeleting = false;
-    Boolean isExpanded = false;
-    ArrayList<Note> notes;
-    NoteAdapter adapter;
-    private Toolbar toolbar;
+    private static List<Note> notes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
-        toolbar = findViewById(R.id.action_bar_top);
 
-        initToolBar();
+        //Get Preferences
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        setContentView(R.layout.drawer_layout_list);
 
-    }
+        //Handle Toolbar
+        Toolbar toolbar = findViewById(R.id.action_bar_top);
+        setSupportActionBar(toolbar);
 
-    private void initToolBar() {
-        if (toolbar != null) {
-            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-                    switch (menuItem.getItemId()) {
-                        case R.id.action_bar_settings:
-                            // User chose the "Settings" item, show the app settings UI...
-                            Intent intent = new Intent(ListActivity.this, SettingsActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            ListActivity.this.startActivity(intent);
-                            return true;
+        //Handle create new note floating button
+        FloatingActionButton floatingActionButton = findViewById(R.id.new_note_float_button);
+        floatingActionButton.setOnLongClickListener((v) -> {
+            Snackbar.make(v, "Create a new note", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
 
-                        case R.id.action_bar_list:
-                            return true;
+            return true;
+        });
 
-                        case R.id.action_bar_new:
-                            Intent intent2 = new Intent(ListActivity.this, NoteActivity.class);
-                            intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            ListActivity.this.startActivity(intent2);
-                            return true;
+        floatingActionButton.setOnClickListener(view -> {
+            Intent intent = new Intent(ListActivity.this, MainActivity.class);
+            startActivity(intent);
 
-                        default:
-                            return false;
+        });
+        //Handle Nav Drawer
+        DrawerLayout navDrawer = findViewById(R.id.drawer_layout_list);
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, navDrawer,
+                toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-                    }
+        navDrawer.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
-                }
-            });
+        //Handle NavigationView
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(ListActivity.this);
 
-        }
     }
 
     /**
-     * Loads user preferences from SharedPreferences.
-     * Connects to the DB, if no notes exist it creates an Intent to open
-     * NoteActivity.
+     * @param item the MenuItem that was clicked
+     * @return boolean success indicator
      */
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.nav_new_note:
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+
+            case R.id.nav_edit_categories:
+                Intent i2 = new Intent(this, CategoryListActivity.class);
+                i2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i2);
+                break;
+
+            case R.id.nav_share:
+                //Open share prompt with options to share a note or a list of notes TODO
+
+                break;
+            case R.id.nav_send:
+                //Open send prompt with options to send a note or a list of notes TODO
+
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + item.getItemId());
+        }
+
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_list);
+        drawerLayout.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout_list);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.app_bar_top_list_menu, menu);
+        return true;
+    }
+
+    /**
+     * @param item that was selected
+     * @return true if the item is recognized
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_bar_settings) {
+            //Open the settings activity
+            Intent i = new Intent(this, SettingsActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+
+            return true;
+        } else if (id == R.id.action_bar_editSwitch) {
+            //Edit mode activated
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -89,97 +167,34 @@ public class ListActivity extends AppCompatActivity {
         //Retrieves Sort Order from sp
         String sortOrder = sp.getString("sort.order.preference", getString(R.string.SORT_ORDER_HIGH_TO_LOW));
 
-        //Instantiate 'DBO' database object
-        NoteDataSource nds = new NoteDataSource(this);
-
         try {
-            nds.open();                     //Open connection to DB
-            notes = nds.getNotes(sortBy, sortOrder);         // Retrieve ArrayList of all note obj's from the DB
-            nds.close();                    //Close connection to the DB
 
-            /*If the DB returned some notes in the ArrayList, initialize ListView and set the adapter
-             * else if the default Note Message is added to the ArrayList<Note>, start the NoteActivity (Create Note Screen)
-             */
-            if (!(notes.size() > 0)) {
-
-                notes.add(Note.getDefaultNote());
-
-            }
-
-            ListView listView = findViewById(R.id.listViewNotes);
-            adapter = new NoteAdapter(this, notes);
-            listView.setAdapter(adapter);
-            initItemClick(listView);
-
+            notes = DBUtil.findNotes(this, sortBy, sortOrder);
 
         } catch (Exception e) {
-            Log.e(TAG, "Error in onResume, inspect the NoteDataSource. ");
-            Toast.makeText(this, "Error retrieving notes, please reload. ", Toast.LENGTH_LONG).show();
-
+            Log.e(TAG, "Error in onResume, inspect DataSource. ");
+            Toast.makeText(this, "Error retrieving notes, please try reloading. ", Toast.LENGTH_LONG).show();
         }
-        initDeleteButton();
-    }
+        RecyclerView recyclerView = findViewById(R.id.recycleList);
+        NoteRecycleAdapter noteRecycleAdapter = new NoteRecycleAdapter(notes);
 
-    /**
-     * Defines behavior for event that user long clicks on a Note in List
-     * If the delete button is not active an Intent is created which stores the noteID in
-     * Extra which we will use from to tell the NoteActivity which note to open
-     */
-    protected void initItemClick(ListView listView) {
+        recyclerView.addItemDecoration(new SpacingItemDecoration(1, true, true));
 
-        listView.setOnItemClickListener((parent, itemClicked, position, id) -> {
-            Note selectedNote = (Note) listView.getItemAtPosition(position);
-            if (isDeleting) {
-                adapter.showDelete(position, itemClicked, ListActivity.this, selectedNote);
 
-            } else if (!selectedNote.getExpanded()) {
-                adapter.showExpandedNote(itemClicked);
-                selectedNote.setExpanded(true);
-
-            } else {
-                adapter.closeExpandedNote(itemClicked);
-                selectedNote.setExpanded(false);
-
-            }
+        recyclerView.setOnLongClickListener(view -> {
+            int position = recyclerView.getChildAdapterPosition(view);
+            int noteId = (int) noteRecycleAdapter.getItemId(position);
+            Intent intent = new Intent(ListActivity.this, MainActivity.class);
+            intent.putExtra(getString(R.string.NOTE_ID_KEY), noteId);
+            ListActivity.this.startActivity(intent);
+            return true;
 
         });
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Note selectedNote = notes.get(position);
-                Intent intent = new Intent(ListActivity.this, NoteActivity.class);
-                intent.putExtra("noteid", selectedNote.getNoteID());
-                ListActivity.this.startActivity(intent);
-                return true;
-            }
-        });
-
+        recyclerView.setAdapter(noteRecycleAdapter);
 
     }
 
-    /**
-     * Sets the event behavior for the toolbar DELETE button
-     * When clicked it
-     */
-    protected void initDeleteButton() {
-        final Button deleteButton = findViewById(R.id.buttonDelete);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    // TODO: Setup the EDIT function and DELETE button on note list items
 
-                if (isDeleting) {
-                    deleteButton.setText("Delete");
-                    isDeleting = false;
-                    adapter.notifyDataSetChanged();
-
-                } else {
-                    deleteButton.setText("Done Deleting");
-                    isDeleting = true;
-                }
-            }
-        });
-    }
 
 }
