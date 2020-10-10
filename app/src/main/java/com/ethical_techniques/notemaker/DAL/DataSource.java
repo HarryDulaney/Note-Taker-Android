@@ -267,6 +267,25 @@ public class DataSource {
         return categories;
     }
 
+    protected Category getCategoryByName(String name) {
+        Category category = new Category();
+
+        String query = "SELECT * FROM " + DBHelper.CATEGORY_TABLE + " WHERE " + DBHelper.CATEGORY_NAME + "=" + name;
+        Cursor cursor = database.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+
+            category.setId(cursor.getInt(0));
+            category.setName(cursor.getString(1));
+            category.setColor(cursor.getInt(2));
+
+            cursor.close();
+        }
+
+        return category;
+
+    }
+
     /**
      * Delete Note.
      *

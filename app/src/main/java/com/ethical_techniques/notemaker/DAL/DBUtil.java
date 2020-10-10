@@ -1,6 +1,9 @@
 package com.ethical_techniques.notemaker.DAL;
 
 import android.content.Context;
+import android.provider.ContactsContract;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.ethical_techniques.notemaker.note.Category;
 import com.ethical_techniques.notemaker.note.Note;
@@ -95,12 +98,25 @@ public class DBUtil {
 
     }
 
+    private static Category findCategory(Context context, String name) throws SQLException {
+        DataSource ds = new DataSource(context);
+        ds.open();
+        Category category = ds.getCategoryByName(name);
+        ds.close();
+        return category;
+    }
+
     public static boolean saveCategory(Context context, Category category) throws SQLException {
         DataSource ds = new DataSource(context);
         boolean wasSuccess = false;
         ds.open();
-        if (category.getId() == -5) {
-            wasSuccess = ds.insertCategory(category);
+        if (category.getId() == -2) {
+            Category checkExists = findCategory(context, category.getName());
+            if (checkExists.getId() != -2) { //Category name clashes with existing Category;
+                //TODO: throw new DataNameClashException();
+            } else {
+                wasSuccess = ds.insertCategory(category); //Insert the new Category
+            }
 
             if (wasSuccess) {
                 int id = ds.getLastCategoryId();
@@ -111,6 +127,7 @@ public class DBUtil {
         }
 
         ds.close();
+
         return wasSuccess;
     }
 
