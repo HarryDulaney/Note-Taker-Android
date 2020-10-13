@@ -15,7 +15,7 @@ import java.util.Objects;
 public class Category {
 
     public static final int NONE = -5;
-    public static final String NONE_NAME = "Unassigned";
+    public static final String NONE_NAME = "Un-Categorized";
     public static final int NON_COLOR = Color.LTGRAY;
 
     private static final Category DEPHAULT;

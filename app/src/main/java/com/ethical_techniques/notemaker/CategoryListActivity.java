@@ -1,30 +1,77 @@
 package com.ethical_techniques.notemaker;
 
+
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-
+import com.ethical_techniques.notemaker.CategoryRecycleAdapter.CategoryViewHolder;
+import com.ethical_techniques.notemaker.DAL.DBUtil;
+import com.ethical_techniques.notemaker.decorators.SpacingItemDecoration;
 import com.ethical_techniques.notemaker.note.Category;
-import com.ethical_techniques.notemaker.note.Note;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
-public class CategoryListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+/* <h3>Positions in RecyclerView:</h3>
+ * <p>
+ * RecyclerView introduces an additional level of abstraction between the {@link Adapter} and
+ * {@link LayoutManager} to be able to detect data set changes in batches during a layout
+ * calculation. This saves LayoutManager from tracking adapter changes to calculate animations.
+ * It also helps with performance because all view bindings happen at the same time and unnecessary
+ * bindings are avoided.
+ * <p>
+ * For this reason, there are two types of <code>position</code> related methods in RecyclerView:
+ * <ul>
+ *     <li>layout position: Position of an item in the latest layout calculation. This is the
+ *     position from the LayoutManager's perspective.</li>
+ *     <li>adapter position: Position of an item in the adapter. This is the position from
+ *     the Adapter's perspective.</li>
+ * </ul>
+ * <p>
+ * These two positions are the same except the time between dispatching <code>adapter.notify*
+ * </code> events and calculating the updated layout.
+ * <p>
+ * Methods that return or receive <code>*LayoutPosition*</code> use position as of the latest
+ * layout calculation (e.g. {@link CategoryViewHolder#getLayoutPosition()},
+ * {@link #findViewHolderForLayoutPosition(int)}). These positions include all changes until the
+ * last layout calculation. You can rely on these positions to be consistent with what user is
+ * currently seeing on the screen. For example, if you have a list of items on the screen and user
+ * asks for the 5<sup>th</sup> element, you should use these methods as they'll match what user
+ * is seeing.
+ * <p>
+ * The other set of position related methods are in the form of
+ * <code>*AdapterPosition*</code>. (e.g. {@link CategoryViewHolder#getAdapterPosition()},
+ * {@link #findViewHolderForAdapterPosition(int)}) You should use these methods when you need to
+ * work with up-to-date adapter positions even if they may not have been reflected to layout yet.
+ * For example, if you want to access the item in the adapter on a CategoryViewHolder click, you should use
+ * {@link CategoryViewHolder#getAdapterPosition()}. Beware that these methods may not be able to calculate
+ * adapter positions if {@link Adapter#notifyDataSetChanged()} has been called and new layout has
+ * not yet been calculated. For this reasons, you should carefully handle {@link #NO_POSITION} or
+ * <code>null</code> results from these methods.*/
+//
 
+public class CategoryListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private final String TAG = this.getClass().getName();
     private static List<Category> categories;
+    CategoryRecycleAdapter recycleAdapter;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +87,7 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
         FloatingActionButton floatingActionButton = findViewById(R.id.new_category_float_button);
         floatingActionButton.setOnLongClickListener((v) -> {
             Snackbar.make(v,
-                    "Create a new Categorey", Snackbar.LENGTH_LONG)
+                    "Create a new category", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
 
             return true;
@@ -48,6 +95,7 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
 
         floatingActionButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, CreateCategoryActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
 
         });
@@ -62,6 +110,33 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
         //Handle NavigationView
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(CategoryListActivity.this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+//        //Retrieve Sort By from sp
+//        String sortBy = sp.getString("sort.by.preference", getString(R.string.SORT_BY_DATE));
+//        //Retrieves Sort Order from sp
+//        String sortOrder = sp.getString("sort.order.preference", getString(R.string.SORT_ORDER_HIGH_TO_LOW));
+
+        try {
+
+            categories = DBUtil.getCategories(this);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error in onResume, inspect DataSource . ");
+            Toast.makeText(this, "Error retrieving categories, please try reloading. ", Toast.LENGTH_LONG).show();
+        }
+        recyclerView = findViewById(R.id.recycleListCategory);
+        recycleAdapter = new CategoryRecycleAdapter(categories);
+
+        recyclerView.addItemDecoration(new SpacingItemDecoration(1, false, true));
+        recyclerView.setAdapter(recycleAdapter);
+
     }
 
 
@@ -124,25 +199,48 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.action_bar_settings) {
-            //Open the settings activity
+            //Open the note_list_settings activity
             Intent i = new Intent(this, SettingsActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
             return true;
+
+        } else if (id == R.id.action_bar_editSwitch) {
+            // Turn on edit mode for the Category Fragments in the RecyclerView by
+            // showing the Edit button on each list item.
+            for (int i = 0; i < recycleAdapter.getItemCount(); i++) {
+                CategoryViewHolder viewHolder = (CategoryViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
+                if (viewHolder != null) {
+                    if (viewHolder.chooseEditCategoryButton.getVisibility() == View.VISIBLE) {
+                        viewHolder.chooseEditCategoryButton.setVisibility(View.INVISIBLE);
+                    } else {
+                        viewHolder.chooseEditCategoryButton.setVisibility(View.VISIBLE);
+                    }
+                    Log.i(TAG, "Edit button on Category list item " + i + "set to visible");
+                } else {
+                    Log.e(TAG, " Error occured at RecycleAdapter position: " + i);
+                }
+
+            }
         }
         return super.onOptionsItemSelected(item);
 
     }
 
+
     public void handleCategoryEdit(View view) {
-        Intent intent = new Intent(this, CreateCategoryActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        int position = recyclerView.getChildAdapterPosition(view);
+        CategoryViewHolder viewHolder = (CategoryViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+        if (viewHolder != null) {
+            Log.i(TAG, "Category list item " + position + " selected to edit fields.");
+
+            Intent intent = new Intent(this, CreateCategoryActivity.class);
+            intent.putExtra(getString(R.string.CATEGORY_ID_KEY), viewHolder.category.getId());
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
 }

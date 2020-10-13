@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
-import com.ethical_techniques.notemaker.DAL.DataSource;
 import com.ethical_techniques.notemaker.decorators.SpacingItemDecoration;
 import com.ethical_techniques.notemaker.note.Note;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,6 +33,8 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
 
     private final String TAG = this.getClass().getName();
     private static List<Note> notes;
+    RecyclerView recyclerView;
+    NoteRecycleAdapter noteRecycleAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,13 +136,11 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks here.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_bar_settings) {
-            //Open the settings activity
+            //Open the note_list_settings activity
             Intent i = new Intent(this, SettingsActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
@@ -148,7 +148,20 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
             return true;
         } else if (id == R.id.action_bar_editSwitch) {
             //Edit mode activated
-
+            for (int i = 0; i < noteRecycleAdapter.getItemCount();
+                 i++) {
+                NoteRecycleAdapter.ViewHolder viewHolder = (NoteRecycleAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
+                if (viewHolder != null) {
+                    if (viewHolder.deleteButton.getVisibility() == View.VISIBLE) {
+                        viewHolder.deleteButton.setVisibility(View.INVISIBLE);
+                    } else {
+                        viewHolder.deleteButton.setVisibility(View.VISIBLE);
+                    }
+                    Log.i(TAG, "Edit button on list item " + i + "set to visible");
+                } else {
+                    Log.e(TAG, " Error occurred at RecycleAdapter position: " + i);
+                }
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -158,39 +171,43 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onResume() {
         super.onResume();
-
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-
         //Retrieve Sort By from sp
         String sortBy = sp.getString("sort.by.preference", getString(R.string.SORT_BY_DATE));
-
         //Retrieves Sort Order from sp
         String sortOrder = sp.getString("sort.order.preference", getString(R.string.SORT_ORDER_HIGH_TO_LOW));
 
         try {
-
             notes = DBUtil.findNotes(this, sortBy, sortOrder);
 
         } catch (Exception e) {
             Log.e(TAG, "Error in onResume, inspect DataSource. ");
             Toast.makeText(this, "Error retrieving notes, please try reloading. ", Toast.LENGTH_LONG).show();
         }
-        RecyclerView recyclerView = findViewById(R.id.recycleList);
-        NoteRecycleAdapter noteRecycleAdapter = new NoteRecycleAdapter(notes);
+        /* If the list of Notes if blank, start the NoteActivity (aka MainActivity) */
+        if (notes.size() == 0) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
 
-        recyclerView.addItemDecoration(new SpacingItemDecoration(1, true, true));
+        } else {
+            recyclerView = findViewById(R.id.recycleList);
+            noteRecycleAdapter = new NoteRecycleAdapter(notes);
+
+            recyclerView.addItemDecoration(new SpacingItemDecoration(1, true, true));
 
 
-        recyclerView.setOnLongClickListener(view -> {
-            int position = recyclerView.getChildAdapterPosition(view);
-            int noteId = (int) noteRecycleAdapter.getItemId(position);
-            Intent intent = new Intent(ListActivity.this, MainActivity.class);
-            intent.putExtra(getString(R.string.NOTE_ID_KEY), noteId);
-            ListActivity.this.startActivity(intent);
-            return true;
+            recyclerView.setOnLongClickListener(view -> {
+                int position = recyclerView.getChildAdapterPosition(view);
+                int noteId = (int) noteRecycleAdapter.getItemId(position);
+                Intent intent = new Intent(ListActivity.this, MainActivity.class);
+                intent.putExtra(getString(R.string.NOTE_ID_KEY), noteId);
+                ListActivity.this.startActivity(intent);
+                return true;
 
-        });
-        recyclerView.setAdapter(noteRecycleAdapter);
+            });
+            recyclerView.setAdapter(noteRecycleAdapter);
+        }
 
     }
 

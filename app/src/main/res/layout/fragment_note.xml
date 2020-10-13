@@ -43,7 +43,7 @@
         android:padding="@dimen/extraSmMargin"
         android:scaleType="center"
         android:src="@android:drawable/ic_delete"
-        android:visibility="visible" />
+        android:visibility="invisible" />
 
     <!-- Date Created -->
     <TextView

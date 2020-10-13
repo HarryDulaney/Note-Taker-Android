@@ -41,7 +41,6 @@
         android:autofillHints=""
         android:focusable="auto"
         android:focusableInTouchMode="true"
-        android:prompt="@string/no_category"
         android:spinnerMode="dropdown" />
 
     <RatingBar

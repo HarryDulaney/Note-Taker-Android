@@ -1,38 +1,111 @@
 package com.ethical_techniques.notemaker;
 
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.note.Category;
+import com.ethical_techniques.notemaker.note.Note;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Objects;
 
+import top.defaults.colorpicker.ColorPickerPopup;
+
+
+/**
+ * The type Create category activity.
+ */
 public class CreateCategoryActivity extends AppCompatActivity {
-
-    private View currView;
+    private final String TAG = getClass().getName();
+    private Category currentCategory;
 
     @Override
     public void onCreate(Bundle saveInstanceBundle) {
         super.onCreate(saveInstanceBundle);
         setContentView(R.layout.app_bar_categ_create);
-        currView = getCurrentFocus();
 
-        //Handle Toolbar
-        Toolbar toolbar = findViewById(R.id.action_bar_top);
-        setSupportActionBar(toolbar);
+        ImageButton colorPickerButton = findViewById(R.id.colorPickerView);
+        colorPickerButton.setOnClickListener(v -> {
 
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
+            new ColorPickerPopup.Builder(this)
+                    .initialColor(Color.RED) // Set initial color
+                    .enableBrightness(true) // Enable brightness slider or not
+                    .enableAlpha(true) // Enable alpha slider or not
+                    .okTitle("Save Selection")
+                    .cancelTitle("Cancel")
+                    .showIndicator(true)
+                    .build()
+                    .show(v, new ColorPickerPopup.ColorPickerObserver() {
+                        @Override
+                        public void onColorPicked(int color) {
+                            v.setBackgroundColor(color);
+                        }
+
+                    });
+        });
+
+        /* Check and Load info based from calling activity */
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null) {
+            //Load the note using the noteID\
+            initCategory(extras.getInt(getString(R.string.CATEGORY_ID_KEY)));
+        } else {
+            //create a new blank note
+            currentCategory = new Category();
+
+            //Initialize the Toolbar
+            Toolbar toolbar = findViewById(R.id.action_bar_top);
+            setSupportActionBar(toolbar);
+
+            // Get the Toolbar back as an ActionBar and initialize the back button (Up/Home Button)
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            } else {
+                Log.e(TAG, "ActionBar was not created properly...");
+            }
+
+        }
+    }
+
+    /**
+     * Opens a connection to the database and uses getSpecificCategory() to retrieve the
+     * Category and then sets the local views with its values.
+     *
+     * @param categoryId identifier for the category
+     */
+    private void initCategory(int categoryId) {
+
+        try {
+            currentCategory = DBUtil.findCategory(this, categoryId);
+
+        } catch (Exception e) {
+            Log.w(TAG, e);
+            Snackbar.make(findViewById(R.id.category_activity),
+                    Objects.requireNonNull(e.getMessage()),
+                    Snackbar.LENGTH_INDEFINITE);
+        }
+
+        EditText editName = findViewById(R.id.editCategoryName);
+        editName.setText(currentCategory.getName());
+
+        ImageButton colorPickButton = findViewById(R.id.colorPickerView);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            colorPickButton.getDrawable().setTint(currentCategory.getColor());
+        }
 
     }
 
@@ -44,20 +117,20 @@ public class CreateCategoryActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-
         super.onBackPressed();
     }
 
 
     /**
+     * Handle save category.
+     *
      * @param view SaveButton view object
      */
     public void handleSaveCategory(View view) {
         Category category = new Category();
         EditText nameInput = findViewById(R.id.editCategoryName);
         if (nameInput.getText().toString().isEmpty()) {
-            Snackbar.make(currView, "Please input a name for the Category before saving. ", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "Please input a name for the Category before saving. ", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         } else {
             category.setName(nameInput.getText().toString());
@@ -65,7 +138,7 @@ public class CreateCategoryActivity extends AppCompatActivity {
             try {
                 DBUtil.saveCategory(this, category);
             } catch (Exception e) {
-                Snackbar.make(currView, "The Category name is already used for another Category, " +
+                Snackbar.make(view, "The Category name is already used for another Category, " +
                         "please delete the other Category or revise the name", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 e.printStackTrace();

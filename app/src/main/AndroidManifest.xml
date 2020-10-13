@@ -17,25 +17,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <!-- The Main Activity -->
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_note_activity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity> <!-- The Settings Activity -->
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" /> <!-- The List Activity -->
+        <!-- The List Activity -->
         <activity
             android:name=".ListActivity"
-            android:label="@string/title_activity_list" />
+            android:label="@string/title_activity_list">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- The Settings (Preferences) Activity -->
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".ListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ListActivity"/>
+        </activity>
+        <!-- The Edit/New Note Activity -->
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_note_activity" />
+
+        <!-- Category List Activity -->
         <activity
             android:name=".CategoryListActivity"
             android:label="Categories" />
+        <!-- The New/Edit Category Activity -->
         <activity
             android:name="CreateCategoryActivity"
             android:label="New Category"

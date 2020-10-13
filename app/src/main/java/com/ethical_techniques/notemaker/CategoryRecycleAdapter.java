@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Category}.
  */
-public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycleAdapter.ViewHolder> {
+public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycleAdapter.CategoryViewHolder> {
 
     private List<Category> categories;
     private DataSource dataSource;
@@ -30,18 +30,19 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
 
     @NotNull
     @Override
-    public CategoryRecycleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_category, parent, false);
-        return new CategoryRecycleAdapter.ViewHolder(view);
+        return new CategoryViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final CategoryRecycleAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final CategoryViewHolder holder, int position) {
 
         holder.category = categories.get(position);
         holder.name.setText(categories.get(position).getName());
         holder.mView.setBackgroundColor(categories.get(position).getColor());
+        holder.chooseEditCategoryButton.setVisibility(View.INVISIBLE);
 
     }
 
@@ -56,22 +57,20 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
 
     }
 
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class CategoryViewHolder extends RecyclerView.ViewHolder {
 
         public final View mView;
         public Category category;
         public final TextView name;
         public final ImageButton deleteButton;
-        public final Button colorChooserButton;
+        public Button chooseEditCategoryButton;
 
-        public ViewHolder(View v) {
+        public CategoryViewHolder(View v) {
             super(v);
             mView = v;
             name = v.findViewById(R.id.categoryName);
             deleteButton = v.findViewById(R.id.buttonDeleteCategory);
-            colorChooserButton = v.findViewById(R.id.categoryEditOpenButton);
-
+            chooseEditCategoryButton = v.findViewById(R.id.categoryEditOpenButton);
         }
 
         @NotNull

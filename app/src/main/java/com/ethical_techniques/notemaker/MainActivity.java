@@ -257,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     /**
+     * Initializes the top app bar.
      * {@inheritDoc}
      */
     @Override
@@ -271,13 +272,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_bar_settings) {
-            //Open the settings activity
+            //Open the note_list_settings activity
             Intent i = new Intent(this, SettingsActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
