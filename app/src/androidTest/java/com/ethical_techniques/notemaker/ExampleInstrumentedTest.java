@@ -9,16 +9,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import com.ethical_techniques.notemaker.DAL.*;
-import com.ethical_techniques.notemaker.note.Category;
-import com.ethical_techniques.notemaker.note.Note;
-import com.ethical_techniques.notemaker.note.PRIORITY;
+
+import com.ethical_techniques.notemaker.model.Category;
+import com.ethical_techniques.notemaker.model.Note;
+import com.ethical_techniques.notemaker.model.PRIORITY;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * Instrumented test, which will execute on an Android device.

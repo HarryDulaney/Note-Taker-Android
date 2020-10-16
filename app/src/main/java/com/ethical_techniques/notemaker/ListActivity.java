@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -18,10 +19,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.decorators.SpacingItemDecoration;
-import com.ethical_techniques.notemaker.note.Note;
+import com.ethical_techniques.notemaker.model.Note;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -97,11 +97,11 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_share:
-                //Open share prompt with options to share a note or a list of notes TODO
+                //TODO:Open share prompt with options to share a note or a list of notes
 
                 break;
             case R.id.nav_send:
-                //Open send prompt with options to send a note or a list of notes TODO
+                //TODO:Open send prompt with options to send a note or a list of notes
 
                 break;
             default:
@@ -196,22 +196,47 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
 
             recyclerView.addItemDecoration(new SpacingItemDecoration(1, true, true));
 
-
-            recyclerView.setOnLongClickListener(view -> {
-                int position = recyclerView.getChildAdapterPosition(view);
-                int noteId = (int) noteRecycleAdapter.getItemId(position);
-                Intent intent = new Intent(ListActivity.this, MainActivity.class);
-                intent.putExtra(getString(R.string.NOTE_ID_KEY), noteId);
-                ListActivity.this.startActivity(intent);
-                return true;
-
+//            recyclerView.setOnLongClickListener(view -> {
+//                int position = recyclerView.getChildAdapterPosition(view);
+//                int noteId = (int) noteRecycleAdapter.getItemId(position);
+//                Intent intent = new Intent(ListActivity.this, MainActivity.class);
+//                intent.putExtra(getString(R.string.NOTE_ID_KEY), noteId);
+//                ListActivity.this.startActivity(intent);
+//                return true;
+//
+//            });
+            noteRecycleAdapter.setNoteClickListener((view, position) -> {
+                String noteName = notes.get(position).getNoteName();
+                Toast.makeText(ListActivity.this, "Hold down a long click on the list item to open / edit the Note."
+                        , Toast.LENGTH_LONG).show();
             });
+            noteRecycleAdapter.setDeleteButtonListener((view, position) -> {
+                Note note = notes.get(position);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle("Confirm")
+                        .setMessage("Are you sure you want to DELETE the Note titled " + note.getNoteName())
+                        .setNegativeButton("CANCEL", (dialog, which) -> {
+                            Toast.makeText(ListActivity.this, "Cancelled delete Note operation.", Toast.LENGTH_LONG).show();
+                            dialog.cancel();
+                        })
+                        .setPositiveButton("OK", (dialog, usersChoice) -> {
+                            //Handle deleting the Note
+                            try {
+                                DBUtil.deleteNote(ListActivity.this, note.getNoteID());
+                                Toast.makeText(ListActivity.this, "The Note titled " + note.getNoteName() + " has been deleted.", Toast.LENGTH_LONG).show();
+                                notes.remove(position);
+                                noteRecycleAdapter.notifyDataSetChanged();
+
+                            } catch (Exception e) {
+                                Toast.makeText(ListActivity.this, "An error occurred and the note could note be deleted :(", Toast.LENGTH_LONG).show();
+                                Log.e(TAG, "Exception @ delete(int noteID)..NoteId = " + note.getNoteID() +
+                                        " Exception's message: " + e.getMessage(), e);
+                            }
+                        });
+                builder.create().show();
+            });
+
             recyclerView.setAdapter(noteRecycleAdapter);
         }
-
     }
-
-    // TODO: Setup the EDIT function and DELETE button on note list items
-
-
 }

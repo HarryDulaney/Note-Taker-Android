@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimaryDark"
+    tools:context="frags.">
 
     <!-- Note Title-->
     <TextView
@@ -27,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@id/textNoteTitle"
         android:layout_alignRight="@id/textNoteTitle"
+        android:onClick="handleDeleteNote"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
@@ -60,17 +62,4 @@
         android:textAppearance="?attr/textAppearanceListItem"
         android:textColor="@color/hgdivDarkItems" />
 
-    <!-- Note Body-->
-    <!--    <TextView-->
-    <!--        android:id="@+id/textNoteBody"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_below="@id/textNoteSubject"-->
-    <!--        android:layout_marginTop="@dimen/activity_vertical_margin"-->
-    <!--        android:contentDescription="@string/the_note_preview_in_list_mode"-->
-    <!--        android:text="@string/empty_note"-->
-    <!--        android:textAppearance="?attr/textAppearanceListItem"-->
-    <!--        android:textColor="@color/hgdivTextOne"-->
-    <!--        android:textSize="20sp"-->
-    <!--        android:visibility="gone" />-->
 </RelativeLayout>

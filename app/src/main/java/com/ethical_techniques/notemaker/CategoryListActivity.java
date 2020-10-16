@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ethical_techniques.notemaker.CategoryRecycleAdapter.CategoryViewHolder;
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.decorators.SpacingItemDecoration;
-import com.ethical_techniques.notemaker.note.Category;
+import com.ethical_techniques.notemaker.model.Category;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;

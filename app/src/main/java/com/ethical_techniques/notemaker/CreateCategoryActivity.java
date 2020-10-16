@@ -8,15 +8,13 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
-import com.ethical_techniques.notemaker.note.Category;
-import com.ethical_techniques.notemaker.note.Note;
+import com.ethical_techniques.notemaker.model.Category;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;

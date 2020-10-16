@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ethical_techniques.notemaker.DAL.DataSource;
-import com.ethical_techniques.notemaker.note.Category;
+import com.ethical_techniques.notemaker.model.Category;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -71,7 +71,9 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
             name = v.findViewById(R.id.categoryName);
             deleteButton = v.findViewById(R.id.buttonDeleteCategory);
             chooseEditCategoryButton = v.findViewById(R.id.categoryEditOpenButton);
+
         }
+
 
         @NotNull
         @Override

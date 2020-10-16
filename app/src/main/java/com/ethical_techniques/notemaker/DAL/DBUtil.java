@@ -3,22 +3,33 @@ package com.ethical_techniques.notemaker.DAL;
 import android.content.Context;
 import android.provider.ContactsContract;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import com.ethical_techniques.notemaker.note.Category;
-import com.ethical_techniques.notemaker.note.Note;
+import com.ethical_techniques.notemaker.ListActivity;
+import com.ethical_techniques.notemaker.model.Category;
+import com.ethical_techniques.notemaker.model.Note;
 
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * The type Db util.
+ */
 public class DBUtil {
 
     private static final String TAG = "DBUtil.class";
 
     private DBUtil() {
-        throw new IllegalArgumentException("Cannot instantiate DBUtil");
+        throw new IllegalArgumentException("Cannot instantiate DBUtil.class");
     }
 
+    /**
+     * Find notes list.
+     *
+     * @param context   the context
+     * @param sortBy    the sort by
+     * @param sortOrder the sort order
+     * @return the list
+     * @throws Exception the exception
+     */
     public static List<Note> findNotes(Context context, String sortBy, String sortOrder) throws Exception {
         List<Note> notes;
         DataSource nds = new DataSource(context);
@@ -31,6 +42,8 @@ public class DBUtil {
     }
 
     /**
+     * Find note note.
+     *
      * @param context the Context from the Activity calling this method
      * @param noteId  the Note Id to look up
      * @return the Note
@@ -49,6 +62,8 @@ public class DBUtil {
     }
 
     /**
+     * Save note boolean.
+     *
      * @param context the Context from the Activity calling this method
      * @param note    the note to save
      * @return was successful
@@ -76,8 +91,11 @@ public class DBUtil {
     }
 
     /**
+     * Gets categories.
+     *
      * @param context of the calling Activity
      * @return list of all Category objects
+     * @throws SQLException the sql exception
      */
     public static List<Category> getCategories(Context context) throws SQLException {
         List<Category> categories;
@@ -88,6 +106,14 @@ public class DBUtil {
         return categories;
     }
 
+    /**
+     * Find category category.
+     *
+     * @param context the context
+     * @param id      the id
+     * @return the category
+     * @throws SQLException the sql exception
+     */
     public static Category findCategory(Context context, int id) throws SQLException {
         DataSource ds = new DataSource(context);
         ds.open();
@@ -106,6 +132,14 @@ public class DBUtil {
         return category;
     }
 
+    /**
+     * Save category boolean.
+     *
+     * @param context  the context
+     * @param category the category
+     * @return the boolean
+     * @throws SQLException the sql exception
+     */
     public static boolean saveCategory(Context context, Category category) throws SQLException {
         DataSource ds = new DataSource(context);
         boolean wasSuccess = false;
@@ -117,7 +151,6 @@ public class DBUtil {
             } else {
                 wasSuccess = ds.insertCategory(category); //Insert the new Category
             }
-
             if (wasSuccess) {
                 int id = ds.getLastCategoryId();
                 category.setId(id);
@@ -131,5 +164,17 @@ public class DBUtil {
         return wasSuccess;
     }
 
+    /**
+     * Delete note.
+     *
+     * @param context the context from which the method was called
+     * @param noteId  the id of the note to delete
+     * @return true if the note was successfully deleted
+     */
+    public static void deleteNote(Context context, int noteId) throws Exception {
+        DataSource dataSource = new DataSource(context);
+        dataSource.delete(noteId);
+        dataSource.close();
+    }
 }
 

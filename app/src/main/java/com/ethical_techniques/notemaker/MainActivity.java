@@ -25,9 +25,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
-import com.ethical_techniques.notemaker.note.Category;
-import com.ethical_techniques.notemaker.note.Note;
-import com.ethical_techniques.notemaker.note.PRIORITY;
+import com.ethical_techniques.notemaker.model.Category;
+import com.ethical_techniques.notemaker.model.Note;
+import com.ethical_techniques.notemaker.model.PRIORITY;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 

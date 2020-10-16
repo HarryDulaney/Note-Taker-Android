@@ -1,4 +1,4 @@
-package com.ethical_techniques.notemaker.note;
+package com.ethical_techniques.notemaker.model;
 
 /**
  * enum representing the priority level of the note.

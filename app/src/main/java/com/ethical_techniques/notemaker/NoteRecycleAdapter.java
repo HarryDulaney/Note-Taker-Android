@@ -2,7 +2,6 @@ package com.ethical_techniques.notemaker;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +10,13 @@ import android.widget.TextView;
 
 
 import com.ethical_techniques.notemaker.DAL.DataSource;
-import com.ethical_techniques.notemaker.note.Note;
+import com.ethical_techniques.notemaker.model.Note;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Note}.
@@ -24,6 +25,8 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
 
     private List<Note> notes;
     private DataSource dataSource;
+    private NoteClickListener noteListener;
+    private NoteClickListener deleteButtonListener;
 
 
     public NoteRecycleAdapter(List<Note> items) {
@@ -40,11 +43,10 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-
-        holder.note = notes.get(position);
-        holder.title.setText(notes.get(position).getNoteName());
-        holder.date.setText(DateFormat.format("MM/dd/yyyy", notes.get(position).getDateCreated()));
-
+        final Note note = notes.get(position);
+        holder.title.setText(note.getNoteName());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        holder.date.setText(dateFormat.format(note.getDateCreated().getTime()));
     }
 
     @Override
@@ -58,21 +60,50 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
 
     }
 
+    public void setNoteClickListener(NoteClickListener noteListener) {
+        this.noteListener = noteListener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    }
+
+    public void setDeleteButtonListener(NoteClickListener deleteButtonListener) {
+        this.deleteButtonListener = deleteButtonListener;
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         public final View mView;
-        public Note note;
         public final TextView title;
         public final TextView date;
         public final ImageButton deleteButton;
 
-        public ViewHolder(View v) {
+        public ViewHolder(final View v) {
             super(v);
             mView = v;
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (noteListener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            noteListener.onNoteClicked(view, position);
+                        }
+
+                    }
+                }
+            });
             title = v.findViewById(R.id.textNoteTitle);
             date = v.findViewById(R.id.dateCreatedText);
             deleteButton = v.findViewById(R.id.buttonDeleteNote);
+            deleteButton.setOnClickListener(v1 -> {
+                if (deleteButtonListener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        deleteButtonListener.onNoteClicked(v1, position);
+                    }
+                }
+            });
+
 
         }
 
@@ -81,7 +112,5 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
         public String toString() {
             return super.toString() + " '" + title.getText() + "'" + " '" + date.getText() + "'";
         }
-
-
     }
 }

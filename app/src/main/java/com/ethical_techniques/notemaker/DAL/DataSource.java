@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.ethical_techniques.notemaker.note.Category;
-import com.ethical_techniques.notemaker.note.Note;
+import com.ethical_techniques.notemaker.model.Category;
+import com.ethical_techniques.notemaker.model.Note;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -288,22 +288,14 @@ public class DataSource {
 
     /**
      * Delete Note.
-     *
-     * @param note the note
-     * @return the boolean
+     * @param noteId the id of the note to delete
      */
-    protected boolean delete(Note note) {
+    protected void delete(int noteId) throws Exception {
         boolean didDelete = false;
-        try {
-            didDelete = database.delete(DBHelper.NOTE_TABLE, DBHelper.ID + "=" + note.getNoteID(), null) > 0;
-            if (didDelete) {
-                Log.i(TAG, "Successfully deleted Note named: " + note.getNoteName() + " with "
-                        + " ID#: " + note.getNoteID());
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Exception @ delete(int noteID)..NoteId = " + note.getNoteID(), e);
+        didDelete = database.delete(DBHelper.NOTE_TABLE, DBHelper.ID + "=" + noteId, null) > 0;
+        if (!didDelete) {
+            throw new Exception("Something went wrong while trying to delete the note from the database :(");
         }
-        return didDelete;
     }
 
     /**

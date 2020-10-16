@@ -1,4 +1,4 @@
-package com.ethical_techniques.notemaker.note;
+package com.ethical_techniques.notemaker.model;
 
 import android.graphics.Color;
 import android.os.Build;
