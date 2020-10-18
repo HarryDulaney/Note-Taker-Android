@@ -169,10 +169,10 @@ public class DBUtil {
      *
      * @param context the context from which the method was called
      * @param noteId  the id of the note to delete
-     * @return true if the note was successfully deleted
      */
     public static void deleteNote(Context context, int noteId) throws Exception {
         DataSource dataSource = new DataSource(context);
+        dataSource.open();
         dataSource.delete(noteId);
         dataSource.close();
     }

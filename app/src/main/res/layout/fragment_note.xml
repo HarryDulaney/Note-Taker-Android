@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimaryDark"
-    tools:context="frags.">
+    android:background="@color/colorPrimaryDark">
 
     <!-- Note Title-->
     <TextView
@@ -28,7 +27,6 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@id/textNoteTitle"
         android:layout_alignRight="@id/textNoteTitle"
-        android:onClick="handleDeleteNote"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
@@ -44,8 +42,8 @@
         android:focusable="false"
         android:padding="@dimen/extraSmMargin"
         android:scaleType="center"
-        android:src="@android:drawable/ic_delete"
-        android:visibility="invisible" />
+        android:src="@android:drawable/ic_menu_delete"
+        android:visibility="visible" />
 
     <!-- Date Created -->
     <TextView
