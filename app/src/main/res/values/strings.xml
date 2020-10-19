@@ -116,5 +116,6 @@
     <string name="title_activity_create_category">CreateCategoryActivity</string>
     <string name="enter_category_name">Enter a name for this category</string>
     <string name="category_color">Category Color</string>
+    <string name="open_this_note_for_editing">Open this note for editing</string>
 
 </resources>

@@ -196,34 +196,39 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
 
             recyclerView.addItemDecoration(new SpacingItemDecoration(1, true, true));
 
-//            recyclerView.setOnLongClickListener(view -> {
-//                int position = recyclerView.getChildAdapterPosition(view);
-//                int noteId = (int) noteRecycleAdapter.getItemId(position);
-//                Intent intent = new Intent(ListActivity.this, MainActivity.class);
-//                intent.putExtra(getString(R.string.NOTE_ID_KEY), noteId);
-//                ListActivity.this.startActivity(intent);
-//                return true;
-//
-//            });
-            noteRecycleAdapter.setNoteClickListener((view, position) -> {
-                String noteName = notes.get(position).getNoteName();
-                Toast.makeText(ListActivity.this, "Hold down a long click on the list item to open / edit the Note."
-                        , Toast.LENGTH_LONG).show();
+            /* Set listener event behavior for long click on list item event */
+            noteRecycleAdapter.setNoteLongClickListener((view, position) -> {
+                int noteId = (int) noteRecycleAdapter.getItemId(position);
+                Intent intent = new Intent(ListActivity.this, MainActivity.class);
+                intent.putExtra(getString(R.string.NOTE_ID_KEY), noteId);
+                ListActivity.this.startActivity(intent);
+
             });
+            /* Set listener event behavior for regular (short) click on list item */
+            noteRecycleAdapter.setNoteClickListener(new NoteClickListener() {
+                @Override
+                public void onNoteClicked(View view, int position) {
+                    Toast.makeText(ListActivity.this, "Hold down a long click to open the note the editing"
+                            , Toast.LENGTH_LONG).show();
+                }
+            });
+
+
+            /* Set listener event behavior for regular click on delete button */
             noteRecycleAdapter.setDeleteButtonListener((view, position) -> {
                 Note note = notes.get(position);
                 final AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                 builder.setTitle("Confirm")
-                        .setMessage("Are you sure you want to DELETE the Note titled " + note.getNoteName())
+                        .setMessage("Are you sure you want to permanently delete the Note: " + note.getNoteName())
                         .setNegativeButton("CANCEL", (dialog, which) -> {
                             Toast.makeText(ListActivity.this, "Cancelled delete Note operation.", Toast.LENGTH_LONG).show();
                             dialog.cancel();
                         })
-                        .setPositiveButton("OK", (dialog, usersChoice) -> {
+                        .setPositiveButton("DELETE", (dialog, usersChoice) -> {
                             //Handle deleting the Note
                             try {
                                 DBUtil.deleteNote(ListActivity.this, note.getNoteID());
-                                Toast.makeText(ListActivity.this, "The Note titled " + note.getNoteName() + " has been deleted.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(ListActivity.this, "The Note titled " + note.getNoteName() + " was deleted.", Toast.LENGTH_LONG).show();
                                 notes.remove(position);
                                 noteRecycleAdapter.notifyDataSetChanged();
 

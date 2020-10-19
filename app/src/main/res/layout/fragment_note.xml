@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/hgdivDarkListItemNotes">
 
     <!-- Note Title-->
     <TextView
@@ -14,6 +13,7 @@
         android:layout_marginStart="@dimen/smallMargin"
         android:layout_marginLeft="@dimen/smallMargin"
         android:layout_marginTop="@dimen/smallMargin"
+        android:maxEms="30"
         android:text="@string/title"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textColor="@color/hgdivDarkItems"
@@ -29,7 +29,7 @@
         android:layout_alignRight="@id/textNoteTitle"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/smallMargin"
         android:layout_marginLeft="@dimen/smallMargin"
         android:layout_marginTop="@dimen/smallMargin"
@@ -39,11 +39,11 @@
         android:adjustViewBounds="true"
         android:background="#00FFFFFF"
         android:contentDescription="@string/delete_button_for_this_note"
-        android:focusable="false"
         android:padding="@dimen/extraSmMargin"
         android:scaleType="center"
-        android:src="@android:drawable/ic_menu_delete"
-        android:visibility="visible" />
+        android:tint="@android:color/holo_red_dark"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_delete_forever_white_36dp" />
 
     <!-- Date Created -->
     <TextView

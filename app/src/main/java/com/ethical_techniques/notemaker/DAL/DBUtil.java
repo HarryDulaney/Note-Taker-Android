@@ -1,9 +1,6 @@
 package com.ethical_techniques.notemaker.DAL;
 
 import android.content.Context;
-import android.provider.ContactsContract;
-
-import com.ethical_techniques.notemaker.ListActivity;
 import com.ethical_techniques.notemaker.model.Category;
 import com.ethical_techniques.notemaker.model.Note;
 

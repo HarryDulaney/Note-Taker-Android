@@ -3,6 +3,7 @@ package com.ethical_techniques.notemaker;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -27,6 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.time.Duration;
 import java.util.List;
 
 /* <h3>Positions in RecyclerView:</h3>
@@ -112,6 +115,7 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
         navigationView.setNavigationItemSelectedListener(CategoryListActivity.this);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onResume() {
         super.onResume();
@@ -133,7 +137,14 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
         }
         recyclerView = findViewById(R.id.recycleListCategory);
         recycleAdapter = new CategoryRecycleAdapter(categories);
+        recycleAdapter.setEditCategoryListener((view, position) -> {
+            Toast.makeText(this, " Category selected for editing", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, CreateCategoryActivity.class);
+            intent.putExtra(getString(R.string.CATEGORY_ID_KEY), recycleAdapter.getItemId(position));
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
 
+        });
         recyclerView.addItemDecoration(new SpacingItemDecoration(1, false, true));
         recyclerView.setAdapter(recycleAdapter);
 
@@ -228,19 +239,5 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
         }
         return super.onOptionsItemSelected(item);
 
-    }
-
-
-    public void handleCategoryEdit(View view) {
-        int position = recyclerView.getChildAdapterPosition(view);
-        CategoryViewHolder viewHolder = (CategoryViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
-        if (viewHolder != null) {
-            Log.i(TAG, "Category list item " + position + " selected to edit fields.");
-
-            Intent intent = new Intent(this, CreateCategoryActivity.class);
-            intent.putExtra(getString(R.string.CATEGORY_ID_KEY), viewHolder.category.getId());
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        }
     }
 }

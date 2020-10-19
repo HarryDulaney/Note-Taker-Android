@@ -264,6 +264,11 @@ public class DataSource {
             ex.printStackTrace();
             Log.e(TAG, "Exception @DataSource.getCategories()");
         }
+        if (categories.size() == 0) {
+            insertCategory(Category.getDEPHAULT());
+            return getCategories();
+        }
+
         return categories;
     }
 

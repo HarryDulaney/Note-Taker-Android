@@ -24,6 +24,12 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
     private List<Category> categories;
     private DataSource dataSource;
 
+    ListClickListener editCategoryListener;
+
+    public void setEditCategoryListener(ListClickListener editCategoryListener) {
+        this.editCategoryListener = editCategoryListener;
+    }
+
     public CategoryRecycleAdapter(List<Category> items) {
         categories = items;
     }
@@ -57,7 +63,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
 
     }
 
-    public static class CategoryViewHolder extends RecyclerView.ViewHolder {
+    public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
         public final View mView;
         public Category category;
@@ -71,6 +77,14 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
             name = v.findViewById(R.id.categoryName);
             deleteButton = v.findViewById(R.id.buttonDeleteCategory);
             chooseEditCategoryButton = v.findViewById(R.id.categoryEditOpenButton);
+            chooseEditCategoryButton.setOnClickListener(view -> {
+                if (editCategoryListener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        editCategoryListener.onListClicked(view, position);
+                    }
+                }
+            });
 
         }
 

@@ -13,7 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.RatingBar;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -50,7 +50,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private final String TAG = this.getClass().getSimpleName();
     private Note currentNote;
     private List<Category> categories;
-    private Category currentNoteCategory = Category.getDEPHAULT();
+    private Category currentNoteCategory;
+    ImageButton priorityStar;
+    Spinner dropDownSpinner;
 
 
     @Override
@@ -81,39 +83,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //create a new blank note
             currentNote = new Note();
             //Initialize the Category chooser dropdown Spinner
-            Spinner dropDownSpinner = findViewById(R.id.categorySpinner);
+            dropDownSpinner = findViewById(R.id.categorySpinner);
             if (initCategories()) {
                 initDropDown(dropDownSpinner);
             }
         }
         //Initialize listeners on text input fields
         initTextChangedEvents();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         //Re-initialize dropdown Spinner
-        Spinner dropDownSpinner = findViewById(R.id.categorySpinner);
-        if (initCategories())
+        dropDownSpinner = findViewById(R.id.categorySpinner);
+        if (initCategories()) {
             initDropDown(dropDownSpinner);
+        }
     }
 
+    /**
+     * Initializes the categories list.
+     * Handles adding the default category (Un-Categorized) in the event that
+     * it has not been persisted into database yet.
+     *
+     * @return true if operation was successful
+     */
     private boolean initCategories() {
         try {
             categories = DBUtil.getCategories(this);
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        }
-
-        if (categories.size() == 0) {
-            try {
-                DBUtil.saveCategory(this, currentNoteCategory);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
-            }
         }
         return true;
     }
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         ArrayAdapter<String> categoryArrayAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item, categoryStrings);
+                R.layout.dropdown_item_simple, categoryStrings);
         spinner.setAdapter(categoryArrayAdapter);
         spinner.setSelection(0);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -140,17 +142,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 String checkedTextView = (String) parent.getItemAtPosition(position);
                 System.out.println("checkedTextView = " + checkedTextView);
-
-
             }
 
-            /**
-             * Callback method to be invoked when the selection disappears from this
-             * view. The selection can disappear for instance when touch is activated
-             * or when the adapter becomes empty.
-             *
-             * @param parent The AdapterView that now contains no selected item.
-             */
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -165,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param id identifier for the note
      */
     private void initNote(int id) {
-
         try {
             currentNote = DBUtil.findNote(this, id);
             currentNoteCategory = DBUtil.findCategory(this, currentNote.getCategory());
@@ -182,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         editName.setText(currentNote.getNoteName());
         editNote.setText(currentNote.getContent());
-        Spinner dropDownSpinner = findViewById(R.id.categorySpinner);
+        dropDownSpinner = findViewById(R.id.categorySpinner);
 
         if (initCategories()) {
             initDropDown(dropDownSpinner);
@@ -196,10 +188,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
         }
+        // Set the priority level ie color in star or not
+        initPriorityStar(currentNote);
+    }
 
-
-        if (currentNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
-
+    /**
+     * Set's RatingBar to the Note's saved value
+     *
+     * @param note populating the Activity fields
+     */
+    private void initPriorityStar(Note note) {
+        priorityStar = findViewById(R.id.highPriorityStar);
+        if (note.getPRIORITY_LEVEL().equals("high")) {
+            priorityStar.setColorFilter(getResources().getColor(R.color.colorPriorityHigh));
+        } else {
+            priorityStar.getDrawable().setColorFilter(null);
         }
     }
 
@@ -331,11 +334,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void afterTextChanged(Editable editable) {
                 currentNote.setNoteContent(etNoteBody.getText().toString());
-
             }
         });
-
-
     }
 
     /**
@@ -372,53 +372,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /**
+     * Switches the priority star on and off
+     *
+     * @param imgButtonView the view parent of the priority star
+     */
+    public void toggleNotePriority(View imgButtonView) {
+        priorityStar = findViewById(R.id.highPriorityStar);
+        if (currentNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
+
+            priorityStar.getDrawable().setColorFilter(null);
+            currentNote.setPRIORITY_LEVEL(PRIORITY.LOW.getString());
+            Toast.makeText(this, "The current note is set to regular priority",
+                    Toast.LENGTH_LONG).show();
+
+        } else {
+
+            priorityStar.setColorFilter(getResources().getColor(R.color.colorPriorityHigh));
+            currentNote.setPRIORITY_LEVEL(PRIORITY.HIGH.getString());
+            Toast.makeText(this, "The current note is set to high priority",
+                    Toast.LENGTH_LONG).show();
+
+        }
+
+    }
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         EditText editName = findViewById(R.id.editTitle);
         assert imm != null;
         imm.hideSoftInputFromWindow(editName.getWindowToken(), 0);
-
-        RatingBar priorityStar = findViewById(R.id.ratingBar);
         imm.hideSoftInputFromWindow(priorityStar.getWindowToken(), 0);
-
         EditText editNote = (EditText) findViewById(R.id.editNotes);
         imm.hideSoftInputFromWindow(editNote.getWindowToken(), 0);
 
     }
-
-    /**
-     * Functions like a switch for turning on and off the RatingBar Star
-     *
-     * @param view the RatingBar View object
-     */
-    public void handlePriorityClicked(View view) {
-        RatingBar priorityStar = findViewById(R.id.ratingBar);
-        if (priorityStar.getRating() == 0.0f) {
-            priorityStar.setRating(1.0f);
-            currentNote.setPRIORITY_LEVEL("high");
-        } else {
-            priorityStar.setRating(0.0f);
-            currentNote.setPRIORITY_LEVEL("low");
-        }
-
-
-    }
-
-    /**
-     * Set's RatingBar to the Note's saved value
-     *
-     * @param note populating the Activity fields
-     */
-    private void initPriorityStar(Note note) {
-        RatingBar priorityStar = findViewById(R.id.ratingBar);
-        if (note.getPRIORITY_LEVEL().equals("high")) {
-            priorityStar.setRating(1.0f);
-        } else {
-            priorityStar.setRating(0.0f);
-        }
-
-    }
-
-
 }

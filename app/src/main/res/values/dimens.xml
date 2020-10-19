@@ -14,4 +14,5 @@
     <dimen name="mediumMargin">16dp</dimen>
     <dimen name="largeMargin">32dp</dimen>
     <dimen name="extraLrgMargin">64dp</dimen>
+    <dimen name="categorySpinnerMain">48sp</dimen>
 </resources>

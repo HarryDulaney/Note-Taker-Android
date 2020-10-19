@@ -27,6 +27,7 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
     private DataSource dataSource;
     private NoteClickListener noteListener;
     private NoteClickListener deleteButtonListener;
+    private NoteLongClickListener noteLongClickListener;
 
 
     public NoteRecycleAdapter(List<Note> items) {
@@ -69,6 +70,10 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
         this.deleteButtonListener = deleteButtonListener;
     }
 
+    public void setNoteLongClickListener(NoteLongClickListener listener) {
+        this.noteLongClickListener = listener;
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -80,17 +85,24 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
         public ViewHolder(final View v) {
             super(v);
             mView = v;
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (noteListener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            noteListener.onNoteClicked(view, position);
-                        }
-
+            v.setOnClickListener(vw ->{
+                if (noteListener != null) {
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        noteListener.onNoteClicked(vw,pos);
                     }
                 }
+            });
+
+            v.setOnLongClickListener(view -> {
+                if (noteLongClickListener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        noteLongClickListener.onNoteLongClicked(view, position);
+                        return true;
+                    }
+                }
+                return false;
             });
             title = v.findViewById(R.id.textNoteTitle);
             date = v.findViewById(R.id.dateCreatedText);
@@ -103,8 +115,6 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
                     }
                 }
             });
-
-
         }
 
         @NotNull

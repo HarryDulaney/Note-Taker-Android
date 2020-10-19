@@ -5,6 +5,8 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.google.android.material.navigation.NavigationView;
+
 import java.util.Objects;
 
 /**
@@ -14,23 +16,19 @@ import java.util.Objects;
  */
 public class Category {
 
-    public static final int NONE = -5;
+    public static final int NONE = 1;
     public static final String NONE_NAME = "Un-Categorized";
     public static final int NON_COLOR = Color.LTGRAY;
 
-    private static final Category DEPHAULT;
+    private static final Category DEPHAULT = new Category(NONE, NONE_NAME, NON_COLOR);
 
-
-    static {
-        DEPHAULT = new Category(NONE, NONE_NAME, NON_COLOR);
-    }
 
     private int id;
     private String name;
     private int color;
 
     public Category() {
-        id = -2;
+        id = -1;
     }
 
     public Category(int id, String name) {
