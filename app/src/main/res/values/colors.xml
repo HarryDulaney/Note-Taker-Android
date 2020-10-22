@@ -5,7 +5,7 @@
     <color name="colorPrimaryNavBar">#00000000</color>
     <color name="colorAccent">#4A148C</color>
     <color name="colorPrimaryToolBar">#880E4F</color>
-    <color name="colorPriorityHigh">#FDD835</color>
+    <color name="colorPriorityHigh">#F7FF00</color>
     <color name="colorPriorityLow">#A6A9AE</color>
     <color name="hgdivOnePrimary">#1A237E</color>
     <color name="hgdivDarkItems">#FFFFFF</color>

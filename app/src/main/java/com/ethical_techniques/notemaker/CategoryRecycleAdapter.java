@@ -3,7 +3,6 @@ package com.ethical_techniques.notemaker;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -20,14 +19,27 @@ import java.util.List;
  * {@link RecyclerView.Adapter} that can display a {@link Category}.
  */
 public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycleAdapter.CategoryViewHolder> {
+    interface DeleteClickListener {
+        void onDeleteClicked(View v, int position);
+    }
 
     private List<Category> categories;
     private DataSource dataSource;
 
-    ListClickListener editCategoryListener;
+    DeleteClickListener deleteButtonListener;
+    ListClickListener categoryShortClickListener;
+    ListLongClickListener categoryLongClickListener;
 
-    public void setEditCategoryListener(ListClickListener editCategoryListener) {
-        this.editCategoryListener = editCategoryListener;
+    public void setShortClickListener(ListClickListener categoryShortClickListener) {
+        this.categoryShortClickListener = categoryShortClickListener;
+    }
+
+    public void setLongClickListener(ListLongClickListener categoryLongClickListener) {
+        this.categoryLongClickListener = categoryLongClickListener;
+    }
+
+    public void setDeleteButtonListener(DeleteClickListener deleteButtonListener) {
+        this.deleteButtonListener = deleteButtonListener;
     }
 
     public CategoryRecycleAdapter(List<Category> items) {
@@ -48,7 +60,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
         holder.category = categories.get(position);
         holder.name.setText(categories.get(position).getName());
         holder.mView.setBackgroundColor(categories.get(position).getColor());
-        holder.chooseEditCategoryButton.setVisibility(View.INVISIBLE);
+        holder.deleteButton.setVisibility(View.INVISIBLE);
 
     }
 
@@ -69,21 +81,38 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
         public Category category;
         public final TextView name;
         public final ImageButton deleteButton;
-        public Button chooseEditCategoryButton;
 
         public CategoryViewHolder(View v) {
             super(v);
             mView = v;
             name = v.findViewById(R.id.categoryName);
             deleteButton = v.findViewById(R.id.buttonDeleteCategory);
-            chooseEditCategoryButton = v.findViewById(R.id.categoryEditOpenButton);
-            chooseEditCategoryButton.setOnClickListener(view -> {
-                if (editCategoryListener != null) {
+
+            deleteButton.setOnClickListener(vw -> {
+                if (deleteButtonListener != null) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        editCategoryListener.onListClicked(view, position);
+                        deleteButtonListener.onDeleteClicked(vw, position);
                     }
                 }
+            });
+            mView.setOnClickListener(view -> {
+                if (categoryShortClickListener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        categoryShortClickListener.onListClicked(view, position);
+                    }
+                }
+            });
+            mView.setOnLongClickListener(v1 -> {
+                if (categoryLongClickListener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        categoryLongClickListener.onListLongClicked(v1, position);
+                        return true;
+                    }
+                }
+                return false;
             });
 
         }

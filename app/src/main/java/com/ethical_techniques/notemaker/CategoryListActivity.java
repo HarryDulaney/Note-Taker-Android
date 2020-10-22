@@ -1,6 +1,5 @@
 package com.ethical_techniques.notemaker;
 
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -29,59 +28,30 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.time.Duration;
 import java.util.List;
 
-/* <h3>Positions in RecyclerView:</h3>
- * <p>
- * RecyclerView introduces an additional level of abstraction between the {@link Adapter} and
- * {@link LayoutManager} to be able to detect data set changes in batches during a layout
- * calculation. This saves LayoutManager from tracking adapter changes to calculate animations.
- * It also helps with performance because all view bindings happen at the same time and unnecessary
- * bindings are avoided.
- * <p>
- * For this reason, there are two types of <code>position</code> related methods in RecyclerView:
- * <ul>
- *     <li>layout position: Position of an item in the latest layout calculation. This is the
- *     position from the LayoutManager's perspective.</li>
- *     <li>adapter position: Position of an item in the adapter. This is the position from
- *     the Adapter's perspective.</li>
- * </ul>
- * <p>
- * These two positions are the same except the time between dispatching <code>adapter.notify*
- * </code> events and calculating the updated layout.
- * <p>
- * Methods that return or receive <code>*LayoutPosition*</code> use position as of the latest
- * layout calculation (e.g. {@link CategoryViewHolder#getLayoutPosition()},
- * {@link #findViewHolderForLayoutPosition(int)}). These positions include all changes until the
- * last layout calculation. You can rely on these positions to be consistent with what user is
- * currently seeing on the screen. For example, if you have a list of items on the screen and user
- * asks for the 5<sup>th</sup> element, you should use these methods as they'll match what user
- * is seeing.
- * <p>
- * The other set of position related methods are in the form of
- * <code>*AdapterPosition*</code>. (e.g. {@link CategoryViewHolder#getAdapterPosition()},
- * {@link #findViewHolderForAdapterPosition(int)}) You should use these methods when you need to
- * work with up-to-date adapter positions even if they may not have been reflected to layout yet.
- * For example, if you want to access the item in the adapter on a CategoryViewHolder click, you should use
- * {@link CategoryViewHolder#getAdapterPosition()}. Beware that these methods may not be able to calculate
- * adapter positions if {@link Adapter#notifyDataSetChanged()} has been called and new layout has
- * not yet been calculated. For this reasons, you should carefully handle {@link #NO_POSITION} or
- * <code>null</code> results from these methods.*/
-//
 
+/**
+ * The type Category list activity controls the behavior of the list of categories.
+ */
 public class CategoryListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
     private final String TAG = this.getClass().getName();
     private static List<Category> categories;
+    /**
+     * The Recycle adapter.
+     */
     CategoryRecycleAdapter recycleAdapter;
+    /**
+     * The Recycler view.
+     */
     RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout_categ_list);
-
-
+        setTitle(R.string.category_list_title);
         //Handle Toolbar
         Toolbar toolbar = findViewById(R.id.action_bar_top);
         setSupportActionBar(toolbar);
@@ -137,19 +107,20 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
         }
         recyclerView = findViewById(R.id.recycleListCategory);
         recycleAdapter = new CategoryRecycleAdapter(categories);
-        recycleAdapter.setEditCategoryListener((view, position) -> {
-            Toast.makeText(this, " Category selected for editing", Toast.LENGTH_LONG).show();
+        recycleAdapter.setLongClickListener((view, position) -> {
             Intent intent = new Intent(this, CreateCategoryActivity.class);
             intent.putExtra(getString(R.string.CATEGORY_ID_KEY), recycleAdapter.getItemId(position));
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
 
         });
+        recycleAdapter.setShortClickListener((view, position) -> {
+            Toast.makeText(this, "Hold a long click on the list item to open the Category for editing.", Toast.LENGTH_LONG).show();
+        });
         recyclerView.addItemDecoration(new SpacingItemDecoration(1, false, true));
         recyclerView.setAdapter(recycleAdapter);
 
     }
-
 
     /**
      * @param item the MenuItem that was clicked
@@ -225,14 +196,16 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
             for (int i = 0; i < recycleAdapter.getItemCount(); i++) {
                 CategoryViewHolder viewHolder = (CategoryViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
                 if (viewHolder != null) {
-                    if (viewHolder.chooseEditCategoryButton.getVisibility() == View.VISIBLE) {
-                        viewHolder.chooseEditCategoryButton.setVisibility(View.INVISIBLE);
+                    if (viewHolder.name.toString().equals(Category.NONE_NAME)) continue;
+
+                        if (viewHolder.deleteButton.getVisibility() == View.VISIBLE) {
+                        viewHolder.deleteButton.setVisibility(View.INVISIBLE);
                     } else {
-                        viewHolder.chooseEditCategoryButton.setVisibility(View.VISIBLE);
+                        viewHolder.deleteButton.setVisibility(View.VISIBLE);
                     }
                     Log.i(TAG, "Edit button on Category list item " + i + "set to visible");
                 } else {
-                    Log.e(TAG, " Error occured at RecycleAdapter position: " + i);
+                    Log.e(TAG, " Error occurred at RecycleAdapter position: " + i);
                 }
 
             }

@@ -26,6 +26,7 @@ import top.defaults.colorpicker.ColorPickerPopup;
  * The type Create category activity.
  */
 public class CreateCategoryActivity extends AppCompatActivity {
+
     private final String TAG = getClass().getName();
     private Category currentCategory;
 
@@ -58,7 +59,7 @@ public class CreateCategoryActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            //Load the note using the noteID\
+            //Load the note using the noteID
             initCategory(extras.getInt(getString(R.string.CATEGORY_ID_KEY)));
         } else {
             //create a new blank note
@@ -101,11 +102,11 @@ public class CreateCategoryActivity extends AppCompatActivity {
         editName.setText(currentCategory.getName());
 
         ImageButton colorPickButton = findViewById(R.id.colorPickerView);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            colorPickButton.getDrawable().setTint(currentCategory.getColor());
-        }
+        colorPickButton.setColorFilter(currentCategory.getColor());
+
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -115,6 +116,9 @@ public class CreateCategoryActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (currentCategory.getName() != null) {
+            //handle Dialog to save changes
+        }
         super.onBackPressed();
     }
 
@@ -143,7 +147,5 @@ public class CreateCategoryActivity extends AppCompatActivity {
 
             }
         }
-
-
     }
 }

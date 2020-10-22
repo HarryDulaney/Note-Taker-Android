@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ImageButton priorityStar;
     Spinner dropDownSpinner;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -250,14 +249,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_main);
+        handleSaveNote(null);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout_main);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
     }
-
 
     /**
      * Initializes the top app bar.
@@ -346,7 +345,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void handleSaveNote(View view) {
 
         if (currentNote.getNoteName() == null || currentNote.getContent() == null) {
-            Toast.makeText(getBaseContext(), "Make sure to fill in the name and the " +
+            Toast.makeText(MainActivity.this, "Make sure to fill in the name and the " +
                     "\n note content fields of the note before saving", Toast.LENGTH_LONG).show();
         } else {
 
