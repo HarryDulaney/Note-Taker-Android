@@ -12,23 +12,23 @@
     tools:context=".MainActivity">
 
 
-    <ImageButton
-        android:id="@+id/saveButton"
-        android:layout_width="56sp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/extraSmMargin"
-        android:layout_marginLeft="@dimen/extraSmMargin"
-        android:layout_marginTop="@dimen/extraSmMargin"
-        android:layout_marginEnd="@dimen/extraSmMargin"
-        android:layout_marginRight="@dimen/extraSmMargin"
-        android:layout_marginBottom="@dimen/extraSmMargin"
-        android:adjustViewBounds="true"
-        android:background="@color/colorPrimaryNavBar"
-        android:baselineAlignBottom="false"
-        android:contentDescription="@string/save"
-        android:onClick="handleSaveNote"
-        android:scaleType="fitStart"
-        android:src="@android:drawable/ic_menu_save" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/saveButton"-->
+<!--        android:layout_width="56sp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="@dimen/extraSmMargin"-->
+<!--        android:layout_marginLeft="@dimen/extraSmMargin"-->
+<!--        android:layout_marginTop="@dimen/extraSmMargin"-->
+<!--        android:layout_marginEnd="@dimen/extraSmMargin"-->
+<!--        android:layout_marginRight="@dimen/extraSmMargin"-->
+<!--        android:layout_marginBottom="@dimen/extraSmMargin"-->
+<!--        android:adjustViewBounds="true"-->
+<!--        android:background="@color/colorPrimaryNavBar"-->
+<!--        android:baselineAlignBottom="false"-->
+<!--        android:contentDescription="@string/save"-->
+<!--        android:onClick="handleSaveNote"-->
+<!--        android:scaleType="fitStart"-->
+<!--        android:src="@android:drawable/ic_menu_save" />-->
 
     <Spinner
         android:id="@+id/categorySpinner"
@@ -43,7 +43,6 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:layout_toStartOf="@id/highPriorityStar"
-        android:layout_toEndOf="@id/saveButton"
         android:autofillHints=""
         android:focusable="auto"
         android:focusableInTouchMode="true"

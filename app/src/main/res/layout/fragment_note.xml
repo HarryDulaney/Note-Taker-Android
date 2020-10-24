@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/hgdivDarkListItemNotes">
+    android:background="@color/listItemDefault">
 
     <!-- Note Title-->
     <TextView
@@ -11,13 +11,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/smallMargin"
-        android:layout_marginLeft="@dimen/smallMargin"
         android:layout_marginTop="@dimen/smallMargin"
         android:maxEms="30"
         android:text="@string/title"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:textColor="@color/hgdivDarkItems"
         android:textSize="20sp"
+        android:textColor="@color/textColorDefault"
         android:textStyle="bold" />
 
     <!-- Delete Button-->
@@ -39,9 +38,8 @@
         android:contentDescription="@string/delete_button_for_this_note"
         android:padding="@dimen/extraSmMargin"
         android:scaleType="center"
-        android:tint="@android:color/holo_red_dark"
         android:visibility="invisible"
-        app:srcCompat="@drawable/ic_delete_forever_white_36dp" />
+        app:srcCompat="@drawable/ic_delete_forever_black_48dp" />
 
     <!-- Date Created -->
     <TextView
@@ -54,7 +52,6 @@
         android:padding="@dimen/fab_margin"
         android:text="@string/d_a_t_e"
         android:textAllCaps="true"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:textColor="@color/hgdivDarkItems" />
-
+        android:textColor="@color/textColorDefault"
+        android:textAppearance="?attr/textAppearanceListItem" />
 </RelativeLayout>

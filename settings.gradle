@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name='NoteMaker'
+rootProject.name='Notes_for_Android'

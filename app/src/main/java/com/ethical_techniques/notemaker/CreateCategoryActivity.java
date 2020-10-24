@@ -1,7 +1,5 @@
 package com.ethical_techniques.notemaker;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,7 +7,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -19,7 +16,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 
-import top.defaults.colorpicker.ColorPickerPopup;
 
 
 /**
@@ -35,25 +31,6 @@ public class CreateCategoryActivity extends AppCompatActivity {
         super.onCreate(saveInstanceBundle);
         setContentView(R.layout.app_bar_categ_create);
 
-        ImageButton colorPickerButton = findViewById(R.id.colorPickerView);
-        colorPickerButton.setOnClickListener(v -> {
-
-            new ColorPickerPopup.Builder(this)
-                    .initialColor(Color.RED) // Set initial color
-                    .enableBrightness(true) // Enable brightness slider or not
-                    .enableAlpha(true) // Enable alpha slider or not
-                    .okTitle("Save Selection")
-                    .cancelTitle("Cancel")
-                    .showIndicator(true)
-                    .build()
-                    .show(v, new ColorPickerPopup.ColorPickerObserver() {
-                        @Override
-                        public void onColorPicked(int color) {
-                            v.setBackgroundColor(color);
-                        }
-
-                    });
-        });
 
         /* Check and Load info based from calling activity */
         Bundle extras = getIntent().getExtras();
@@ -65,19 +42,24 @@ public class CreateCategoryActivity extends AppCompatActivity {
             //create a new blank note
             currentCategory = new Category();
 
-            //Initialize the Toolbar
-            Toolbar toolbar = findViewById(R.id.action_bar_top);
-            setSupportActionBar(toolbar);
-
-            // Get the Toolbar back as an ActionBar and initialize the back button (Up/Home Button)
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            } else {
-                Log.e(TAG, "ActionBar was not created properly...");
-            }
-
         }
+        //Initialize the Toolbar
+        Toolbar toolbar = findViewById(R.id.action_bar_top_cr_cat);
+        setSupportActionBar(toolbar);
+
+        // Get the Toolbar back as an ActionBar and initialize the back button (Up/Home Button)
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else {
+            Log.e(TAG, "ActionBar was not created properly...");
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     /**
@@ -118,6 +100,7 @@ public class CreateCategoryActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (currentCategory.getName() != null) {
             //handle Dialog to save changes
+
         }
         super.onBackPressed();
     }

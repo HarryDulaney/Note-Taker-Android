@@ -7,17 +7,19 @@ import androidx.annotation.RequiresApi;
 
 import com.google.android.material.navigation.NavigationView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 /**
  * A user defined category for logically grouping of Notes.
  * <p>
- * If Category.id is equal to -5 than the Category has not saved in persistent memory.
+ * If Category.ID is equal to -1 than the Category has not saved in persistent memory.
  */
 public class Category {
 
     public static final int NONE = 1;
-    public static final String NONE_NAME = "Un-Categorized";
+    public static final String NONE_NAME = "No Category";
     public static final int NON_COLOR = Color.LTGRAY;
 
     private static final Category DEPHAULT = new Category(NONE, NONE_NAME, NON_COLOR);
@@ -73,6 +75,7 @@ public class Category {
     }
 
 
+    @NotNull
     @Override
     public String toString() {
         return "Category{" +
@@ -92,7 +95,6 @@ public class Category {
                 color == category.color;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public int hashCode() {
         return Objects.hash(id, name, color);

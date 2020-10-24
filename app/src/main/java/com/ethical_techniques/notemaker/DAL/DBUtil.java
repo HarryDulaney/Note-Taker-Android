@@ -1,6 +1,8 @@
 package com.ethical_techniques.notemaker.DAL;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.ethical_techniques.notemaker.model.Category;
 import com.ethical_techniques.notemaker.model.Note;
 
@@ -67,6 +69,11 @@ public class DBUtil {
      * @throws Exception trying to open the the datasource
      */
     public static boolean saveNote(Context context, Note note) throws Exception {
+        if (note.getNoteID() == -2) {
+            Log.i(TAG, "Skipped save Note because Note is the dummy for the Note List intro message");
+            return true;
+        }
+
         boolean wasSuccess = false;
         DataSource nds = new DataSource(context);
         nds.open();

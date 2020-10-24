@@ -2,7 +2,6 @@ package com.ethical_techniques.notemaker;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -85,7 +83,6 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
         navigationView.setNavigationItemSelectedListener(CategoryListActivity.this);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onResume() {
         super.onResume();
@@ -108,10 +105,15 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
         recyclerView = findViewById(R.id.recycleListCategory);
         recycleAdapter = new CategoryRecycleAdapter(categories);
         recycleAdapter.setLongClickListener((view, position) -> {
-            Intent intent = new Intent(this, CreateCategoryActivity.class);
-            intent.putExtra(getString(R.string.CATEGORY_ID_KEY), recycleAdapter.getItemId(position));
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            if (position != 0) {
+                int categoryId = (int) recycleAdapter.getItemId(position);
+                Intent intent = new Intent(this, CreateCategoryActivity.class);
+                intent.putExtra(getString(R.string.CATEGORY_ID_KEY), categoryId);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "This is a default category and is necessary for grouping un-categorized Notes. " +
+                        "Please try creating a new category with the button below.", Toast.LENGTH_LONG).show();
+            }
 
         });
         recycleAdapter.setShortClickListener((view, position) -> {
@@ -184,7 +186,7 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
         // Handle action bar item clicks here.
         int id = item.getItemId();
         if (id == R.id.action_bar_settings) {
-            //Open the note_list_settings activity
+            //Open the settings activity
             Intent i = new Intent(this, SettingsActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
@@ -198,7 +200,7 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
                 if (viewHolder != null) {
                     if (viewHolder.name.toString().equals(Category.NONE_NAME)) continue;
 
-                        if (viewHolder.deleteButton.getVisibility() == View.VISIBLE) {
+                    if (viewHolder.deleteButton.getVisibility() == View.VISIBLE) {
                         viewHolder.deleteButton.setVisibility(View.INVISIBLE);
                     } else {
                         viewHolder.deleteButton.setVisibility(View.VISIBLE);

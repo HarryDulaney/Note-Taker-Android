@@ -2,6 +2,7 @@ package com.ethical_techniques.notemaker;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.renderscript.RenderScript;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,12 @@ import android.widget.TextView;
 
 import com.ethical_techniques.notemaker.DAL.DataSource;
 import com.ethical_techniques.notemaker.model.Note;
+import com.ethical_techniques.notemaker.model.PRIORITY;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,6 +34,9 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
 
 
     public NoteRecycleAdapter(List<Note> items) {
+        if (items.size() == 0) {
+            items.add(new Note(-2, "Hold click here to create a note", 0, "", Calendar.getInstance(), PRIORITY.LOW.getString()));
+        }
         notes = items;
     }
 
@@ -85,11 +91,11 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
         public ViewHolder(final View v) {
             super(v);
             mView = v;
-            v.setOnClickListener(vw ->{
+            v.setOnClickListener(vw -> {
                 if (noteListener != null) {
                     int pos = getAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION) {
-                        noteListener.onNoteClicked(vw,pos);
+                        noteListener.onNoteClicked(vw, pos);
                     }
                 }
             });

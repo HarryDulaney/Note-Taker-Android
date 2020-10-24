@@ -35,6 +35,16 @@ public class DataSource {
     }
 
     /**
+     * @return defCategory, the ContentValues to persist for the fallback/ default Category
+     */
+    public static ContentValues getDefaultCategory() {
+        ContentValues defCategory = new ContentValues();
+        defCategory.put(DBHelper.CATEGORY_NAME, Category.NONE_NAME);
+        defCategory.put(DBHelper.CATEGORY_COLOR_INT, Category.NON_COLOR);
+        return defCategory;
+    }
+
+    /**
      * Open.
      *
      * @throws SQLException the sql exception
@@ -293,6 +303,7 @@ public class DataSource {
 
     /**
      * Delete Note.
+     *
      * @param noteId the id of the note to delete
      */
     protected void delete(int noteId) throws Exception {

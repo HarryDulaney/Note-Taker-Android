@@ -215,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (item.getItemId()) {
             case R.id.nav_my_notes: {
+                handleSaveNote();
                 Intent intent2 = new Intent(this, ListActivity.class);
                 intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent2);
@@ -222,18 +223,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             break;
             case R.id.nav_edit_categories: {
+                handleSaveNote();
                 Intent i3 = new Intent(this, CategoryListActivity.class);
                 i3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i3);
             }
             break;
 
-
             case R.id.nav_share: {
                 //Open share prompt with options to share a note or a list of notes TODO
             }
             break;
-            case R.id.nav_send: {
+            case R.id.nav_sync: {
                 //Open send prompt with options to send a note or a list of notes TODO
             }
             break;
@@ -249,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        handleSaveNote(null);
+        handleSaveNote();
         DrawerLayout drawer = findViewById(R.id.drawer_layout_main);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -278,11 +279,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_bar_settings) {
-            //Open the note_list_settings activity
+            //Open the settings activity
             Intent i = new Intent(this, SettingsActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
             return true;
+        }
+        if (id == R.id.action_bar_save_button) {
+            handleSaveNote();
         }
         return super.onOptionsItemSelected(item);
 
@@ -340,9 +344,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /**
      * Save button clicked
      *
-     * @param view the view parent of the button that was clicked
      */
-    public void handleSaveNote(View view) {
+    public void handleSaveNote() {
 
         if (currentNote.getNoteName() == null || currentNote.getContent() == null) {
             Toast.makeText(MainActivity.this, "Make sure to fill in the name and the " +

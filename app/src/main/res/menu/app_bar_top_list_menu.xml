@@ -8,14 +8,14 @@
     <item
         android:id="@+id/action_bar_editSwitch"
         android:contentDescription="@string/press_editable"
-        android:icon="@drawable/ic_sort_variant_remove_white_36dp"
+        android:icon="@drawable/ic_square_edit_outline_grey600_48dp"
         android:title="@string/edit_list"
         app:showAsAction="always" />
-    <!-- Settings -->
+
     <item
         android:id="@+id/action_bar_settings"
         android:contentDescription="@string/navigate_to_the_settings_menu"
-        android:icon="@drawable/ic_tune_white_36dp"
+        android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/settings"
         app:showAsAction="ifRoom" />
 

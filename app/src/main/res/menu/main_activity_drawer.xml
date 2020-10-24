@@ -15,16 +15,16 @@
         android:icon="@drawable/ic_playlist_plus_grey600_48dp"
         android:title="@string/create_edit_categories" />
 </group>
-<item android:title="@string/export">
+<item android:title="@string/connect">
     <menu>
         <item
             android:id="@+id/nav_share"
             android:icon="@drawable/ic_menu_share"
             android:title="@string/share" />
         <item
-            android:id="@+id/nav_send"
-            android:icon="@drawable/ic_menu_send"
-            android:title="@string/send" />
+            android:id="@+id/nav_sync"
+            android:icon="@drawable/ic_cloud_sync_grey600_48dp"
+            android:title="@string/sync" />
     </menu>
 </item>
 </menu>

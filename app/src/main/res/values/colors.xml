@@ -11,9 +11,13 @@
     <color name="hgdivDarkItems">#FFFFFF</color>
     <color name="hgdivDarkBGOne">#303F9F</color>
     <color name="hgdivDarkListItemNotes">#242C2C</color>
+    <color name="textColorDefault">#0D113E</color>
+    <color name="listItemDefault">#E0F7FA</color>
     <color name="hgdivTextOne">#F3E5F5</color>
     <color name="darkBackgroundPrimary">#323335</color>
     <color name="lightBackgroundDefault">#FFFFFF</color>
     <color name="listbg">#525457</color>
+    <color name="deactivated_link">#B3E5FC</color>
+
 
 </resources>

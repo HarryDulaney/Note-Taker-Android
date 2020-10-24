@@ -4,13 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
 
-    <!-- Settings -->
+    <!-- Save -->
     <item
-        android:id="@+id/action_bar_settings"
-        android:contentDescription="@string/navigate_to_the_settings_menu"
-        android:title="@string/settings"
-        android:icon="@drawable/ic_tune_white_36dp"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/action_bar_save_button"
+        android:contentDescription="@string/save_note_return_to_list"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="@string/save"
+        app:showAsAction="always" />
+
+<!--    &lt;!&ndash; Settings &ndash;&gt;-->
+<!--    <item-->
+<!--        android:id="@+id/action_bar_settings"-->
+<!--        android:contentDescription="@string/navigate_to_the_settings_menu"-->
+<!--        android:icon="@android:drawable/ic_menu_preferences"-->
+<!--        android:title="@string/settings"-->
+<!--        app:showAsAction="ifRoom" />-->
 
 
 </menu>

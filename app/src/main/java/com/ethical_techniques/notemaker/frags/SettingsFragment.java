@@ -1,8 +1,6 @@
 package com.ethical_techniques.notemaker.frags;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -16,7 +14,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.note_list_settings, rootKey);
+        setPreferencesFromResource(R.xml.settings, rootKey);
     }
 
 }

@@ -61,6 +61,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
         holder.name.setText(categories.get(position).getName());
         holder.mView.setBackgroundColor(categories.get(position).getColor());
         holder.deleteButton.setVisibility(View.INVISIBLE);
+        if (position == 0) holder.deleteButton.setColorFilter(R.color.deactivated_link);
 
     }
 

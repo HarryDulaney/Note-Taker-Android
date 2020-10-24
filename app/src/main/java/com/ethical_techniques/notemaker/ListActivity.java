@@ -35,6 +35,7 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
     private static List<Note> notes;
     RecyclerView recyclerView;
     NoteRecycleAdapter noteRecycleAdapter;
+    public static boolean ranOnce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +101,8 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
                 //TODO:Open share prompt with options to share a note or a list of notes
 
                 break;
-            case R.id.nav_send:
-                //TODO:Open send prompt with options to send a note or a list of notes
+            case R.id.nav_sync:
+                //TODO: If user isn't logged in, show login screen, else run sync and ask to auto sync
 
                 break;
             default:
@@ -140,7 +141,7 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_bar_settings) {
-            //Open the note_list_settings activity
+            //Open the settings activity
             Intent i = new Intent(this, SettingsActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
@@ -185,7 +186,8 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(this, "Error retrieving notes, please try reloading. ", Toast.LENGTH_LONG).show();
         }
         /* If the list of Notes if blank, start the NoteActivity (aka MainActivity) */
-        if (notes.size() == 0) {
+        if (notes.size() == 0 && !ranOnce) {
+            ranOnce = true;
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

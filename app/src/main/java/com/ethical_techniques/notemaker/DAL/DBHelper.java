@@ -1,5 +1,6 @@
 package com.ethical_techniques.notemaker.DAL;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -9,7 +10,7 @@ import android.util.Log;
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "NOTES_DATABASE.db";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 1;
 
     public static final String NOTE_TABLE = "note";
     public static final String ID = "_id";
@@ -28,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     + CATEGORY_NAME + " TEXT NOT NULL, " + CATEGORY_COLOR_INT + " INTEGER)";
 
     /**
-     * A Note that isn't explicitly assigned a Category remains assigned to the Dephault type Category and
+     * A Note that isn't explicitly assigned a Category remains assigned to the Dephault("Un-Categorized") type Category and
      * is grouped with other Notes of this Category.
      *
      * The Note holds a reference INTEGER to the _id of the Category of which it was assigned. This dependency is implemented
@@ -50,6 +51,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase database) {
         database.execSQL(CREATE_TABLE_NOTE);
         database.execSQL(CREATE_TABLE_CATEGORY);
+        database.insert(CATEGORY_TABLE,null,DataSource.getDefaultCategory());
     }
 
     @Override

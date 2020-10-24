@@ -58,7 +58,7 @@ public class SettingsActivity extends AppCompatActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_bar_settings) {
-            //Open the note_list_settings activity
+            //Open the settings activity
             Intent i = new Intent(this, SettingsActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
