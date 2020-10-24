@@ -9,7 +9,7 @@
     <string-array name="sort_by_values">
         <item>@string/SORT_BY_DATE</item>
         <item>@string/SORT_BY_PRIORITY</item>
-        <item>@string/SORT_BY_NOTENAME</item>
+        <item>@string/SORT_BY_NAME</item>
     </string-array>
 
     <!-- Sort Order Preference -->
@@ -22,6 +22,6 @@
         <item>@string/SORT_ORDER_HIGH_TO_LOW</item>
         <item>@string/SORT_ORDER_LOW_TO_HIGH</item>
     </string-array>
-    <string name="SORT_BY_NOTENAME">notename</string>
+    <string name="SORT_BY_NAME">notename</string>
 
 </resources>

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -32,7 +33,7 @@ import java.util.List;
 /**
  * The type Category list activity controls the behavior of the list of categories.
  */
-public class CategoryListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class CategoryListActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getName();
     private static List<Category> categories;
@@ -48,11 +49,20 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.drawer_layout_categ_list);
+        setContentView(R.layout.app_bar_categ_list);
         setTitle(R.string.category_list_title);
         //Handle Toolbar
         Toolbar toolbar = findViewById(R.id.action_bar_top);
         setSupportActionBar(toolbar);
+
+
+        // Get the Toolbar back as an ActionBar and initialize the back button (Up/Home Button)
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        } else {
+            Log.e(TAG, "ActionBar was not created properly...");
+        }
 
         //Handle create new note floating button
         FloatingActionButton floatingActionButton = findViewById(R.id.new_category_float_button);
@@ -70,17 +80,17 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
             startActivity(intent);
 
         });
-        //Handle Nav Drawer
-        DrawerLayout navDrawer = findViewById(R.id.drawer_layout_list);
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, navDrawer,
-                toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-        navDrawer.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
-
-        //Handle NavigationView
-        NavigationView navigationView = findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(CategoryListActivity.this);
+//        //Handle Nav Drawer
+//        DrawerLayout navDrawer = findViewById(R.id.drawer_layout_list);
+//        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, navDrawer,
+//                toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//
+//        navDrawer.addDrawerListener(drawerToggle);
+//        drawerToggle.syncState();
+//
+//        //Handle NavigationView
+//        NavigationView navigationView = findViewById(R.id.navigation_view);
+//        navigationView.setNavigationItemSelectedListener(CategoryListActivity.this);
     }
 
     @Override
@@ -124,51 +134,56 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
 
     }
 
-    /**
-     * @param item the MenuItem that was clicked
-     * @return boolean success indicator
-     */
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.nav_new_note:
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                break;
-
-            case R.id.nav_my_notes:
-                Intent intent1 = new Intent(CategoryListActivity.this, ListActivity.class);
-                intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent1);
-                break;
-            case R.id.nav_share:
-                //Open share prompt with options to share a note or a list of notes TODO
-
-                break;
-            case R.id.nav_send:
-                //Open send prompt with options to send a note or a list of notes TODO
-
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + item.getItemId());
-        }
-
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_list);
-        drawerLayout.closeDrawer(GravityCompat.START);
-
-        return true;
-    }
+//    /**
+//     * @param item the MenuItem that was clicked
+//     * @return boolean success indicator
+//     */
+//    @Override
+//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//
+//        switch (item.getItemId()) {
+//            case R.id.nav_new_note:
+//                Intent intent = new Intent(this, MainActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+//                break;
+//
+//            case R.id.nav_my_notes:
+//                Intent intent1 = new Intent(CategoryListActivity.this, ListActivity.class);
+//                intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent1);
+//                break;
+//
+//            case R.id.nav_settings:
+//                SettingsActivity.setCallingActivity(R.integer.categ_list_activty);
+//                //Open the settings activity
+//                Intent i = new Intent(this, SettingsActivity.class);
+//                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(i);
+//                break;
+//
+//            case R.id.nav_share:
+//                //Open share prompt with options to share a note or a list of notes TODO
+//
+//                break;
+//            case R.id.nav_send:
+//                //Open send prompt with options to send a note or a list of notes TODO
+//
+//                break;
+//            default:
+//                throw new IllegalStateException("Unexpected value: " + item.getItemId());
+//        }
+//
+//        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_list);
+//        drawerLayout.closeDrawer(GravityCompat.START);
+//
+//        return true;
+//    }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout_list);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
+
     }
 
     @Override
@@ -185,14 +200,7 @@ public class CategoryListActivity extends AppCompatActivity implements Navigatio
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here.
         int id = item.getItemId();
-        if (id == R.id.action_bar_settings) {
-            //Open the settings activity
-            Intent i = new Intent(this, SettingsActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
-            return true;
-
-        } else if (id == R.id.action_bar_editSwitch) {
+        if (id == R.id.action_bar_editSwitch) {
             // Turn on edit mode for the Category Fragments in the RecyclerView by
             // showing the Edit button on each list item.
             for (int i = 0; i < recycleAdapter.getItemCount(); i++) {

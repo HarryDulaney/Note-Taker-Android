@@ -1,6 +1,5 @@
 package com.ethical_techniques.notemaker;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,14 +14,15 @@ import com.ethical_techniques.notemaker.frags.SettingsFragment;
 public class SettingsActivity extends AppCompatActivity {
 
     private final String TAG = getClass().getName();
+    private static int callingContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_bar_notelist_settings);
+        setContentView(R.layout.app_bar_settings);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.note_list_settings, new SettingsFragment())
+                .replace(R.id.settings, new SettingsFragment())
                 .commit();
 
         //Initialize the Toolbar
@@ -57,16 +57,33 @@ public class SettingsActivity extends AppCompatActivity {
         // Handle action bar item clicks.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_bar_settings) {
-            //Open the settings activity
-            Intent i = new Intent(this, SettingsActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
-            return true;
-        }
+//        if (id == R.id.action_bar_back_button) {
+//            switch (callingContext) {
+//                case R.integer.list_activity:
+//                    //Return to list activity
+//                    break;
+//                case R.integer.categ_list_activty:
+//                    //Return to categoryListActivity
+//                    break;
+//                case R.integer.main_activity:
+//                    //Return to main activity
+//
+//            }
+//
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
+//    public static void setCallingActivity(int contextKey) {
+//        SettingsActivity.callingContext = contextKey;
+//    }
 
 
 }

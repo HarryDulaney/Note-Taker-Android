@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -45,7 +46,7 @@ import java.util.Objects;
  *
  * <p> Main Activity also includes the Navigation Drawer</p>
  */
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getSimpleName();
     private Note currentNote;
@@ -57,20 +58,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.drawer_layout_main);
+        setContentView(R.layout.app_bar_main);
         //Initialize Toolbar
         Toolbar toolbar = findViewById(R.id.action_bar_top);
         setSupportActionBar(toolbar);
-        //Initialize navigation drawer
-        DrawerLayout navDrawer = findViewById(R.id.drawer_layout_main);
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, navDrawer,
-                toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        //Set toggle on nav drawer
-        navDrawer.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
-        //Initialize NavigationView
-        NavigationView navigationView = findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(this);
+
+        // Get the Toolbar back as an ActionBar and initialize the back button (Up/Home Button)
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        } else {
+            Log.e(TAG, "ActionBar was not created properly...");
+        }
+//        //Initialize navigation drawer
+//        DrawerLayout navDrawer = findViewById(R.id.drawer_layout_main);
+//        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, navDrawer,
+//                toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        //Set toggle on nav drawer
+//        navDrawer.addDrawerListener(drawerToggle);
+//        drawerToggle.syncState();
+//        //Initialize NavigationView
+//        NavigationView navigationView = findViewById(R.id.navigation_view);
+//        navigationView.setNavigationItemSelectedListener(this);
 
         /* Check and Load info based from previous activity */
         Bundle extras = getIntent().getExtras();
@@ -205,58 +214,60 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
-    /**
-     * @param item the MenuItem that was clicked
-     * @return boolean success indicator
-     */
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.nav_my_notes: {
-                handleSaveNote();
-                Intent intent2 = new Intent(this, ListActivity.class);
-                intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent2);
-
-            }
-            break;
-            case R.id.nav_edit_categories: {
-                handleSaveNote();
-                Intent i3 = new Intent(this, CategoryListActivity.class);
-                i3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(i3);
-            }
-            break;
-
-            case R.id.nav_share: {
-                //Open share prompt with options to share a note or a list of notes TODO
-            }
-            break;
-            case R.id.nav_sync: {
-                //Open send prompt with options to send a note or a list of notes TODO
-            }
-            break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + item.getItemId());
-        }
-
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_main);
-        drawerLayout.closeDrawer(GravityCompat.START);
-
-        return true;
-    }
+//
+//    /**
+//     * @param item the MenuItem that was clicked
+//     * @return boolean success indicator
+//     */
+//    @Override
+//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//
+//        switch (item.getItemId()) {
+//            case R.id.nav_my_notes: {
+//                handleSaveNote();
+//                Intent intent2 = new Intent(this, ListActivity.class);
+//                intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(intent2);
+//
+//            }
+//            break;
+//            case R.id.nav_edit_categories: {
+//                handleSaveNote();
+//                Intent i3 = new Intent(this, CategoryListActivity.class);
+//                i3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(i3);
+//            }
+//            break;
+//
+//            case R.id.nav_settings:
+//                SettingsActivity.setCallingActivity(R.integer.main_activity);
+//                //Open the settings activity
+//                Intent i = new Intent(this, SettingsActivity.class);
+//                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(i);
+//
+//            case R.id.nav_share: {
+//                //Open share prompt with options to share a note or a list of notes TODO
+//            }
+//            break;
+//            case R.id.nav_sync: {
+//                //Open send prompt with options to send a note or a list of notes TODO
+//            }
+//            break;
+//            default:
+//                throw new IllegalStateException("Unexpected value: " + item.getItemId());
+//        }
+//
+//        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_main);
+//        drawerLayout.closeDrawer(GravityCompat.START);
+//
+//        return true;
+//    }
 
     @Override
     public void onBackPressed() {
         handleSaveNote();
-        DrawerLayout drawer = findViewById(R.id.drawer_layout_main);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
     /**
@@ -277,14 +288,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks.
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_bar_settings) {
-            //Open the settings activity
-            Intent i = new Intent(this, SettingsActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
-            return true;
-        }
         if (id == R.id.action_bar_save_button) {
             handleSaveNote();
         }
@@ -343,7 +346,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /**
      * Save button clicked
-     *
      */
     public void handleSaveNote() {
 

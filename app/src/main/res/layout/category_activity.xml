@@ -12,19 +12,19 @@
     tools:context=".CreateCategoryActivity">
 
 
-    <ImageButton
-        android:id="@+id/saveButton"
-        android:layout_width="64sp"
-        android:layout_height="64sp"
-        android:layout_marginStart="@dimen/extraSmMargin"
-        android:layout_marginTop="@dimen/extraSmMargin"
-        android:layout_marginEnd="@dimen/extraSmMargin"
-        android:layout_marginBottom="@dimen/extraSmMargin"
-        android:background="@color/colorPrimaryNavBar"
-        android:contentDescription="@string/save"
-        android:onClick="handleSaveCategory"
-        android:scaleType="fitCenter"
-        android:src="@android:drawable/ic_menu_save" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/saveButton"-->
+<!--        android:layout_width="64sp"-->
+<!--        android:layout_height="64sp"-->
+<!--        android:layout_marginStart="@dimen/extraSmMargin"-->
+<!--        android:layout_marginTop="@dimen/extraSmMargin"-->
+<!--        android:layout_marginEnd="@dimen/extraSmMargin"-->
+<!--        android:layout_marginBottom="@dimen/extraSmMargin"-->
+<!--        android:background="@color/colorPrimaryNavBar"-->
+<!--        android:contentDescription="@string/save"-->
+<!--        android:onClick="handleSaveCategory"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        android:src="@android:drawable/ic_menu_save" />-->
 
 
     <EditText
@@ -42,8 +42,8 @@
         android:id="@+id/colorPickerView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/saveButton"
         android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/mediumMargin"
         android:background="@color/colorPrimaryNavBar"
         android:contentDescription="@string/save"
         android:src="@drawable/ic_palette_white_48dp" />

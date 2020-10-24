@@ -8,7 +8,7 @@
     <string name="notemaker">Note App</string>
     <string name="title_activity_list">Saved Notes</string>
     <string name="save_note_return_to_list">Save the note and return to list</string>
-    <string name="title_activity_settings">Note List Settings</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="add_contact">New Note</string>
     <string name="empty_note">Lors epsum oprotunet skopstompem reevelenas tos vuptum</string>
     <string name="no_subject">no subject</string>
@@ -25,7 +25,7 @@
     <string name="navbarImageBttonListContentDesc">The NavBar ImageButton for Note List Screen</string>
 
     <!-- Preferences Constants -->
-
+    <!-- NOTES -->
     <string name="SORT_BY_PREF_ID">sort.by.preference</string>
     <string name="SORT_ORDER_PREF_ID">sort.order.preference</string>
 
@@ -35,8 +35,11 @@
     <string name="SORT_ORDER_HIGH_TO_LOW">DESC</string>
     <string name="SORT_ORDER_LOW_TO_HIGH">ASC</string>
 
-    <string name="USER_PREFERENCES">"global.application.preferences"</string>
-    <string name="USER_PREFERENCES_SORTING">"global.sorting.preferences"</string>
+
+    <!-- CATEGORIES -->
+    <string name="SORT_CATEGORY_BY_PREF_ID">category.sort.by.preference</string>
+    <string name="SORT_CATEGORY_ORDER_PREF_ID">category.sort.order.preference</string>
+
 
     <string name="ascending">Low to High</string>
     <string name="descending">High to Low</string>
@@ -123,6 +126,6 @@
     <string name="category_color">Category Color</string>
     <string name="open_this_note_for_editing">Open this note for editing</string>
     <string name="select_and_deselect_this_note_as_high_priority">Select and deselect this note as high priority</string>
-    <string name="backbutton">BackButton</string>
+    <string name="backbutton">Back Button</string>
 
 </resources>

@@ -33,23 +33,33 @@
             android:parentActivityName=".ListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ListActivity"/>
+                android:value=".ListActivity" />
         </activity>
         <!-- The Edit/New Note Activity -->
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_note_activity" />
+            android:label="@string/title_note_activity"
+            android:parentActivityName=".ListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ListActivity" />
+        </activity>
+
 
         <!-- Category List Activity -->
         <activity
             android:name=".CategoryListActivity"
-            android:label="Categories" />
+            android:label="Categories"
+            android:parentActivityName=".ListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ListActivity" />
+        </activity>
         <!-- The New/Edit Category Activity -->
         <activity
             android:name="CreateCategoryActivity"
             android:label="New Category"
             android:parentActivityName=".CategoryListActivity">
-
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

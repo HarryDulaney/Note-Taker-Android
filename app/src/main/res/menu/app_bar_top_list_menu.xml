@@ -12,12 +12,12 @@
         android:title="@string/edit_list"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/action_bar_settings"
-        android:contentDescription="@string/navigate_to_the_settings_menu"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:title="@string/settings"
-        app:showAsAction="ifRoom" />
+<!--    <item-->
+<!--        android:id="@+id/action_bar_settings"-->
+<!--        android:contentDescription="@string/navigate_to_the_settings_menu"-->
+<!--        android:icon="@android:drawable/ic_menu_preferences"-->
+<!--        android:title="@string/settings"-->
+<!--        app:showAsAction="ifRoom" />-->
 
 
 </menu>

@@ -15,7 +15,7 @@
     tools:context=".SettingsActivity">
 
     <FrameLayout
-        android:id="@id/note_list_settings"
+        android:id="@id/settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

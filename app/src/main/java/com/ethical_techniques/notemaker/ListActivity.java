@@ -28,7 +28,9 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
-
+/**
+ * The Parent Activity containing the navigation drawer. Other activities will return to this main menu list.
+ */
 public class ListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = this.getClass().getName();
@@ -97,6 +99,13 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(i2);
                 break;
 
+            case R.id.nav_settings:
+                //Open the settings activity
+                Intent i = new Intent(this, SettingsActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+                break;
+
             case R.id.nav_share:
                 //TODO:Open share prompt with options to share a note or a list of notes
 
@@ -140,14 +149,7 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
         // Handle action bar item clicks here.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_bar_settings) {
-            //Open the settings activity
-            Intent i = new Intent(this, SettingsActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
-
-            return true;
-        } else if (id == R.id.action_bar_editSwitch) {
+        if (id == R.id.action_bar_editSwitch) {
             //Edit mode activated
             for (int i = 0; i < noteRecycleAdapter.getItemCount();
                  i++) {
