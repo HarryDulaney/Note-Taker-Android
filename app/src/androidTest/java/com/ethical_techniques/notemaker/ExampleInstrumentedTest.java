@@ -23,24 +23,24 @@ import java.util.List;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(AndroidJUnit4.class)
+//@RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
-
-    @Before
-    public void testObjects() {
-        List<Note> notes = new ArrayList<>();
-        List<Category> categories = new ArrayList<>();
-
-        int category = new Category(11,"To Do's", Color.valueOf(Color.CYAN));
-        Note note = new Note(17,"Test Note",category,"This is a test Note", Calendar.getInstance(), PRIORITY.HIGH);
-
-    }
-
-    @Test
-    public void useAppContext() {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
-//        assertEquals();
-    }
+//
+//    @Before
+//    public void testObjects() {
+//        List<Note> notes = new ArrayList<>();
+//        List<Category> categories = new ArrayList<>();
+//
+//        int category = new Category(11,"To Do's", Color.valueOf(Color.CYAN));
+//        Note note = new Note(17,"Test Note",category,"This is a test Note", Calendar.getInstance(), PRIORITY.HIGH);
+//
+//    }
+//
+//    @Test
+//    public void useAppContext() {
+//        // Context of the app under test.
+//        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+//
+////        assertEquals();
+//    }
 }

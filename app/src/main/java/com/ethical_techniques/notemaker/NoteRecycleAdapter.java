@@ -34,9 +34,6 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
 
 
     public NoteRecycleAdapter(List<Note> items) {
-        if (items.size() == 0) {
-            items.add(new Note(-2, "Hold click here to create a note", 0, "", Calendar.getInstance(), PRIORITY.LOW.getString()));
-        }
         notes = items;
     }
 

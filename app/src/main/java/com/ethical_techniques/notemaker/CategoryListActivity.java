@@ -143,7 +143,7 @@ public class CategoryListActivity extends AppCompatActivity {
 //
 //        switch (item.getItemId()) {
 //            case R.id.nav_new_note:
-//                Intent intent = new Intent(this, MainActivity.class);
+//                Intent intent = new Intent(this, NoteActivity.class);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //                startActivity(intent);
 //                break;

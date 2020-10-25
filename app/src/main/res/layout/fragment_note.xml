@@ -3,8 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/listItemDefault">
-
+    android:layout_marginStart="@dimen/extraSmMargin"
+    android:layout_marginTop="@dimen/extraSmMargin"
+    android:layout_marginEnd="@dimen/extraSmMargin"
+    android:layout_marginBottom="@dimen/extraSmMargin"
+    android:background="@color/listbg"
+    android:padding="@dimen/extraSmMargin">
     <!-- Note Title-->
     <TextView
         android:id="@+id/textNoteTitle"
@@ -15,8 +19,8 @@
         android:maxEms="30"
         android:text="@string/title"
         android:textAppearance="?attr/textAppearanceListItem"
+        android:textColor="@color/hgdivTextOne"
         android:textSize="20sp"
-        android:textColor="@color/textColorDefault"
         android:textStyle="bold" />
 
     <!-- Delete Button-->
@@ -33,13 +37,12 @@
         android:layout_marginEnd="@dimen/smallMargin"
         android:layout_marginRight="@dimen/smallMargin"
         android:layout_marginBottom="@dimen/smallMargin"
-        android:adjustViewBounds="true"
         android:background="#00FFFFFF"
         android:contentDescription="@string/delete_button_for_this_note"
         android:padding="@dimen/extraSmMargin"
         android:scaleType="center"
         android:visibility="invisible"
-        app:srcCompat="@drawable/ic_delete_forever_black_48dp" />
+        app:srcCompat="@drawable/ic_delete_forever_white_36dp" />
 
     <!-- Date Created -->
     <TextView
@@ -52,6 +55,6 @@
         android:padding="@dimen/fab_margin"
         android:text="@string/d_a_t_e"
         android:textAllCaps="true"
-        android:textColor="@color/textColorDefault"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textColor="@color/hgdivTextOne" />
 </RelativeLayout>

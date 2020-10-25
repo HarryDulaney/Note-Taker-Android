@@ -17,19 +17,14 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.model.Category;
 import com.ethical_techniques.notemaker.model.Note;
 import com.ethical_techniques.notemaker.model.PRIORITY;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.sql.SQLException;
@@ -46,7 +41,7 @@ import java.util.Objects;
  *
  * <p> Main Activity also includes the Navigation Drawer</p>
  */
-public class MainActivity extends AppCompatActivity {
+public class NoteActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getSimpleName();
     private Note currentNote;
@@ -62,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         //Initialize Toolbar
         Toolbar toolbar = findViewById(R.id.action_bar_top);
         setSupportActionBar(toolbar);
+        priorityStar = findViewById(R.id.highPriorityStar);
 
         // Get the Toolbar back as an ActionBar and initialize the back button (Up/Home Button)
         ActionBar actionBar = getSupportActionBar();
@@ -70,16 +66,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.e(TAG, "ActionBar was not created properly...");
         }
-//        //Initialize navigation drawer
-//        DrawerLayout navDrawer = findViewById(R.id.drawer_layout_main);
-//        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, navDrawer,
-//                toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        //Set toggle on nav drawer
-//        navDrawer.addDrawerListener(drawerToggle);
-//        drawerToggle.syncState();
-//        //Initialize NavigationView
-//        NavigationView navigationView = findViewById(R.id.navigation_view);
-//        navigationView.setNavigationItemSelectedListener(this);
 
         /* Check and Load info based from previous activity */
         Bundle extras = getIntent().getExtras();
@@ -350,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
     public void handleSaveNote() {
 
         if (currentNote.getNoteName() == null || currentNote.getContent() == null) {
-            Toast.makeText(MainActivity.this, "Make sure to fill in the name and the " +
+            Toast.makeText(NoteActivity.this, "Make sure to fill in the name and the " +
                     "\n note content fields of the note before saving", Toast.LENGTH_LONG).show();
         } else {
 
@@ -359,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
 
             boolean success = false;
             try {
-                success = DBUtil.saveNote(MainActivity.this, currentNote);
+                success = DBUtil.saveNote(NoteActivity.this, currentNote);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -369,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
                                 "\nClick on the List icon on the navigation bar to manage your notes. ",
                         Toast.LENGTH_LONG).show();
 
-                Intent intent2 = new Intent(MainActivity.this, ListActivity.class);
+                Intent intent2 = new Intent(NoteActivity.this, ListActivity.class);
                 intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent2);
             }

@@ -37,7 +37,7 @@
         </activity>
         <!-- The Edit/New Note Activity -->
         <activity
-            android:name=".MainActivity"
+            android:name=".NoteActivity"
             android:label="@string/title_note_activity"
             android:parentActivityName=".ListActivity">
             <meta-data

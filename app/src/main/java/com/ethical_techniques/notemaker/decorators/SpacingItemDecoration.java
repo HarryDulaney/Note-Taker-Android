@@ -6,6 +6,8 @@ import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 public class SpacingItemDecoration extends RecyclerView.ItemDecoration {
@@ -24,7 +26,7 @@ public class SpacingItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(@NotNull Rect outRect, @NotNull View view, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
         if (spacingPx <= 0) {
             return;
