@@ -1,8 +1,7 @@
-package com.ethical_techniques.notemaker;
+package com.ethical_techniques.notemaker.adapters;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.renderscript.RenderScript;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +10,15 @@ import android.widget.TextView;
 
 
 import com.ethical_techniques.notemaker.DAL.DataSource;
+import com.ethical_techniques.notemaker.listeners.NoteClickListener;
+import com.ethical_techniques.notemaker.R;
+import com.ethical_techniques.notemaker.listeners.NoteLongClickListener;
 import com.ethical_techniques.notemaker.model.Note;
 import com.ethical_techniques.notemaker.model.PRIORITY;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 

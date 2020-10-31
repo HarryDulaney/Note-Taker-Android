@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * The type Category list activity controls the behavior of the list of categories.
  */
-public class CategoryListActivity extends AppCompatActivity {
+public class CategoryListActivity extends BaseActivity {
 
     private final String TAG = this.getClass().getName();
     private static List<Category> categories;

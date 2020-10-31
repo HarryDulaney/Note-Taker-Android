@@ -23,6 +23,7 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
+import com.ethical_techniques.notemaker.adapters.NoteRecycleAdapter;
 import com.ethical_techniques.notemaker.model.Note;
 import com.ethical_techniques.notemaker.model.PRIORITY;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -230,13 +231,8 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
 
         });
         /* Set listener event behavior for regular (short) click on list item */
-        noteRecycleAdapter.setNoteClickListener(new NoteClickListener() {
-            @Override
-            public void onNoteClicked(View view, int position) {
-                Toast.makeText(ListActivity.this, "Hold down a long click to open the note the editing"
-                        , Toast.LENGTH_LONG).show();
-            }
-        });
+        noteRecycleAdapter.setNoteClickListener((view, position) -> Toast.makeText(ListActivity.this, "Hold down a long click to open the note the editing"
+                , Toast.LENGTH_LONG).show());
         noteRecycleAdapter.setPriorityStarListener((priorityView, position) -> {
             Note priorityNote = notes.get(position);
             if (priorityNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {

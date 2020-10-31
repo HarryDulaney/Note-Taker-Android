@@ -23,7 +23,6 @@ public class UserLoginActivity extends BaseActivity {
         setContentView(R.layout.activity_user_login);
         Toolbar toolbar = findViewById(R.id.action_bar_login);
         setSupportActionBar(toolbar);
-        
     }
 
 }

@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ethical_techniques.notemaker.DAL.DataSource;
+import com.ethical_techniques.notemaker.listeners.ListClickListener;
+import com.ethical_techniques.notemaker.listeners.ListLongClickListener;
 import com.ethical_techniques.notemaker.model.Category;
 
 import org.jetbrains.annotations.NotNull;
@@ -101,7 +103,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
                 if (categoryShortClickListener != null) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        categoryShortClickListener.onListClicked(view, position);
+                        categoryShortClickListener.clicked(view, position);
                     }
                 }
             });
@@ -109,7 +111,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
                 if (categoryLongClickListener != null) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        categoryLongClickListener.onListLongClicked(v1, position);
+                        categoryLongClickListener.clicked(v1, position);
                         return true;
                     }
                 }
