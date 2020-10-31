@@ -16,16 +16,15 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
-import com.ethical_techniques.notemaker.decorators.DividerItemDecoration;
-import com.ethical_techniques.notemaker.decorators.SpacingItemDecoration;
 import com.ethical_techniques.notemaker.model.Note;
+import com.ethical_techniques.notemaker.model.PRIORITY;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -174,8 +173,10 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
             NoteRecycleAdapter.ViewHolder viewHolder = (NoteRecycleAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
             if (viewHolder != null) {
                 if (viewHolder.deleteButton.getVisibility() == View.VISIBLE) {
-                    viewHolder.deleteButton.setVisibility(View.INVISIBLE);
+                    viewHolder.deleteButton.setVisibility(View.GONE);
+                    viewHolder.priorityStar.setVisibility(View.VISIBLE);
                 } else {
+                    viewHolder.priorityStar.setVisibility(View.GONE);
                     viewHolder.deleteButton.setVisibility(View.VISIBLE);
                 }
                 Log.i(TAG, "Edit button on list item " + i + "set to visible");
@@ -236,6 +237,19 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
                         , Toast.LENGTH_LONG).show();
             }
         });
+        noteRecycleAdapter.setPriorityStarListener((priorityView, position) -> {
+            Note priorityNote = notes.get(position);
+            if (priorityNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
+                if (priorityView instanceof ImageButton) {
+                    ImageButton priorityStar = (ImageButton) priorityView;
+                    priorityStar.setColorFilter(R.color.colorPriorityHigh);
+                }
+                priorityNote.setPRIORITY_LEVEL(PRIORITY.LOW.getString());
+                Toast.makeText(this, "The current note is set to regular priority",
+                        Toast.LENGTH_LONG).show();
+
+            }
+        });
 
 
         /* Set listener event behavior for regular click on delete button */
@@ -267,4 +281,17 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
 
         recyclerView.setAdapter(noteRecycleAdapter);
     }
+
+    public void handleToggleStar(View starView) {
+        if (starView instanceof ImageButton) {
+            ImageButton starButton = (ImageButton) starView;
+            if (starButton.getDrawable().getCurrent() == ContextCompat.getDrawable(this, android.R.drawable.btn_star_big_off)) {
+                starButton.setImageDrawable(ContextCompat.getDrawable(this, android.R.drawable.btn_star_big_on));
+
+            } else {
+                starButton.setImageDrawable(ContextCompat.getDrawable(this, android.R.drawable.btn_star_big_off));
+            }
+        }
+    }
+
 }

@@ -11,5 +11,13 @@
         android:icon="@drawable/ic_playlist_edit_white_48dp"
         android:title="@string/edit_list"
         app:showAsAction="always" />
+    <!-- Categories -->
+    <item
+        android:id="@+id/action_bar_categoriesDropdown"
+        android:contentDescription="@string/press_editable"
+        android:icon="@drawable/ic_playlist_edit_white_48dp"
+        android:title="@string/edit_list"
+        app:showAsAction="ifRoom" />
+
 
 </menu>

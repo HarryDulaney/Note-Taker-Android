@@ -19,7 +19,7 @@ import java.util.Objects;
 public class Category {
 
     public static final int NONE = 1;
-    public static final String NONE_NAME = "Categories";
+    public static final String NONE_NAME = "Assign to Category";
     public static final int NON_COLOR = Color.LTGRAY;
 
     private static final Category DEPHAULT = new Category(NONE, NONE_NAME, NON_COLOR);

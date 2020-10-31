@@ -32,6 +32,8 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
     private NoteClickListener deleteButtonListener;
     private NoteLongClickListener noteLongClickListener;
 
+    private NoteClickListener priorityStarListener;
+
 
     public NoteRecycleAdapter(List<Note> items) {
         notes = items;
@@ -51,6 +53,10 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
         holder.title.setText(note.getNoteName());
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
         holder.date.setText(dateFormat.format(note.getDateCreated().getTime()));
+
+        if (note.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
+            holder.priorityStar.setColorFilter(R.color.colorPriorityHigh);
+        }
     }
 
     @Override
@@ -62,6 +68,10 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
     public long getItemId(int position) {
         return notes.get(position).getNoteID();
 
+    }
+
+    public void setPriorityStarListener(NoteClickListener priorityStarListener) {
+        this.priorityStarListener = priorityStarListener;
     }
 
     public void setNoteClickListener(NoteClickListener noteListener) {
@@ -84,6 +94,7 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
         public final TextView title;
         public final TextView date;
         public final ImageButton deleteButton;
+        public final ImageButton priorityStar;
 
         public ViewHolder(final View v) {
             super(v);
@@ -115,6 +126,15 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         deleteButtonListener.onNoteClicked(v1, position);
+                    }
+                }
+            });
+            priorityStar = v.findViewById(R.id.highPriorityStar);
+            priorityStar.setOnClickListener(star -> {
+                if (priorityStarListener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        priorityStarListener.onNoteClicked(star, position);
                     }
                 }
             });

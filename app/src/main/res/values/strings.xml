@@ -128,5 +128,17 @@
     <string name="select_and_deselect_this_note_as_high_priority">Select and deselect this note as high priority</string>
     <string name="backbutton">Back Button</string>
     <string name="empty_note_list_message_p1">This is where your notes will be. Click the Add Note icon to create a new Note</string>
+    <string name="login_title_activity">Login and Sync</string>
+    <string name="easylogin">Easy Login</string>
+    <string name="googleIcon">Google Icon</string>
+    <string name="title_activity_user_login">UserLoginActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
 </resources>

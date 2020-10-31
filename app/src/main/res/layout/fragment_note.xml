@@ -41,15 +41,17 @@
         android:contentDescription="@string/delete_button_for_this_note"
         android:padding="@dimen/extraSmMargin"
         android:scaleType="center"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:srcCompat="@drawable/ic_delete_forever_white_36dp" />
 
-    <!-- Priority On / Off Switch -->
+    <!-- High Priority On / Off Switch -->
     <ImageButton
         android:id="@+id/highPriorityStar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/textNoteTitle"
         android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/smallMargin"
         android:layout_marginLeft="@dimen/smallMargin"
         android:layout_marginTop="@dimen/smallMargin"
@@ -58,8 +60,9 @@
         android:layout_marginBottom="@dimen/smallMargin"
         android:background="#00FFFFFF"
         android:contentDescription="@string/select_and_deselect_this_note_as_high_priority"
-        android:src="@drawable/ic_file_star_grey600_48dp" />
-
+        android:padding="@dimen/extraSmMargin"
+        android:src="@drawable/ic_star_grey600_36dp"
+        android:visibility="visible" />
 
     <!-- Date Created -->
     <TextView

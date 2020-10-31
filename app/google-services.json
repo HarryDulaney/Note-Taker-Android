@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "452138447395",
+    "firebase_url": "https://notes-for-android-90fdf.firebaseio.com",
+    "project_id": "notes-for-android-90fdf",
+    "storage_bucket": "notes-for-android-90fdf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452138447395:android:c85586c8deef5e76507796",
+        "android_client_info": {
+          "package_name": "com.ethical_techniques.notemaker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "452138447395-6n5hof303jjdrbcjd8nv6o69di1ittn0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ethical_techniques.notemaker",
+            "certificate_hash": "a94f52508a54e491a78b65dcbb8abe97eeff262e"
+          }
+        },
+        {
+          "client_id": "452138447395-i78qkhqstpggbhi93hp142360aifdjbl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOP8JBfnVG7WL5BHTypWixqwJK4v2liGc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "452138447395-i78qkhqstpggbhi93hp142360aifdjbl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

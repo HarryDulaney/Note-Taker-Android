@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".NoteActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/action_bar_top"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/design_default_color_primary_dark"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:id="@+id/note_activity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/darkBackgroundPrimary"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".NoteActivity">
+
+
+        <Spinner
+            android:id="@+id/categorySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:alwaysDrawnWithCache="false"
+            android:animateLayoutChanges="false"
+            android:autofillHints=""
+            android:focusable="auto"
+            android:focusableInTouchMode="true"
+            android:spinnerMode="dropdown" />
+
+
+        <EditText
+            android:id="@+id/editTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/categorySpinner"
+            android:layout_margin="@dimen/extraSmMargin"
+            android:autofillHints=""
+            android:ems="18"
+            android:hint="@string/enter_a_title"
+            android:inputType="textCapWords"
+            android:textSize="19sp" />
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editNotes"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/editTitle"
+            android:layout_margin="@dimen/smallMargin"
+            android:focusable="true"
+            android:gravity="start"
+            android:hint="@string/write_your_note_here_then_hit_save"
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical"
+            android:selectAllOnFocus="false"
+            android:textAlignment="viewStart"
+            android:textSize="18sp" />
+
+
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -4,15 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".SettingsActivity">
+    tools:context=".CategoryListActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:layout_insetEdge="top"
-        android:layout_marginTop="0dp">
+        app:layout_insetEdge="top">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/action_bar_top"
@@ -22,10 +21,23 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/settings_activity"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleListCategory"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_dodgeInsetEdges="top"
-        android:layout_marginTop="0dp"/>
+        tools:listitem="@layout/fragment_category" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/new_category_float_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_playlist_plus_grey600_48dp"
+        android:tint="@color/design_default_color_surface"
+        android:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

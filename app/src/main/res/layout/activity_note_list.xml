@@ -12,9 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:layout_insetEdge="top"
-        android:layout_marginTop="0dp">
-
+        app:layout_insetEdge="top">
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/action_bar_top"
             android:layout_width="match_parent"
@@ -23,13 +21,16 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <include
-        layout="@layout/fragment_item_list"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleList"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="0dp"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/fragment_note"
         app:layout_dodgeInsetEdges="top" />
+
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

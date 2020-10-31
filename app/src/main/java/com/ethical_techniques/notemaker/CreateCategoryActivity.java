@@ -29,7 +29,7 @@ public class CreateCategoryActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle saveInstanceBundle) {
         super.onCreate(saveInstanceBundle);
-        setContentView(R.layout.app_bar_categ_create);
+        setContentView(R.layout.activity_categ_create);
 
 
         /* Check and Load info based from calling activity */

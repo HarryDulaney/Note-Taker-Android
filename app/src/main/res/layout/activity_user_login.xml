@@ -5,21 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".CreateCategoryActivity">
+    tools:context=".auth.UserLoginActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_marginTop="0dp"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_insetEdge="top">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/action_bar_top_cr_cat"
+            android:id="@+id/action_bar_login"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/design_default_color_primary_dark"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/category_activity" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+
+    </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -2,6 +2,8 @@ package com.ethical_techniques.notemaker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,13 +15,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.model.Category;
@@ -47,17 +49,16 @@ public class NoteActivity extends AppCompatActivity {
     private Note currentNote;
     private List<Category> categories;
     private Category currentNoteCategory;
-    ImageButton priorityStar;
     Spinner dropDownSpinner;
+    MenuItem priorityStar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_bar_main);
+        setContentView(R.layout.activity_note);
         //Initialize Toolbar
         Toolbar toolbar = findViewById(R.id.action_bar_top);
         setSupportActionBar(toolbar);
-        priorityStar = findViewById(R.id.highPriorityStar);
 
         // Get the Toolbar back as an ActionBar and initialize the back button (Up/Home Button)
         ActionBar actionBar = getSupportActionBar();
@@ -182,7 +183,7 @@ public class NoteActivity extends AppCompatActivity {
             }
 
         }
-        // Set the priority level ie color in star or not
+        // Set the priority level ie color in star
         initPriorityStar(currentNote);
     }
 
@@ -192,63 +193,10 @@ public class NoteActivity extends AppCompatActivity {
      * @param note populating the Activity fields
      */
     private void initPriorityStar(Note note) {
-        priorityStar = findViewById(R.id.highPriorityStar);
-        if (note.getPRIORITY_LEVEL().equals("high")) {
-            priorityStar.setColorFilter(getResources().getColor(R.color.colorPriorityHigh));
-        } else {
-            priorityStar.getDrawable().setColorFilter(null);
+        if (priorityStar != null) {
+            handleTogglePriorityStar(priorityStar, note.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString()));
         }
     }
-
-//
-//    /**
-//     * @param item the MenuItem that was clicked
-//     * @return boolean success indicator
-//     */
-//    @Override
-//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//
-//        switch (item.getItemId()) {
-//            case R.id.nav_my_notes: {
-//                handleSaveNote();
-//                Intent intent2 = new Intent(this, ListActivity.class);
-//                intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                startActivity(intent2);
-//
-//            }
-//            break;
-//            case R.id.nav_edit_categories: {
-//                handleSaveNote();
-//                Intent i3 = new Intent(this, CategoryListActivity.class);
-//                i3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                startActivity(i3);
-//            }
-//            break;
-//
-//            case R.id.nav_settings:
-//                SettingsActivity.setCallingActivity(R.integer.main_activity);
-//                //Open the settings activity
-//                Intent i = new Intent(this, SettingsActivity.class);
-//                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                startActivity(i);
-//
-//            case R.id.nav_share: {
-//                //Open share prompt with options to share a note or a list of notes TODO
-//            }
-//            break;
-//            case R.id.nav_sync: {
-//                //Open send prompt with options to send a note or a list of notes TODO
-//            }
-//            break;
-//            default:
-//                throw new IllegalStateException("Unexpected value: " + item.getItemId());
-//        }
-//
-//        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_main);
-//        drawerLayout.closeDrawer(GravityCompat.START);
-//
-//        return true;
-//    }
 
     @Override
     public void onBackPressed() {
@@ -263,7 +211,29 @@ public class NoteActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_bar_top_menu, menu);
+        priorityStar = menu.findItem(R.id.action_bar_priority_star);
         return true;
+    }
+
+    /**
+     * Switches the priority star on and off
+     */
+    private void handleTogglePriorityStar(MenuItem menuItem, boolean colorTheStar) {
+        Drawable starDrawable = menuItem.getIcon();
+        if (starDrawable != null) {
+            starDrawable.mutate();
+            if (colorTheStar) {
+                starDrawable.setColorFilter(ContextCompat.getColor(this, R.color.colorPriorityHigh), PorterDuff.Mode.SRC_ATOP);
+
+                Toast.makeText(this, "The current note is set to high priority",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                starDrawable.setColorFilter(null);
+                Toast.makeText(this, "The current note is set to regular priority",
+                        Toast.LENGTH_LONG).show();
+
+            }
+        }
     }
 
     /**
@@ -276,11 +246,16 @@ public class NoteActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_bar_save_button) {
             handleSaveNote();
+        } else if (id == R.id.action_bar_priority_star) {
+            handleTogglePriorityStar(item, !(currentNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())));
+            if (currentNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
+                currentNote.setPRIORITY_LEVEL(PRIORITY.LOW.getString());
+            } else {
+                currentNote.setPRIORITY_LEVEL(PRIORITY.HIGH.getString());
+            }
         }
-        return super.onOptionsItemSelected(item);
-
+        return true;
     }
-
 
     /**
      * Sets event listener TextWatcher to each of the input fields in the NoteActivity
@@ -362,37 +337,12 @@ public class NoteActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Switches the priority star on and off
-     *
-     * @param imgButtonView the view parent of the priority star
-     */
-    public void toggleNotePriority(View imgButtonView) {
-        priorityStar = findViewById(R.id.highPriorityStar);
-        if (currentNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
-
-            priorityStar.getDrawable().setColorFilter(null);
-            currentNote.setPRIORITY_LEVEL(PRIORITY.LOW.getString());
-            Toast.makeText(this, "The current note is set to regular priority",
-                    Toast.LENGTH_LONG).show();
-
-        } else {
-
-            priorityStar.setColorFilter(getResources().getColor(R.color.colorPriorityHigh));
-            currentNote.setPRIORITY_LEVEL(PRIORITY.HIGH.getString());
-            Toast.makeText(this, "The current note is set to high priority",
-                    Toast.LENGTH_LONG).show();
-
-        }
-
-    }
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         EditText editName = findViewById(R.id.editTitle);
         assert imm != null;
         imm.hideSoftInputFromWindow(editName.getWindowToken(), 0);
-        imm.hideSoftInputFromWindow(priorityStar.getWindowToken(), 0);
         EditText editNote = (EditText) findViewById(R.id.editNotes);
         imm.hideSoftInputFromWindow(editNote.getWindowToken(), 0);
 
