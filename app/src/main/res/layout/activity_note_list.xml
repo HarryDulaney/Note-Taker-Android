@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_dodgeInsetEdges="top"
         tools:listitem="@layout/fragment_note" />
@@ -37,7 +37,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_dodgeInsetEdges="top">
 
         <TextView
             android:id="@+id/empty_view1"
@@ -48,28 +49,48 @@
             android:text="@string/empty_note_list_message_p1"
             android:textAlignment="center"
             android:textColor="@color/colorPriorityLow"
-            android:textSize="22sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/empty_view2"
+            android:textSize="20sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@id/emptyListSyncButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageButton
+            android:id="@+id/emptyListSyncButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="#463949AB"
+            android:contentDescription="@string/cloud_sync_empty_list_image"
+            android:gravity="center"
+            android:padding="@dimen/mediumMargin"
+            android:scaleType="centerInside"
+            android:tint="#039BE5"
+            app:layout_constraintBottom_toTopOf="@id/empty_view2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/empty_view1"
+            app:srcCompat="@drawable/ic_cloud_sync_black_48dp" />
 
         <TextView
             android:id="@+id/empty_view2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:gravity="center"
             android:padding="@dimen/largeMargin"
-            android:text=""
+            android:text="@string/empty_note_list_message_p2"
             android:textAlignment="center"
             android:textColor="@color/colorPriorityLow"
-            android:textSize="22sp"
-            android:visibility="gone"
+            android:textSize="20sp"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/empty_view1" />
+            app:layout_constraintTop_toBottomOf="@id/emptyListSyncButton" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
