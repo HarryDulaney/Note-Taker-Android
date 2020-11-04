@@ -104,7 +104,7 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
                 if (noteListener != null) {
                     int pos = getAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION) {
-                        noteListener.onNoteClicked(vw, pos);
+                        noteListener.clicked(vw, pos);
                     }
                 }
             });
@@ -113,7 +113,7 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
                 if (noteLongClickListener != null) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        noteLongClickListener.onNoteLongClicked(view, position);
+                        noteLongClickListener.clicked(view, position);
                         return true;
                     }
                 }
@@ -126,7 +126,7 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
                 if (deleteButtonListener != null) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        deleteButtonListener.onNoteClicked(v1, position);
+                        deleteButtonListener.clicked(v1, position);
                     }
                 }
             });
@@ -135,7 +135,7 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
                 if (priorityStarListener != null) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        priorityStarListener.onNoteClicked(star, position);
+                        priorityStarListener.clicked(star, position);
                     }
                 }
             });

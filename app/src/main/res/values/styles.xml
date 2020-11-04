@@ -44,5 +44,11 @@
         <item name="android:textSize">36sp</item>
     </style>
 
+    <style name="MaterialDesignButton" parent="Theme.MaterialComponents">
+        <item name="colorOnPrimary">#0F1523</item>
+        <item name="colorPrimary">#A7ADE4</item>
+        <item name="colorOnSurface">#746B7C</item>
+    </style>
+
 
 </resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_notes"
+            android:icon="@drawable/ic_view_list_grey600_48dp"
+            android:title="@string/my_notes" />
+        <item
+            android:id="@+id/nav_new_note"
+            android:icon="@drawable/ic_file_plus_grey600_48dp"
+            android:title="@string/new_note" />
+        <item
+            android:id="@+id/nav_edit_categories"
+            android:icon="@drawable/ic_playlist_plus_grey600_48dp"
+            android:title="@string/create_edit_categories" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@android:drawable/ic_menu_preferences"
+            android:title="@string/settings" />
+
+    </group>
+    <item android:title="@string/connect">
+        <menu>
+            <item
+                android:id="@+id/nav_sync"
+                android:icon="@drawable/ic_cloud_sync_grey600_48dp"
+                android:title="@string/sync" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/cloud_off_outline"
+                android:enabled="false"
+                android:title="@string/logout" />
+<!--            <item-->
+<!--                android:id="@+id/nav_share"-->
+<!--                android:icon="@drawable/ic_menu_share"-->
+<!--                android:title="@string/share" />-->
+
+
+        </menu>
+    </item>
+</menu>

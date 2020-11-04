@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".auth.UserRegisterActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_insetEdge="top">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/action_bar_registration"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/design_default_color_primary_dark"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutRegister1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_dodgeInsetEdges="top">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInLayEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/password_info"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="@dimen/largeMargin"
+            android:layout_marginTop="@dimen/smallMargin"
+            app:helperText="Email Address">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextEmailAddressRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="30"
+                android:hint="@string/email_emailaddress_com"
+                android:inputType="textEmailAddress"
+                android:scrollHorizontally="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/textViewRegisterTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginHorizontal="@dimen/smallMargin"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/register_user_header"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/pw_req_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewRegisterTitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/mediumMargin"
+            android:text="@string/pw_title_require"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/password_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pw_req_title"
+            android:layout_marginHorizontal="@dimen/mediumMargin"
+            android:layout_marginTop="@dimen/smallMargin"
+            android:lines="6"
+            android:text="@string/pword_req_list" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInLayPwordNew"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textInLayEmail"
+            android:layout_marginHorizontal="@dimen/largeMargin"
+            android:layout_marginTop="@dimen/smallMargin"
+            app:errorIconDrawable="@android:drawable/stat_notify_error"
+            app:helperText="@string/create_pword"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextNewPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:ems="30"
+                android:hint="@string/pword_example"
+                android:inputType="textWebPassword" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInLayPwordConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textInLayPwordNew"
+            android:layout_marginHorizontal="@dimen/largeMargin"
+            android:layout_marginTop="@dimen/smallMargin"
+            app:errorIconDrawable="@android:drawable/stat_notify_error"
+            app:helperText="@string/confirm_pword"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextNewPasswordConfirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:ems="30"
+                android:hint="@string/re_type_password"
+                android:inputType="textWebPassword" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/registerLayoutBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textInLayPwordConfirm"
+            android:layout_centerHorizontal="true"
+            android:layout_marginVertical="@dimen/mediumMargin">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/handleRegisterSubmit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/mediumMargin"
+                android:text="@string/submit"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:theme="@style/MaterialDesignButton" />
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/handleClearForm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/mediumMargin"
+                android:layout_toEndOf="@id/handleRegisterSubmit"
+                android:onClick="handleResetFormFields"
+                android:text="@string/clearform"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:theme="@style/MaterialDesignButton" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

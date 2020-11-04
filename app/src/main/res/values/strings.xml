@@ -84,8 +84,8 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Notes for Android</string>
-    <string name="nav_header_subtitle">By: HGDIV</string>
+    <string name="nav_header_title">Notes</string>
+    <string name="nav_header_subtitle">By: harrydulaney.github.io</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="NOTE_ID_KEY">note.id.constant.key</string>
     <string name="CATEGORY_ID_KEY">category.id.constant.key</string>
@@ -99,7 +99,7 @@
     <string name="my_notes">All Notes</string>
     <string name="share">Share</string>
     <string name="send">Send</string>
-    <string name="sync">Sync</string>
+    <string name="sync">Login/Sync</string>
     <string name="export">Export</string>
     <string name="connect">Connect</string>
     <string name="android_studio">Notes For Android</string>
@@ -119,7 +119,11 @@
     <string name="pickcolor">Pick a Color</string>
     <string name="pick_a_color">Pick a color:</string>
     <string name="cancel">CANCEL</string>
+    <string name="localMode">CONTINUE WITHOUT SYNC</string>
+    <string name="register_new_user">Register</string>
+    <string name="create_account">Create Account</string>
     <string name="no_category">No Category</string>
+    <string name="clearform">Clear Form</string>
     <string name="colors">Colors</string>
     <string name="title_activity_create_category">CreateCategoryActivity</string>
     <string name="enter_category_name">Enter a name for this category</string>
@@ -142,5 +146,29 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="cloud_sync_empty_list_image">Cloud Sync Empty list message image</string>
+    <string name="password">Password</string>
+    <string name="email_login_header">Sign-in to your Notes-For-Android account</string>
+    <string name="register_user_header">Register a new user account to enable syncing notes across your devices</string>
+    <string name="pw_title_require">Passwords must have:</string>
+    <string name="email_emailaddress_com">ex: example@email.com</string>
+    <string name="pword_example">ex: yDikj83K$L7</string>
+    <string name="create_pword">New Password</string>
+    <string name="confirm_pword">Confirm Password</string>
+    <string name="login">LOGIN</string>
+    <string name="alternatively">Alternatively</string>
+    <string name="or">OR</string>
+    <string name="login_using_a_google_account">Login Using A Google Account</string>
+    <string name="logout">Sign Out</string>
+    <string name="submit">submit</string>
+    <string name="re_type_password">Re-Type Password</string>
+    <string name="cancel_login_activity">Cancel Login Activity</string>
+    <string name="cloud_account">Cloud Account Status</string>
+    <string name="users_picture">users picture from cloud account import</string>
+    <string name="avatar_icon">Avatar icon</string>
+    <string name="continue_wo_login">Skip</string>
+    <string name="OR">or</string>
+    <string name="pword_req_list">- At least 8 characters and at most 20\n- At least one digit\n- At least one UPPER case letter\n- At least one lower case letter\n- At least one special character ex: !@#$%*()-+=^\n- No white space</string>
+    <string name="empty_string" />
+    <string name="avatar_of_user">Avatar of user</string>
 
 </resources>

@@ -10,12 +10,12 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ethical_techniques.notemaker.CategoryRecycleAdapter.CategoryViewHolder;
+import com.ethical_techniques.notemaker.adapters.CategoryRecycleAdapter;
+import com.ethical_techniques.notemaker.adapters.CategoryRecycleAdapter.CategoryViewHolder;
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.decorators.SpacingItemDecoration;
 import com.ethical_techniques.notemaker.model.Category;

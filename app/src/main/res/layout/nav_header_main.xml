@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/side_nav_bar"
@@ -11,26 +13,50 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/nav_header_img_view"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/the_main_image_displayed_in_the_navigation_drawer"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@drawable/note_round_launch_icon" />
+        android:layoutDirection="ltr">
 
-    <TextView
-        android:id="@+id/textView_drawer_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="@string/nav_header_title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        <ImageView
+            android:id="@+id/nav_header_img_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/the_main_image_displayed_in_the_navigation_drawer"
+            android:src="@drawable/ic_notebook_edit_outline_black_36dp"
+            android:layout_marginEnd="@dimen/smallMargin"
+            tools:targetApi="n" />
+
+        <TextView
+            android:id="@+id/textView_drawer_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nav_header_title"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="22sp" />
+
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView_title_drawer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/nav_header_subtitle" />
+        android:text="@string/nav_header_subtitle"
+        android:textStyle="bold" />
+    <View
+        android:id="@+id/divider_navHeader"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="?android:attr/listDivider"
+        app:layout_anchorGravity="center" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/avatar_icon"
+        android:layout_marginTop="@dimen/largeMargin"
+        android:src="@drawable/ic_account_circle_black_48dp"/>
+
 
 </LinearLayout>

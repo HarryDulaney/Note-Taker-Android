@@ -2,19 +2,21 @@ package com.ethical_techniques.notemaker;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -22,6 +24,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.adapters.NoteRecycleAdapter;
 import com.ethical_techniques.notemaker.model.Note;
@@ -30,23 +33,26 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+
 import java.util.List;
 
 /**
- * The Parent/ Main Activity containing the navigation drawer. Other activities return here.
+ * The Main Activity containing the navigation drawer, most other activities,excluding authentication activities
+ * return here have back buttons that will return here.
  */
-public class ListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ListActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = this.getClass().getName();
     private static List<Note> notes;
     RecyclerView recyclerView;
     NoteRecycleAdapter noteRecycleAdapter;
     boolean editModeActive;
+    private ImageSwitcher avatarSwitcher;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //Get Preferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.drawer_layout_list);
@@ -81,6 +87,19 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(ListActivity.this);
 
+        if (signedIn()) {
+            initUserAvatar();
+        } else {
+            avatarSwitcher.setImageResource(R.drawable.ic_account_circle_grey600_48dp);
+
+        }
+
+    }
+
+    private void initUserAvatar() {
+        ImageView imageView = new ImageView(this);
+        Glide.with(this).load(firebaseUser.getPhotoUrl()).into(imageView);
+        avatarSwitcher.setImageDrawable(imageView.getDrawable());
     }
 
     /**
@@ -110,13 +129,7 @@ public class ListActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(i);
                 break;
 
-            case R.id.nav_share:
-                //TODO:Open share prompt with options to share a note or a list of notes
-
-                break;
             case R.id.nav_sync:
-                //TODO: If user isn't logged in, show login screen, else run sync and ask to auto sync
-
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + item.getItemId());

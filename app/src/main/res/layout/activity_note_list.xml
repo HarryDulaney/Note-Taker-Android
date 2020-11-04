@@ -14,7 +14,7 @@
         app:layout_insetEdge="top">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/action_bar_top"
+            android:id="@+id/toolbar_list_activity"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/design_default_color_primary_dark"
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_dodgeInsetEdges="top"
         tools:listitem="@layout/fragment_note" />
@@ -50,7 +50,7 @@
             android:textAlignment="center"
             android:textColor="@color/colorPriorityLow"
             android:textSize="20sp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/emptyListSyncButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,6 +71,7 @@
             android:padding="@dimen/mediumMargin"
             android:scaleType="centerInside"
             android:tint="#039BE5"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/empty_view2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -86,7 +87,7 @@
             android:textAlignment="center"
             android:textColor="@color/colorPriorityLow"
             android:textSize="20sp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

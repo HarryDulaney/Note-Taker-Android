@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
@@ -21,7 +20,7 @@ import java.util.Objects;
 /**
  * The type Create category activity.
  */
-public class CreateCategoryActivity extends AppCompatActivity {
+public class CreateCategoryActivity extends BaseActivity {
 
     private final String TAG = getClass().getName();
     private Category currentCategory;

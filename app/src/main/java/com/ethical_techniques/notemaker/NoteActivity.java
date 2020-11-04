@@ -1,6 +1,5 @@
 package com.ethical_techniques.notemaker;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -19,7 +17,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
@@ -43,7 +40,7 @@ import java.util.Objects;
  *
  * <p> Main Activity also includes the Navigation Drawer</p>
  */
-public class NoteActivity extends AppCompatActivity {
+public class NoteActivity extends BaseActivity {
 
     private final String TAG = this.getClass().getSimpleName();
     private Note currentNote;
@@ -316,7 +313,14 @@ public class NoteActivity extends AppCompatActivity {
         } else {
 
             currentNote.setDateCreated(Calendar.getInstance());
-            hideKeyboard();
+            List<View> views = new ArrayList<>();
+            views.add(findViewById(R.id.editTitle));
+            views.add(findViewById(R.id.editNotes));
+            views.add(findViewById(R.id.editTitle));
+
+            if (views.size() > 0) {
+                hideKeyboard(views);
+            }
 
             boolean success = false;
             try {
@@ -335,16 +339,5 @@ public class NoteActivity extends AppCompatActivity {
                 startActivity(intent2);
             }
         }
-    }
-
-
-    private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        EditText editName = findViewById(R.id.editTitle);
-        assert imm != null;
-        imm.hideSoftInputFromWindow(editName.getWindowToken(), 0);
-        EditText editNote = (EditText) findViewById(R.id.editNotes);
-        imm.hideSoftInputFromWindow(editNote.getWindowToken(), 0);
-
     }
 }
