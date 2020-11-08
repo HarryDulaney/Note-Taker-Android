@@ -39,7 +39,7 @@ public class DataSource {
      */
     public static ContentValues getDefaultCategory() {
         ContentValues defCategory = new ContentValues();
-        defCategory.put(DBHelper.CATEGORY_NAME, Category.NONE_NAME);
+        defCategory.put(DBHelper.CATEGORY_NAME, Category.MAIN_NAME);
         defCategory.put(DBHelper.CATEGORY_COLOR_INT, Category.NON_COLOR);
         return defCategory;
     }
@@ -395,7 +395,7 @@ public class DataSource {
      * @return the ID aka.'noteID', of the last note to be inserted into the database
      */
     protected int getLastCategoryId() {
-        int id = Category.NONE;
+        int id = Category.MAIN_ID;
         try {
             String query = "Select MAX(" + DBHelper.ID + ") from " + DBHelper.CATEGORY_TABLE;
             Cursor cursor = database.rawQuery(query, null);
@@ -405,7 +405,7 @@ public class DataSource {
             cursor.close();
 
         } catch (Exception e) {
-            id = Category.NONE;
+            id = Category.MAIN_ID;
             Log.e(TAG, "@ getLastCategoryId()");
         }
         return id;

@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import androidx.appcompat.widget.Toolbar;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
+import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.model.Category;
 import com.google.android.material.snackbar.Snackbar;
 

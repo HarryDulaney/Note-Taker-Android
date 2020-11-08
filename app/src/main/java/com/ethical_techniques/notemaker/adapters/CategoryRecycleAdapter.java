@@ -21,8 +21,13 @@ import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Category}.
+ *
+ * @author Harry Dulaney
  */
 public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycleAdapter.CategoryViewHolder> {
+    /**
+     * The interface Delete click listener.
+     */
     interface DeleteClickListener extends ViewListener {
         void clicked(View v, int position);
     }
@@ -30,22 +35,51 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
     private List<Category> categories;
     private DataSource dataSource;
 
+    /**
+     * The Delete button listener.
+     */
     DeleteClickListener deleteButtonListener;
+    /**
+     * The Category short click listener.
+     */
     ListClickListener categoryShortClickListener;
+    /**
+     * The Category long click listener.
+     */
     ListLongClickListener categoryLongClickListener;
 
+    /**
+     * Sets short click listener.
+     *
+     * @param categoryShortClickListener the category short click listener
+     */
     public void setShortClickListener(ListClickListener categoryShortClickListener) {
         this.categoryShortClickListener = categoryShortClickListener;
     }
 
+    /**
+     * Sets long click listener.
+     *
+     * @param categoryLongClickListener the category long click listener
+     */
     public void setLongClickListener(ListLongClickListener categoryLongClickListener) {
         this.categoryLongClickListener = categoryLongClickListener;
     }
 
+    /**
+     * Sets delete button listener.
+     *
+     * @param deleteButtonListener the delete button listener
+     */
     public void setDeleteButtonListener(DeleteClickListener deleteButtonListener) {
         this.deleteButtonListener = deleteButtonListener;
     }
 
+    /**
+     * Instantiates a new Category recycle adapter.
+     *
+     * @param items the items
+     */
     public CategoryRecycleAdapter(List<Category> items) {
         categories = items;
     }
@@ -80,13 +114,33 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
 
     }
 
+    /**
+     * The type Category view holder.
+     */
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
+        /**
+         * The Category's view.
+         */
         public final View mView;
+        /**
+         * The Category.
+         */
         public Category category;
+        /**
+         * The Name.
+         */
         public final TextView name;
+        /**
+         * The Delete button.
+         */
         public final ImageButton deleteButton;
 
+        /**
+         * Instantiates a new Category view holder.
+         *
+         * @param v the v
+         */
         public CategoryViewHolder(View v) {
             super(v);
             mView = v;

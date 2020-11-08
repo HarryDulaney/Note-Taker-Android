@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".auth.UpdateProfileActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_insetEdge="top">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/action_bar_registration"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/design_default_color_primary_dark"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutRegister1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_dodgeInsetEdges="top">
+
+        <TextView
+            android:id="@+id/textViewHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginHorizontal="@dimen/smallMargin"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/update_profile_header"
+            android:textAlignment="center"
+            android:textSize="22sp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/userProfileImage"
+            android:layout_width="match_parent"
+            android:layout_height="@android:dimen/notification_large_icon_height"
+            android:layout_below="@id/textViewHeader"
+            android:layout_marginTop="@dimen/mediumMargin"
+            android:layoutDirection="ltr">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="@android:dimen/notification_large_icon_width"
+                android:layout_height="@android:dimen/notification_large_icon_height"
+                android:layout_gravity="center"
+                android:contentDescription="@string/contentDesc_ProfileImageSet"
+                android:layoutDirection="ltr"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_account_circle_black_48dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mediumMargin"
+                android:gravity="center_vertical"
+                android:layoutDirection="ltr"
+                android:text="@string/change"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:theme="@style/MaterialDesignButton"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/imageView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/userProfileImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="@dimen/largeMargin"
+            android:layout_marginTop="@dimen/smallMargin"
+            android:layout_marginBottom="@dimen/mediumMargin"
+            app:helperText="User Display Name">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextInputUserNameUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="30"
+                android:hint="@string/example_username"
+                android:inputType="textAutoCorrect"
+                android:scrollHorizontally="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/emailAddressDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/TextLayoutUserEmail"
+            android:layout_marginHorizontal="@dimen/smallMargin"
+            android:layout_marginBottom="@dimen/mediumMargin"
+            android:text="@string/error_message1"
+            android:textAlignment="center"
+            android:textColor="@color/textColorDefault"
+            android:textSize="24sp" />
+
+        <LinearLayout
+            android:id="@+id/TextLayoutUserEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textInputLayout1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="@dimen/extraLrgMargin"
+            android:layout_marginTop="@dimen/mediumMargin"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/labelEmailProfileUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/extraLrgMargin"
+                android:gravity="center_vertical"
+                android:text="@string/fui_email_hint"
+                android:textAllCaps="true"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/updateEmailAddressButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginStart="@dimen/mediumMargin"
+                android:gravity="center_vertical"
+                android:onClick="handleUpdateUserEmail"
+                android:text="@string/reset"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:theme="@style/MaterialDesignButton" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/registerLayoutBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/emailAddressDisplay"
+            android:layout_centerHorizontal="true"
+            android:layout_marginVertical="@dimen/mediumMargin">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/handleRegisterSubmit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/mediumMargin"
+                android:text="@string/submit"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:theme="@style/MaterialDesignButton" />
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/handleClearForm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/mediumMargin"
+                android:layout_toEndOf="@id/handleRegisterSubmit"
+                android:onClick="handleUpdateUserProfile"
+                android:text="@string/cancel_exit"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:theme="@style/MaterialDesignButton" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/emailAddressDisplay"
+            android:background="?android:attr/listDivider" />
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@id/TextLayoutUserEmail"
+            android:background="?android:attr/listDivider" />
+
+    </RelativeLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

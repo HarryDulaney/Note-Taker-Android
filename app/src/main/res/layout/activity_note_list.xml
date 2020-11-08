@@ -18,7 +18,19 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/design_default_color_primary_dark"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <Spinner
+                android:id="@+id/list_activity_category_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:dropDownWidth="120dp"
+                android:popupBackground="@color/textColorDefault" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -43,7 +55,8 @@
         <TextView
             android:id="@+id/empty_view1"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="242dp"
             android:gravity="center"
             android:padding="@dimen/largeMargin"
             android:text="@string/empty_note_list_message_p1"
@@ -51,47 +64,29 @@
             android:textColor="@color/colorPriorityLow"
             android:textSize="20sp"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/emptyListSyncButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <ImageButton
-            android:id="@+id/emptyListSyncButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="#463949AB"
-            android:contentDescription="@string/cloud_sync_empty_list_image"
-            android:gravity="center"
-            android:padding="@dimen/mediumMargin"
-            android:scaleType="centerInside"
-            android:tint="#039BE5"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/empty_view2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/empty_view1"
-            app:srcCompat="@drawable/ic_cloud_sync_black_48dp" />
-
-        <TextView
-            android:id="@+id/empty_view2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:padding="@dimen/largeMargin"
-            android:text="@string/empty_note_list_message_p2"
-            android:textAlignment="center"
-            android:textColor="@color/colorPriorityLow"
-            android:textSize="20sp"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/emptyListSyncButton" />
+            app:layout_constraintTop_toBottomOf="@+id/empty_view2" />
+        
+
+        <ImageView
+            android:id="@+id/empty_view2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="64dp"
+            android:contentDescription="@string/imageview_empty_list"
+            android:scaleType="centerInside"
+            android:src="@drawable/emptylistview656767"
+            android:text="@string/empty_note_list_message_p2"
+            android:textColor="@color/colorPriorityLow"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/empty_view1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

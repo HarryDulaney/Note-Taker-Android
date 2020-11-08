@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/side_nav_bar"
+    android:fitsSystemWindows="true"
     android:gravity="bottom"
     android:orientation="vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -16,47 +17,65 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layoutDirection="ltr">
+        android:layoutDirection="ltr"
+        android:layout_marginTop="@dimen/extraLrgMargin">
 
         <ImageView
             android:id="@+id/nav_header_img_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/smallMargin"
             android:contentDescription="@string/the_main_image_displayed_in_the_navigation_drawer"
             android:src="@drawable/ic_notebook_edit_outline_black_36dp"
-            android:layout_marginEnd="@dimen/smallMargin"
             tools:targetApi="n" />
 
         <TextView
             android:id="@+id/textView_drawer_title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/nav_header_title"
             android:textAllCaps="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="22sp" />
-
-
+            android:textSize="30sp" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/textView_title_drawer"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/nav_header_subtitle"
-        android:textStyle="bold" />
+        android:textAlignment="viewEnd" />
+
     <View
         android:id="@+id/divider_navHeader"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="?android:attr/listDivider"
         app:layout_anchorGravity="center" />
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/avatar_icon"
-        android:layout_marginTop="@dimen/largeMargin"
-        android:src="@drawable/ic_account_circle_black_48dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="@android:dimen/notification_large_icon_width"
+            android:layout_height="@android:dimen/notification_large_icon_height"
+            android:layout_marginTop="@dimen/smallMargin"
+            android:contentDescription="@string/avatar_icon"
+            android:src="@drawable/ic_account_circle_black_48dp" />
+
+        <TextView
+            android:id="@+id/textViewUserNameDrawer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/smallMargin"
+            android:layout_marginTop="24dp"
+            android:layoutDirection="ltr"
+            android:text="@string/signed_out"
+            android:textAlignment="gravity"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 
 </LinearLayout>

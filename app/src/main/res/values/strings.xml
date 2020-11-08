@@ -6,7 +6,7 @@
     <string name="write_your_note_here_then_hit_save">Write your note here then click the save icon above.</string>
     <string name="enter_a_title">Enter a Title</string>
     <string name="notemaker">Note App</string>
-    <string name="title_activity_list">Saved Notes</string>
+    <string name="title_activity_list">Main Menu</string>
     <string name="save_note_return_to_list">Save the note and return to list</string>
     <string name="title_activity_settings">Settings</string>
     <string name="add_contact">New Note</string>
@@ -85,7 +85,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Notes</string>
-    <string name="nav_header_subtitle">By: harrydulaney.github.io</string>
+    <string name="nav_header_subtitle">By: harrydulaney.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="NOTE_ID_KEY">note.id.constant.key</string>
     <string name="CATEGORY_ID_KEY">category.id.constant.key</string>
@@ -131,12 +131,12 @@
     <string name="open_this_note_for_editing">Open this note for editing</string>
     <string name="select_and_deselect_this_note_as_high_priority">Select and deselect this note as high priority</string>
     <string name="backbutton">Back Button</string>
-    <string name="empty_note_list_message_p1">Your note list is empty. 	&#10; &#10; Press the cloud sync button below to import your notes by signing in to an existing account.</string>
+    <string name="empty_note_list_message_p1">Looks like you don\'t have any notes yet. 	&#10; &#10; Press the Add Note button below to start creating notes. &#10; Or to import notes open the navigation drawer and sync an existing account.</string>
     <string name="empty_note_list_message_p2">Or just start creating notes! &#10; Press the icon at the bottom right side of the screen to go to your NotePad. </string>
     <string name="login_title_activity">Login and Sync</string>
     <string name="easylogin">Easy Login</string>
     <string name="googleIcon">Google Icon</string>
-    <string name="title_activity_user_login">UserLoginActivity</string>
+    <string name="title_activity_user_login">Account Sign In</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -170,5 +170,16 @@
     <string name="pword_req_list">- At least 8 characters and at most 20\n- At least one digit\n- At least one UPPER case letter\n- At least one lower case letter\n- At least one special character ex: !@#$%*()-+=^\n- No white space</string>
     <string name="empty_string" />
     <string name="avatar_of_user">Avatar of user</string>
+    <string name="signed_out">Signed Out</string>
+    <string name="input_the_display_name_you_want_to_use_below">Input the display name you want to use below.</string>
+    <string name="display_name">Display Name</string>
+    <string name="imageview_empty_list">Imageview empty list</string>
+    <string name="update_profile_header">Edit User Profile</string>
+    <string name="example_username">ex: LakersFan132</string>
+    <string name="contentDesc_ProfileImageSet">Users Display Image for Firebasre Profile</string>
+    <string name="change">Change</string>
+    <string name="cancel_exit">Cancel / Exit</string>
+    <string name="error_message1">Oops..Something Went Wrong</string>
+    <string name="reset">reset</string>
 
 </resources>

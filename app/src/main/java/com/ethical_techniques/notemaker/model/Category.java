@@ -1,11 +1,6 @@
 package com.ethical_techniques.notemaker.model;
 
 import android.graphics.Color;
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
-import com.google.android.material.navigation.NavigationView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,11 +13,11 @@ import java.util.Objects;
  */
 public class Category {
 
-    public static final int NONE = 1;
-    public static final String NONE_NAME = "Assign to Category";
-    public static final int NON_COLOR = Color.LTGRAY;
+    public static final int MAIN_ID = 1;
+    public static final String MAIN_NAME = "Main";
+    public static final int MAIN_COLOR = Color.LTGRAY;
 
-    private static final Category DEPHAULT = new Category(NONE, NONE_NAME, NON_COLOR);
+    private static final Category MAIN_CATEGORY = new Category(MAIN_ID, MAIN_NAME, MAIN_COLOR);
 
 
     private int id;
@@ -71,7 +66,7 @@ public class Category {
     }
 
     public static Category getDEPHAULT() {
-        return DEPHAULT;
+        return MAIN_CATEGORY;
     }
 
 

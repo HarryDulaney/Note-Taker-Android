@@ -2,7 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
+    android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
+    tools:context=".ListActivity">
 
     <!-- Edit Mode Switch -->
     <item
@@ -11,11 +12,11 @@
         android:icon="@drawable/ic_playlist_edit_white_48dp"
         android:title="@string/edit_list"
         app:showAsAction="always" />
-    <!-- Categories -->
+    <!-- Categories TODO: Categories chooser dropdown in Note List Activity -->
     <item
         android:id="@+id/action_bar_categoriesDropdown"
         android:contentDescription="@string/press_editable"
-        android:icon="@drawable/ic_playlist_edit_white_48dp"
+        android:icon="@android:drawable/arrow_down_float"
         android:title="@string/edit_list"
         app:showAsAction="ifRoom" />
 

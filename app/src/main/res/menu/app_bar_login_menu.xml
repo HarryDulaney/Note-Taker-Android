@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
+    android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".auth.UserLoginActivity">
 
-    <item
-        android:id="@+id/cancel_registration"
-        android:contentDescription="@string/cancel_login_activity"
-        android:title="@string/cancel"
-        app:showAsAction="always" />
 
     <item
         android:id="@+id/skip_login_button"

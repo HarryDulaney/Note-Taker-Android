@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ethical_techniques.notemaker.adapters.CategoryRecycleAdapter;
 import com.ethical_techniques.notemaker.adapters.CategoryRecycleAdapter.CategoryViewHolder;
 import com.ethical_techniques.notemaker.DAL.DBUtil;
+import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.decorators.SpacingItemDecoration;
 import com.ethical_techniques.notemaker.model.Category;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -47,7 +48,7 @@ public class CategoryListActivity extends BaseActivity {
         setContentView(R.layout.activity_categ_list);
         setTitle(R.string.category_list_title);
         //Handle Toolbar
-        Toolbar toolbar = findViewById(R.id.action_bar_top);
+        Toolbar toolbar = findViewById(R.id.action_bar_categ_list);
         setSupportActionBar(toolbar);
 
 
@@ -201,7 +202,7 @@ public class CategoryListActivity extends BaseActivity {
             for (int i = 0; i < recycleAdapter.getItemCount(); i++) {
                 CategoryViewHolder viewHolder = (CategoryViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
                 if (viewHolder != null) {
-                    if (viewHolder.name.toString().equals(Category.NONE_NAME)) continue;
+                    if (viewHolder.name.toString().equals(Category.MAIN_NAME)) continue;
 
                     if (viewHolder.deleteButton.getVisibility() == View.VISIBLE) {
                         viewHolder.deleteButton.setVisibility(View.INVISIBLE);

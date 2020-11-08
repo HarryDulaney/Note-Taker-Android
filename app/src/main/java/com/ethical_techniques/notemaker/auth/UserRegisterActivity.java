@@ -1,9 +1,9 @@
 package com.ethical_techniques.notemaker.auth;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,7 +13,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.Task;
 
-import com.ethical_techniques.notemaker.BaseActivity;
 import com.ethical_techniques.notemaker.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -31,7 +30,6 @@ import java.util.regex.Pattern;
 public class UserRegisterActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "UserRegisterActivity";
-    private FirebaseAuth fAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,20 +38,13 @@ public class UserRegisterActivity extends BaseActivity implements View.OnClickLi
         Toolbar toolbar = findViewById(R.id.action_bar_registration);
         setSupportActionBar(toolbar);
 
-    }
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-//        menu.getItem(R.id.skip_login_button).setEnabled(false);
-//        menu.getItem(R.id.cancel_registration).setEnabled(true);
-        return true;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.app_bar_login, menu);
-
+        getMenuInflater().inflate(R.menu.app_bar_registration_menu, menu);
         return true;
     }
 
@@ -86,20 +77,26 @@ public class UserRegisterActivity extends BaseActivity implements View.OnClickLi
         pwConfirm = pOne.equals(pTwo);
 
         if (emailOkay && pwOkay && pwConfirm) {
+            FirebaseAuth fAuth = FirebaseAuth.getInstance();
             fAuth.createUserWithEmailAndPassword(emailInput.getText().toString(), pOne.getText().toString())
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
+                                builder.setTitle("Success!")
+                                        .setMessage("Please sign in with the credentials you just created to get started!")
+                                        .setPositiveButton("Login Screen", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                onBackPressed();
+                                            }
+                                        });
                                 Log.d(TAG, "createUserWithEmail:success");
-                                FirebaseUser user = fAuth.getCurrentUser();
 
                             } else {
-                                // If sign in fails, display a message to the user.
                                 Log.w(TAG, "Create new User with email: failed", task.getException());
-                                Toast.makeText(UserRegisterActivity.this, "Authentication failed.",
+                                Toast.makeText(UserRegisterActivity.this, "Registration failed.",
                                         Toast.LENGTH_SHORT).show();
 
                             }

@@ -8,12 +8,12 @@ import android.view.MenuItem;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
+import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.frags.SettingsFragment;
 
 public class SettingsActivity extends BaseActivity {
 
     private final String TAG = getClass().getName();
-    private static int callingContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class SettingsActivity extends BaseActivity {
                 .commit();
 
         //Initialize the Toolbar
-        Toolbar toolbar = findViewById(R.id.action_bar_top);
+        Toolbar toolbar = findViewById(R.id.action_bar_settings);
         setSupportActionBar(toolbar);
 
         // Get the Toolbar back as an ActionBar and initialize the back button (Up/Home Button)

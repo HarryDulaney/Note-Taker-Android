@@ -16,11 +16,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
+import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.model.Category;
 import com.ethical_techniques.notemaker.model.Note;
 import com.ethical_techniques.notemaker.model.PRIORITY;
@@ -54,16 +54,12 @@ public class NoteActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
         //Initialize Toolbar
-        Toolbar toolbar = findViewById(R.id.action_bar_top);
+        Toolbar toolbar = findViewById(R.id.action_bar_create_note);
         setSupportActionBar(toolbar);
 
         // Get the Toolbar back as an ActionBar and initialize the back button (Up/Home Button)
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        } else {
-            Log.e(TAG, "ActionBar was not created properly...");
-        }
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         /* Check and Load info based from previous activity */
         Bundle extras = getIntent().getExtras();
@@ -88,7 +84,7 @@ public class NoteActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //Re-initialize dropdown Spinner
+        //Refresh dropdown Spinner
         dropDownSpinner = findViewById(R.id.categorySpinner);
         if (initCategories()) {
             initDropDown(dropDownSpinner);
@@ -283,7 +279,7 @@ public class NoteActivity extends BaseActivity {
             }
         });
 
-        final EditText etNoteBody = (EditText) findViewById(R.id.editNotes);
+        final EditText etNoteBody = findViewById(R.id.editNotes);
         etNoteBody.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
