@@ -28,6 +28,8 @@ import java.util.List;
 
 /**
  * The type Category list activity controls the behavior of the list of categories.
+ *
+ * @author Harry Dulaney
  */
 public class CategoryListActivity extends BaseActivity {
 
@@ -48,7 +50,7 @@ public class CategoryListActivity extends BaseActivity {
         setContentView(R.layout.activity_categ_list);
         setTitle(R.string.category_list_title);
         //Handle Toolbar
-        Toolbar toolbar = findViewById(R.id.action_bar_categ_list);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -215,6 +217,7 @@ public class CategoryListActivity extends BaseActivity {
                 }
 
             }
+            return true;
         }
         return super.onOptionsItemSelected(item);
 

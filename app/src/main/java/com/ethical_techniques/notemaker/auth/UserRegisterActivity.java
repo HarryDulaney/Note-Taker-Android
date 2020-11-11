@@ -21,12 +21,16 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The type User register activity.
+ *
+ * @author Harry Dulaney
+ */
 public class UserRegisterActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "UserRegisterActivity";
@@ -35,7 +39,7 @@ public class UserRegisterActivity extends BaseActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_register);
-        Toolbar toolbar = findViewById(R.id.action_bar_registration);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -130,6 +134,11 @@ public class UserRegisterActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    /**
+     * Handle reset form fields.
+     *
+     * @param view the view
+     */
     public void handleResetFormFields(View view) {
         TextInputEditText emailInput = findViewById(R.id.editTextEmailAddressRegister);
         TextInputEditText pOne = findViewById(R.id.editTextNewPassword);

@@ -1,7 +1,13 @@
 package com.ethical_techniques.notemaker.adapters;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +15,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 
+import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.DAL.DataSource;
+import com.ethical_techniques.notemaker.listeners.ImageButtonListener;
 import com.ethical_techniques.notemaker.listeners.NoteClickListener;
 import com.ethical_techniques.notemaker.R;
 import com.ethical_techniques.notemaker.listeners.NoteLongClickListener;
@@ -24,6 +32,8 @@ import java.util.Locale;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Note}.
+ *
+ * @author Harry Dulaney
  */
 public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.ViewHolder> {
 
@@ -32,8 +42,7 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
     private NoteClickListener noteListener;
     private NoteClickListener deleteButtonListener;
     private NoteLongClickListener noteLongClickListener;
-
-    private NoteClickListener priorityStarListener;
+    private ImageButtonListener priorityStarListener;
 
 
     public NoteRecycleAdapter(List<Note> items) {
@@ -42,21 +51,24 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
 
     @NotNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_note, parent, false);
+    public ViewHolder onCreateViewHolder(ViewGroup vGroup, int viewType) {
+        View view = LayoutInflater.from(vGroup.getContext())
+                .inflate(R.layout.fragment_note, vGroup, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Note note = notes.get(position);
+        Note note = notes.get(position);
         holder.title.setText(note.getNoteName());
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
         holder.date.setText(dateFormat.format(note.getDateCreated().getTime()));
 
+        holder.priorityStar.getDrawable().mutate();
         if (note.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
-            holder.priorityStar.setColorFilter(R.color.colorPriorityHigh);
+            holder.priorityStar.getDrawable().setTint(Color.YELLOW);
+        } else {
+            holder.priorityStar.getDrawable().setTint(Color.GRAY);
         }
     }
 
@@ -71,7 +83,11 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
 
     }
 
-    public void setPriorityStarListener(NoteClickListener priorityStarListener) {
+    public Note getItem(int position) {
+        return notes.get(position);
+    }
+
+    public void setPriorityStarListener(ImageButtonListener priorityStarListener) {
         this.priorityStarListener = priorityStarListener;
     }
 
@@ -131,15 +147,19 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
                 }
             });
             priorityStar = v.findViewById(R.id.highPriorityStar);
-            priorityStar.setOnClickListener(star -> {
+            //Define listener events for PriorityStar ImageButton
+            priorityStar.setOnClickListener(view -> {
+
                 if (priorityStarListener != null) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        priorityStarListener.clicked(star, position);
+                        priorityStarListener.changeStateOnClicked(priorityStar, position);
+
                     }
                 }
             });
         }
+
 
         @NotNull
         @Override

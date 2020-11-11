@@ -3,6 +3,8 @@ package com.ethical_techniques.notemaker;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -31,8 +33,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.adapters.NoteRecycleAdapter;
+import com.ethical_techniques.notemaker.auth.AppFlowActivity;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.auth.UpdateProfileActivity;
+import com.ethical_techniques.notemaker.auth.UserLoginActivity;
 import com.ethical_techniques.notemaker.model.Category;
 import com.ethical_techniques.notemaker.model.Note;
 import com.ethical_techniques.notemaker.model.PRIORITY;
@@ -50,6 +54,8 @@ import java.util.List;
 /**
  * The Main Activity containing the navigation drawer, most other activities,excluding authentication activities
  * return here have back buttons that will return here.
+ *
+ * @author Harry Dulaney
  */
 public class ListActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -62,17 +68,22 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
     private List<Category> categories;
     private Spinner spinner;
     private SharedPreferences sharedPreferences;
+    ArrayAdapter<Category> categoryArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        checkMessages();
         //Initialize SharedPreferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.drawer_layout_list);
 
         //Handle Toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar_list_activity);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //initialize Categories Dropdown (i.e. Spinner)
+        spinner = findViewById(R.id.list_activity_category_spinner);
 
         //Handle create new note floating button
         FloatingActionButton floatingActionButton = findViewById(R.id.new_note_float_button);
@@ -88,6 +99,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
             startActivity(intent);
 
         });
+
         //Handle Nav Drawer
         DrawerLayout navDrawer = findViewById(R.id.drawer_layout_list);
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, navDrawer,
@@ -106,24 +118,49 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         //Replace User Avatar Icon in drawer with users img
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser != null) {
-            initUserAvatar(fUser);
+            initUserAvatar(fUser, navigationView);
         }
-        spinner = findViewById(R.id.action_bar_categoriesDropdown);
+        menu.findItem(R.id.nav_sync).setEnabled(fUser != null);
+
     }
 
-    private void initUserAvatar(FirebaseUser fUser) {
+    /* load bundle to get message */
+    private void checkMessages() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.getBoolean(AppFlowActivity.getLaunchKey())) {
+                showSyncDecisionDialog();
+            }
+        }
+    }
+
+    /**
+     * Display choice dialog prompting the user to login to their cloud account
+     */
+    private void showSyncDecisionDialog() {
+
+    }
+
+    private void initUserAvatar(FirebaseUser fUser, NavigationView nv) {
         ImageView imageView = new ImageView(this);
         Glide.with(this).load(fUser.getPhotoUrl()).into(imageView);
 
-        TextView displayName = findViewById(R.id.textViewUserNameDrawer);
-        displayName.setText(fUser.getDisplayName() == null ? "Click to Set" : fUser.getDisplayName());
-        if (fUser.getDisplayName() == null) {
+        View navHeaderView = nv.getHeaderView(0);
+        TextView displayName = navHeaderView.findViewById(R.id.textViewUserNameDrawer);
+
+        findViewById(R.id.textViewUserNameDrawer);
+        displayName.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_account_circle_black_48dp, 0, 0, 0);
+
+        if (fUser.getDisplayName() != null && !fUser.getDisplayName().isEmpty()) {
+            displayName.setText(fUser.getDisplayName());
+        } else {
+            displayName.setText(R.string.nav_drawer_username_default);
             displayName.setOnClickListener(e -> {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ListActivity.this);
                 final EditText dialogInput = new EditText(this);
                 dialogInput.setInputType(InputType.TYPE_CLASS_TEXT);
                 dialogBuilder.setView(dialogInput);
-                dialogBuilder.setTitle("Set An Display Name");
+                dialogBuilder.setTitle("Username not set");
                 dialogBuilder.setMessage("What do you like to be called?");
                 dialogBuilder.setPositiveButton("SUBMIT", (dialogInterface, which) -> {
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -145,36 +182,39 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_new_note:
+                //Open create new note activity
                 Intent intent = new Intent(this, NoteActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 break;
 
             case R.id.nav_edit_categories:
+                //Edit the note categories
                 Intent i2 = new Intent(this, CategoryListActivity.class);
-                i2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                i2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i2);
                 break;
 
             case R.id.nav_settings:
                 //Open the settings activity
                 Intent i = new Intent(this, SettingsActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i);
                 break;
 
             case R.id.nav_sync:
+                //Open user login activity
+                Intent intent1 = new Intent(this, UserLoginActivity.class);
+//                intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent1);
                 break;
             case R.id.nav_update:
+                //Open update user profile activity
                 Intent i3 = new Intent(this, UpdateProfileActivity.class);
-                i3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                if (isSignedIn()) {
-//                    Bundle b = new Bundle();
-//                    b.putParcelable(USER_BUNDLE_KEY, fUser);
-//                    i3.putExtras(b);
-//                }
+//                i3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i3);
-
+                break;
+            case R.id.nav_logout:
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + item.getItemId());
@@ -202,6 +242,11 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return true;
+    }
+
     /**
      * @param item that was selected
      * @return true if the item is recognized
@@ -221,17 +266,15 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
                 editModeActive = false;
             }
             return true;
-        } else if (id == R.id.action_bar_categoriesDropdown) {
-            openCategoriesDropdown();
+        } else if (id == R.id.list_activity_category_spinner) {
+            String categoryName = (String) spinner.getSelectedItem();
+            Toast.makeText(this, "Category by the name of " + categoryName + " was selected", Toast.LENGTH_SHORT).show();
+            return true;
         }
         return super.onOptionsItemSelected(item);
 
     }
 
-    private void openCategoriesDropdown() {
-        spinner.getSelectedItem();
-
-    }
 
     private void toggleDeleteIcon() {
         for (int i = 0; i < noteRecycleAdapter.getItemCount();
@@ -269,6 +312,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
             Toast.makeText(this, "Error retrieving notes, please try reloading. ", Toast.LENGTH_LONG).show();
         }
 
+        initDropDown();
         recyclerView = findViewById(R.id.recycleList);
         TextView emptyListMessageTopHalf = findViewById(R.id.empty_view1);
         ImageView emptyListImage = findViewById(R.id.empty_view2);
@@ -282,35 +326,45 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
             recyclerView.setVisibility(View.VISIBLE);
             emptyListMessageTopHalf.setVisibility(View.GONE);
             emptyListImage.setVisibility(View.GONE);
+            initNoteList();
         }
 
+    }
+
+    /**
+     * Initialize the list of notes and define listener events
+     */
+    private void initNoteList() {
         /* Set listener event behavior for long click on list item event */
         noteRecycleAdapter.setNoteLongClickListener((view, position) -> {
             int noteId = (int) noteRecycleAdapter.getItemId(position);
             Intent intent = new Intent(ListActivity.this, NoteActivity.class);
             intent.putExtra(getString(R.string.NOTE_ID_KEY), noteId);
             ListActivity.this.startActivity(intent);
-
         });
         /* Set listener event behavior for regular (short) click on list item */
         noteRecycleAdapter.setNoteClickListener((view, position) -> Toast.makeText(ListActivity.this,
-                "Hold down a long click to open the note the editing"
+                "Long click to open the note the editing"
                 , Toast.LENGTH_LONG).show());
+
         noteRecycleAdapter.setPriorityStarListener((priorityView, position) -> {
             Note priorityNote = notes.get(position);
             if (priorityNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
-                if (priorityView instanceof ImageButton) {
-                    ImageButton priorityStar = (ImageButton) priorityView;
-                    priorityStar.setColorFilter(R.color.colorPriorityHigh);
-                }
+
                 priorityNote.setPRIORITY_LEVEL(PRIORITY.LOW.getString());
-                Toast.makeText(this, "The current note is set to regular priority",
-                        Toast.LENGTH_LONG).show();
-
+                handleTogglePriorityStar(priorityView, priorityNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString()));
+                Toast.makeText(ListActivity.this,
+                        "This note is set to " + priorityNote.getPRIORITY_LEVEL() + " priority",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                priorityNote.setPRIORITY_LEVEL(PRIORITY.HIGH.getString());
+                handleTogglePriorityStar(priorityView, priorityNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString()));
+                Toast.makeText(ListActivity.this,
+                        "This note is set to: " + priorityNote.getPRIORITY_LEVEL() + " priority",
+                        Toast.LENGTH_SHORT).show();
             }
+            noteRecycleAdapter.notifyDataSetChanged();
         });
-
-
         /* Set listener event behavior for regular click on delete button */
         noteRecycleAdapter.setDeleteButtonListener((view, position) -> {
             Note note = notes.get(position);
@@ -334,11 +388,26 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         });
 
         recyclerView.setAdapter(noteRecycleAdapter);
-        //Refresh dropdown Spinner
-        initDropDown();
 
     }
 
+    /**
+     *
+     */
+    void saveNoteChanges() {
+        for (int i = 0; i < noteRecycleAdapter.getItemCount(); i++) {
+            Note note = noteRecycleAdapter.getItem(i);
+            try {
+                DBUtil.saveNote(this, note);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Initialize the category dropdown menu
+     */
     private void initDropDown() {
         try {
             categories = DBUtil.getCategories(this);
@@ -359,11 +428,11 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                String name = (String) parent.getItemAtPosition(position);
+                String categoryName = (String) parent.getItemAtPosition(position);
                 Toast.makeText(ListActivity.this,
-                        "Item = " + name + " was selected from the dropdown menu.",
+                        "Displaying " + categoryName + " notes",
                         Toast.LENGTH_LONG).show();
-                Log.i("checkedTextView = " + name,TAG);
+                Log.i("checkedTextView = " + categoryName, TAG);
             }
 
             @Override
@@ -373,14 +442,26 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         });
     }
 
-    public void handleToggleStar(View starView) {
-        if (starView instanceof ImageButton) {
-            ImageButton starButton = (ImageButton) starView;
-            if (starButton.getDrawable().getCurrent() == ContextCompat.getDrawable(this, android.R.drawable.btn_star_big_off)) {
-                starButton.setImageDrawable(ContextCompat.getDrawable(this, android.R.drawable.btn_star_big_on));
+    @Override
+    protected void onPause() {
+        saveNoteChanges();
+        super.onPause();
+    }
+
+    /**
+     * Switches the priority star on and off
+     */
+    private void handleTogglePriorityStar(ImageButton starView, boolean colorTheStar) {
+        Drawable starDrawable = starView.getDrawable();
+        if (starDrawable != null) {
+            starDrawable.mutate();
+            if (colorTheStar) {
+                starDrawable.setColorFilter(ContextCompat.getColor(this, R.color.colorPriorityHigh), PorterDuff.Mode.SRC_ATOP);
 
             } else {
-                starButton.setImageDrawable(ContextCompat.getDrawable(this, android.R.drawable.btn_star_big_off));
+                starDrawable.setColorFilter(null);
+
+
             }
         }
     }

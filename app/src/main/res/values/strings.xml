@@ -6,7 +6,7 @@
     <string name="write_your_note_here_then_hit_save">Write your note here then click the save icon above.</string>
     <string name="enter_a_title">Enter a Title</string>
     <string name="notemaker">Note App</string>
-    <string name="title_activity_list">Main Menu</string>
+    <string name="title_activity_list">Menu</string>
     <string name="save_note_return_to_list">Save the note and return to list</string>
     <string name="title_activity_settings">Settings</string>
     <string name="add_contact">New Note</string>
@@ -136,7 +136,7 @@
     <string name="login_title_activity">Login and Sync</string>
     <string name="easylogin">Easy Login</string>
     <string name="googleIcon">Google Icon</string>
-    <string name="title_activity_user_login">Account Sign In</string>
+    <string name="title_activity_user_login">Sign In</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -165,7 +165,7 @@
     <string name="cloud_account">Cloud Account Status</string>
     <string name="users_picture">users picture from cloud account import</string>
     <string name="avatar_icon">Avatar icon</string>
-    <string name="continue_wo_login">Skip</string>
+    <string name="itemLoginMenuSkip">Skip to Notes</string>
     <string name="OR">or</string>
     <string name="pword_req_list">- At least 8 characters and at most 20\n- At least one digit\n- At least one UPPER case letter\n- At least one lower case letter\n- At least one special character ex: !@#$%*()-+=^\n- No white space</string>
     <string name="empty_string" />
@@ -181,5 +181,7 @@
     <string name="cancel_exit">Cancel / Exit</string>
     <string name="error_message1">Oops..Something Went Wrong</string>
     <string name="reset">reset</string>
+    <string name="nav_drawer_username_default">Set Display Name</string>
+    <string name="LAUNCH_MESSAGE_KEY">com.ethical_techniques.notemaker.showLoginDecisionDialog</string>
 
 </resources>

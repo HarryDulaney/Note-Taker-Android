@@ -17,6 +17,8 @@ import java.util.List;
 
 /**
  * The type Data source.
+ *
+ * @author Harry Dulaney
  */
 public class DataSource {
 
@@ -40,7 +42,7 @@ public class DataSource {
     public static ContentValues getDefaultCategory() {
         ContentValues defCategory = new ContentValues();
         defCategory.put(DBHelper.CATEGORY_NAME, Category.MAIN_NAME);
-        defCategory.put(DBHelper.CATEGORY_COLOR_INT, Category.NON_COLOR);
+        defCategory.put(DBHelper.CATEGORY_COLOR_INT, Category.MAIN_COLOR);
         return defCategory;
     }
 
@@ -91,6 +93,21 @@ public class DataSource {
 
         }
         return didSucceed;
+    }
+
+    protected boolean checkNotes() {
+        int count = 0;
+        try {
+            String query = "SELECT _id FROM " + DBHelper.NOTE_TABLE;
+            Cursor noteCursor = database.rawQuery(query, null);
+            count = noteCursor.getCount();
+            noteCursor.close();
+
+        } catch (Exception e) {
+            Log.e(TAG, "@ checkNotes() ", e);
+        }
+        return count > 0;
+
     }
 
     /**
@@ -275,7 +292,7 @@ public class DataSource {
             Log.e(TAG, "Exception @DataSource.getCategories()");
         }
         if (categories.size() == 0) {
-            insertCategory(Category.getDEPHAULT());
+            insertCategory(Category.getMain());
             return getCategories();
         }
 

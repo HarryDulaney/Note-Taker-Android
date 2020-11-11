@@ -3,6 +3,8 @@ package com.ethical_techniques.notemaker.DAL;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.ethical_techniques.notemaker.model.Category;
 import com.ethical_techniques.notemaker.model.Note;
 
@@ -11,6 +13,8 @@ import java.util.List;
 
 /**
  * The type Db util.
+ *
+ * @author Harry Dulaney
  */
 public class DBUtil {
 
@@ -39,6 +43,20 @@ public class DBUtil {
         return notes;
 
     }
+
+    /**
+     * @return true if the user has notes in local persistent memory
+     * @throws Exception the exception
+     */
+    public static boolean hasNotes(Context context) throws Exception {
+        boolean has = Boolean.FALSE;
+        DataSource nds = new DataSource(context);
+        nds.open();
+        has = nds.checkNotes();
+        nds.close();
+        return has;
+    }
+
 
     /**
      * Find note note.

@@ -1,6 +1,11 @@
 package com.ethical_techniques.notemaker.model;
 
 import android.graphics.Color;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.os.Parcelable.Creator;
+
+import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -10,15 +15,47 @@ import java.util.Objects;
  * A user defined category for logically grouping of Notes.
  * <p>
  * If Category.ID is equal to -1 than the Category has not saved in persistent memory.
+ *
+ * @author Harry Dulaney
  */
-public class Category {
+public class Category implements Parcelable {
 
     public static final int MAIN_ID = 1;
-    public static final String MAIN_NAME = "Main";
+    public static final String MAIN_NAME = "All Notes";
     public static final int MAIN_COLOR = Color.LTGRAY;
 
     private static final Category MAIN_CATEGORY = new Category(MAIN_ID, MAIN_NAME, MAIN_COLOR);
 
+    /**
+     * Instantiates a new Category from Parcel.
+     *
+     * @param in the in
+     */
+    protected Category(Parcel in) {
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+
+    }
+
+    public static final Creator<Category> CREATOR = new Creator<Category>() {
+        @Override
+        public Category createFromParcel(Parcel in) {
+            return new Category(in);
+        }
+
+        @Override
+        public Category[] newArray(int size) {
+            return new Category[size];
+        }
+    };
 
     private int id;
     private String name;
@@ -65,7 +102,7 @@ public class Category {
         this.color = color;
     }
 
-    public static Category getDEPHAULT() {
+    public static Category getMain() {
         return MAIN_CATEGORY;
     }
 

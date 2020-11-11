@@ -4,7 +4,11 @@ import android.view.View;
 import android.widget.ImageButton;
 
 
-public interface NoteClickListener extends ViewListener{
-//    void onNoteClicked(View view, int position);
+/**
+ * The interface Note click listener.
+ *
+ * @author Harry Dulaney
+ */
+public interface NoteClickListener extends ViewListener {
 }
 

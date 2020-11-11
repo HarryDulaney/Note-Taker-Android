@@ -1,5 +1,6 @@
 package com.ethical_techniques.notemaker;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -16,7 +17,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NavUtils;
 import androidx.core.content.ContextCompat;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
@@ -24,6 +29,8 @@ import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.model.Category;
 import com.ethical_techniques.notemaker.model.Note;
 import com.ethical_techniques.notemaker.model.PRIORITY;
+import com.ethical_techniques.notemaker.utils.DialogAction;
+import com.ethical_techniques.notemaker.utils.DialogUtil;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.sql.SQLException;
@@ -39,6 +46,8 @@ import java.util.Objects;
  * / creating new categories </p>
  *
  * <p> Main Activity also includes the Navigation Drawer</p>
+ *
+ * @author Harry Dulaney
  */
 public class NoteActivity extends BaseActivity {
 
@@ -48,18 +57,23 @@ public class NoteActivity extends BaseActivity {
     private Category currentNoteCategory;
     Spinner dropDownSpinner;
     MenuItem priorityStar;
+    ArrayAdapter<String> categoryArrayAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
+
         //Initialize Toolbar
-        Toolbar toolbar = findViewById(R.id.action_bar_create_note);
+        Toolbar toolbar = findViewById(R.id.toolbar_note);
         setSupportActionBar(toolbar);
-
         // Get the Toolbar back as an ActionBar and initialize the back button (Up/Home Button)
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         /* Check and Load info based from previous activity */
         Bundle extras = getIntent().getExtras();
@@ -70,12 +84,23 @@ public class NoteActivity extends BaseActivity {
         } else {
             //create a new blank note
             currentNote = new Note();
-            //Initialize the Category chooser dropdown Spinner
+            //Refresh dropdown Spinner
             dropDownSpinner = findViewById(R.id.categorySpinner);
             if (initCategories()) {
                 initDropDown(dropDownSpinner);
             }
+
         }
+
+        OnBackPressedDispatcher backButtonPressed = new OnBackPressedDispatcher();
+        OnBackPressedCallback backButtonCallback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                showSaveNotePrompt();
+            }
+        };
+        backButtonPressed.addCallback(backButtonCallback);
+
         //Initialize listeners on text input fields
         initTextChangedEvents();
 
@@ -84,11 +109,7 @@ public class NoteActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //Refresh dropdown Spinner
-        dropDownSpinner = findViewById(R.id.categorySpinner);
-        if (initCategories()) {
-            initDropDown(dropDownSpinner);
-        }
+
     }
 
     /**
@@ -120,7 +141,7 @@ public class NoteActivity extends BaseActivity {
             categoryStrings.add(category.getName());
         }
 
-        ArrayAdapter<String> categoryArrayAdapter = new ArrayAdapter<>(this,
+        categoryArrayAdapter = new ArrayAdapter<>(this,
                 R.layout.dropdown_item_simple, categoryStrings);
         spinner.setAdapter(categoryArrayAdapter);
         spinner.setSelection(0);
@@ -130,6 +151,7 @@ public class NoteActivity extends BaseActivity {
 
                 String checkedTextView = (String) parent.getItemAtPosition(position);
                 System.out.println("checkedTextView = " + checkedTextView);
+                currentNote.setCategory(categories.get(position).getId());
             }
 
             @Override
@@ -191,12 +213,6 @@ public class NoteActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        handleSaveNote();
-        super.onBackPressed();
-    }
-
     /**
      * Initializes the top app bar.
      * {@inheritDoc}
@@ -219,14 +235,19 @@ public class NoteActivity extends BaseActivity {
                 starDrawable.setColorFilter(ContextCompat.getColor(this, R.color.colorPriorityHigh), PorterDuff.Mode.SRC_ATOP);
 
                 Toast.makeText(this, "The current note is set to high priority",
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_SHORT).show();
             } else {
                 starDrawable.setColorFilter(null);
                 Toast.makeText(this, "The current note is set to regular priority",
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_SHORT).show();
 
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     /**
@@ -239,15 +260,34 @@ public class NoteActivity extends BaseActivity {
         int id = item.getItemId();
         if (id == R.id.action_bar_save_button) {
             handleSaveNote();
+            return true;
         } else if (id == R.id.action_bar_priority_star) {
-            handleTogglePriorityStar(item, !(currentNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())));
+            handleTogglePriorityStar(item, currentNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString()));
             if (currentNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
                 currentNote.setPRIORITY_LEVEL(PRIORITY.LOW.getString());
             } else {
                 currentNote.setPRIORITY_LEVEL(PRIORITY.HIGH.getString());
             }
+            return true;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
+    }
+
+    void showSaveNotePrompt() {
+        List<View> views = new ArrayList<>();
+        views.add(findViewById(R.id.editTitle));
+        views.add(findViewById(R.id.editNotes));
+        views.add(findViewById(R.id.editTitle));
+        hideKeyboard(views);
+
+        DialogUtil.makeAndShow(NoteActivity.this,
+                "Save Note Prompt",
+                "Would you like to save the current note before moving on?",
+                "Yes Save",
+                "Dont Save",
+                this::showSaveNotePrompt,
+                this::onBackPressed
+        );
     }
 
     /**
@@ -302,6 +342,14 @@ public class NoteActivity extends BaseActivity {
      * Save button clicked
      */
     public void handleSaveNote() {
+        List<View> views = new ArrayList<>();
+        views.add(findViewById(R.id.editTitle));
+        views.add(findViewById(R.id.editNotes));
+        views.add(findViewById(R.id.editTitle));
+
+        if (views.size() > 0) {
+            hideKeyboard(views);
+        }
 
         if (currentNote.getNoteName() == null || currentNote.getContent() == null) {
             Toast.makeText(NoteActivity.this, "Make sure to fill in the name and the " +
@@ -309,14 +357,7 @@ public class NoteActivity extends BaseActivity {
         } else {
 
             currentNote.setDateCreated(Calendar.getInstance());
-            List<View> views = new ArrayList<>();
-            views.add(findViewById(R.id.editTitle));
-            views.add(findViewById(R.id.editNotes));
-            views.add(findViewById(R.id.editTitle));
 
-            if (views.size() > 0) {
-                hideKeyboard(views);
-            }
 
             boolean success = false;
             try {
@@ -326,12 +367,11 @@ public class NoteActivity extends BaseActivity {
             }
 
             if (success) {
-                Toast.makeText(getBaseContext(), "Success, Your new note was saved. " +
+                Toast.makeText(this, "Success, Your new note was saved. " +
                                 "\nClick on the List icon on the navigation bar to manage your notes. ",
                         Toast.LENGTH_LONG).show();
 
                 Intent intent2 = new Intent(NoteActivity.this, ListActivity.class);
-                intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent2);
             }
         }

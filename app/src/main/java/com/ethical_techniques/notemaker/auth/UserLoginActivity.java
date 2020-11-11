@@ -21,14 +21,19 @@ import com.google.firebase.auth.FirebaseUser;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import java.util.prefs.PreferenceChangeEvent;
+import java.util.prefs.PreferenceChangeListener;
+
 import javax.annotation.Nullable;
 
 /**
  * The type User login activity.
+ *
+ * @author Harry Dulaney
  */
 public class UserLoginActivity extends BaseActivity {
 
-    private static final String TAG = "UserLoginActivity";
+    private final String TAG = getClass().getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +46,7 @@ public class UserLoginActivity extends BaseActivity {
 
     private void openMainMenu() {
         Intent i1 = new Intent(UserLoginActivity.this, ListActivity.class);
-        i1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
+        i1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         UserLoginActivity.this.startActivity(i1);
 
     }
@@ -77,16 +81,13 @@ public class UserLoginActivity extends BaseActivity {
     @Override
     public void onStart() {
         super.onStart();
-        if (isSignedIn()) {
-            openMainMenu();
-        }
     }
 
 
     /**
      * Handle open register user.
      *
-     * @param view the view
+     * @param view the view from the triggered onClick
      */
     public void handleOpenRegisterUser(View view) {
         Intent intent = new Intent(UserLoginActivity.this, UserRegisterActivity.class);
@@ -97,24 +98,27 @@ public class UserLoginActivity extends BaseActivity {
     /**
      * Handle user login event.
      *
-     * @param view the view
+     * @param view the view from the triggered onClick
      */
     public void handleUserLoginEvent(View view) {
         final EditText edTextEmail = findViewById(R.id.editTextLoginEmailAddress);
         final EditText edTextPword = findViewById(R.id.editTextPwordLogin);
         if (TextUtils.isEmpty(edTextEmail.getText()) || TextUtils.isEmpty(edTextPword.getText())) {
-            Snackbar.make(view.getRootView(), "Both email and password must be filled in to validate your sign in credentials", BaseTransientBottomBar.LENGTH_LONG).show();
+            Snackbar.make(view.getRootView(),
+                    "Both email and password must be filled in to validate your sign in credentials",
+                    BaseTransientBottomBar.LENGTH_LONG).show();
         } else {
             FirebaseAuth fAuth = FirebaseAuth.getInstance();
-            fAuth.signInWithEmailAndPassword(edTextEmail.getText().toString(), edTextPword.getText().toString())
+            fAuth.signInWithEmailAndPassword(edTextEmail.getText().toString(),
+                    edTextPword.getText().toString())
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
-                            signIn(fAuth);
                             FirebaseUser fUser = fAuth.getCurrentUser();
-                            Log.d(TAG, "User sign In with email address: success");
+                            Log.d(TAG, "User sign-in with email address: success");
                             assert fUser != null;
                             Toast.makeText(UserLoginActivity.this, "Welcome back " + fUser.getDisplayName() + " you are now logged into your account",
                                     Toast.LENGTH_SHORT).show();
+                            openMainMenu();
                         } else {
                             Log.w(TAG, "Email Login In to Firebase status: failed", task.getException());
                             Toast.makeText(UserLoginActivity.this, "We could not find a user matching those credentials. " +
@@ -124,4 +128,5 @@ public class UserLoginActivity extends BaseActivity {
                     });
         }
     }
+
 }

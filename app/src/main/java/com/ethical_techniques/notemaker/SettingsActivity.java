@@ -11,6 +11,11 @@ import androidx.appcompat.widget.Toolbar;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.frags.SettingsFragment;
 
+/**
+ * The type Settings activity.
+ *
+ * @author Harry Dulaney
+ */
 public class SettingsActivity extends BaseActivity {
 
     private final String TAG = getClass().getName();
@@ -25,7 +30,7 @@ public class SettingsActivity extends BaseActivity {
                 .commit();
 
         //Initialize the Toolbar
-        Toolbar toolbar = findViewById(R.id.action_bar_settings);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Get the Toolbar back as an ActionBar and initialize the back button (Up/Home Button)

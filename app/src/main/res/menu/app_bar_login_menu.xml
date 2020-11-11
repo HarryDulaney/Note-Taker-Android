@@ -9,7 +9,7 @@
     <item
         android:id="@+id/skip_login_button"
         android:contentDescription="@string/cancel_login_activity"
-        android:title="@string/continue_wo_login"
+        android:title="@string/itemLoginMenuSkip"
         app:showAsAction="always" />
 
 

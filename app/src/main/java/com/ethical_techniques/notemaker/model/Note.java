@@ -1,7 +1,11 @@
 package com.ethical_techniques.notemaker.model;
 
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.os.Parcelable.Creator;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import java.util.Calendar;
@@ -13,8 +17,10 @@ import java.util.Objects;
  * subject - Optional subject line
  * noteContent - The body of the note containing the main contents (Not Null)
  * dateCreated - Holds the calender day of note creation
+ *
+ * @author Harry Dulaney
  */
-public class Note {
+public class Note implements Parcelable {
 
     /**
      * Database Id
@@ -60,6 +66,36 @@ public class Note {
         setPRIORITY_LEVEL(priorityLevel);
     }
 
+    /**
+     * Instantiates a new Note by un-flattening the Parcel.
+     *
+     * @param in the in
+     */
+    protected Note(Parcel in) {
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+
+    }
+
+    public static final Creator<Note> CREATOR = new Creator<Note>() {
+        @Override
+        public Note createFromParcel(Parcel in) {
+            return new Note(in);
+        }
+
+        @Override
+        public Note[] newArray(int size) {
+            return new Note[size];
+        }
+    };
 
     public int getCategory() {
         return categoryId;

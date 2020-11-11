@@ -20,6 +20,8 @@ import java.util.Objects;
 
 /**
  * The type Create category activity.
+ *
+ * @author Harry Dulaney
  */
 public class CreateCategoryActivity extends BaseActivity {
 
@@ -44,7 +46,7 @@ public class CreateCategoryActivity extends BaseActivity {
 
         }
         //Initialize the Toolbar
-        Toolbar toolbar = findViewById(R.id.action_bar_top_cr_cat);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Get the Toolbar back as an ActionBar and initialize the back button (Up/Home Button)
