@@ -96,6 +96,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
 
         floatingActionButton.setOnClickListener(view -> {
             Intent intent = new Intent(ListActivity.this, NoteActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
 
         });
@@ -120,7 +121,9 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         if (fUser != null) {
             initUserAvatar(fUser, navigationView);
         }
-        menu.findItem(R.id.nav_sync).setEnabled(fUser != null);
+        menu.findItem(R.id.nav_sync).setEnabled(fUser == null);
+        menu.findItem(R.id.nav_logout).setEnabled(fUser != null);
+        menu.findItem(R.id.nav_update).setEnabled(fUser != null);
 
     }
 
@@ -348,19 +351,19 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
                 , Toast.LENGTH_LONG).show());
 
         noteRecycleAdapter.setPriorityStarListener((priorityView, position) -> {
-            Note priorityNote = notes.get(position);
-            if (priorityNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
+            Note note = notes.get(position);
+            if (note.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
 
-                priorityNote.setPRIORITY_LEVEL(PRIORITY.LOW.getString());
-                handleTogglePriorityStar(priorityView, priorityNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString()));
+                note.setPRIORITY_LEVEL(PRIORITY.LOW.getString());
+                handleTogglePriorityStar(priorityView, false);
                 Toast.makeText(ListActivity.this,
-                        "This note is set to " + priorityNote.getPRIORITY_LEVEL() + " priority",
+                        "This note is set to " + note.getPRIORITY_LEVEL() + " priority",
                         Toast.LENGTH_SHORT).show();
             } else {
-                priorityNote.setPRIORITY_LEVEL(PRIORITY.HIGH.getString());
-                handleTogglePriorityStar(priorityView, priorityNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString()));
+                note.setPRIORITY_LEVEL(PRIORITY.HIGH.getString());
+                handleTogglePriorityStar(priorityView, true);
                 Toast.makeText(ListActivity.this,
-                        "This note is set to: " + priorityNote.getPRIORITY_LEVEL() + " priority",
+                        "This note is set to: " + note.getPRIORITY_LEVEL() + " priority",
                         Toast.LENGTH_SHORT).show();
             }
             noteRecycleAdapter.notifyDataSetChanged();

@@ -41,25 +41,13 @@ public class BaseActivity extends AppCompatActivity {
     protected static final String PREF_KEY_LOCAL_MODE = "com.ethical_techniques.user.pref.key.local.mode";
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceBundle) {
-        super.onCreate(savedInstanceBundle);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-
     /**
      * Hide keyboard.
      *
      * @param views the views
      */
-    protected void hideKeyboard(List<View> views) {
-        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    protected void hideKeyboard(Context context, List<View> views) {
+        final InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             for (View view : views) {
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);

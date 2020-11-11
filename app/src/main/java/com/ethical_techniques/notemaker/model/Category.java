@@ -21,7 +21,7 @@ import java.util.Objects;
 public class Category implements Parcelable {
 
     public static final int MAIN_ID = 1;
-    public static final String MAIN_NAME = "All Notes";
+    public static final String MAIN_NAME = "Display All";
     public static final int MAIN_COLOR = Color.LTGRAY;
 
     private static final Category MAIN_CATEGORY = new Category(MAIN_ID, MAIN_NAME, MAIN_COLOR);

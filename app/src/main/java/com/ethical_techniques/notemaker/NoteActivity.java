@@ -1,6 +1,8 @@
 package com.ethical_techniques.notemaker;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -8,29 +10,36 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.ComponentActivity;
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
 import androidx.core.content.ContextCompat;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
+import com.ethical_techniques.notemaker.auth.AppFlowActivity;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.model.Category;
 import com.ethical_techniques.notemaker.model.Note;
 import com.ethical_techniques.notemaker.model.PRIORITY;
 import com.ethical_techniques.notemaker.utils.DialogAction;
 import com.ethical_techniques.notemaker.utils.DialogUtil;
+import com.google.android.gms.common.util.Strings;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.sql.SQLException;
@@ -90,25 +99,45 @@ public class NoteActivity extends BaseActivity {
                 initDropDown(dropDownSpinner);
             }
 
-        }
-
-        OnBackPressedDispatcher backButtonPressed = new OnBackPressedDispatcher();
-        OnBackPressedCallback backButtonCallback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                showSaveNotePrompt();
-            }
-        };
-        backButtonPressed.addCallback(backButtonCallback);
-
-        //Initialize listeners on text input fields
+        }//Initialize listeners on text input fields
         initTextChangedEvents();
 
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        backClickedSavePrompt();
+    }
+
+    /**
+     * Displays a save dialog to warn the user to save changes the note before
+     * moving back up to a previous activity
+     */
+    protected void backClickedSavePrompt() {
+
+        List<View> views = new ArrayList<>();
+        final EditText title = findViewById(R.id.editTitle);
+        final EditText notes = findViewById(R.id.editNotes);
+        views.add(title);
+        views.add(notes);
+        hideKeyboard(this, views);
+        DialogUtil.makeAndShow(this,
+                "Unsaved changes detected",
+                "Hit SAVE to save changes before going back or DONT SAVE to continue to your Notes list without saving.",
+                "SAVE", "DONT SAVE",
+                () -> {
+                    handleSaveNote();
+                    NoteActivity.super.onBackPressed();
+                },
+                NoteActivity.super::onBackPressed
+        );
 
     }
 
@@ -190,7 +219,6 @@ public class NoteActivity extends BaseActivity {
             initDropDown(dropDownSpinner);
         }
         int currentPosition = 0;
-
         for (int i = 0; i < categories.size(); i++) {
             if (categories.get(i).getName().equals(currentNoteCategory.getName())) {
                 currentPosition = i;
@@ -209,7 +237,11 @@ public class NoteActivity extends BaseActivity {
      */
     private void initPriorityStar(Note note) {
         if (priorityStar != null) {
-            handleTogglePriorityStar(priorityStar, note.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString()));
+            if (note.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
+                handleTogglePriorityStar(priorityStar, true);
+            } else {
+                handleTogglePriorityStar(priorityStar, false);
+            }
         }
     }
 
@@ -245,10 +277,6 @@ public class NoteActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 
     /**
      * @param item that was selected
@@ -257,38 +285,30 @@ public class NoteActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks.
-        int id = item.getItemId();
-        if (id == R.id.action_bar_save_button) {
-            handleSaveNote();
-            return true;
-        } else if (id == R.id.action_bar_priority_star) {
-            handleTogglePriorityStar(item, currentNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString()));
-            if (currentNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
-                currentNote.setPRIORITY_LEVEL(PRIORITY.LOW.getString());
-            } else {
-                currentNote.setPRIORITY_LEVEL(PRIORITY.HIGH.getString());
+        switch (item.getItemId()) {
+            case R.id.action_bar_save_button: {
+                handleSaveNote();
+                return true;
             }
-            return true;
+            case R.id.action_bar_priority_star: {
+                handleTogglePriorityStar(item, currentNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString()));
+                if (currentNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
+                    currentNote.setPRIORITY_LEVEL(PRIORITY.LOW.getString());
+                } else {
+                    currentNote.setPRIORITY_LEVEL(PRIORITY.HIGH.getString());
+                }
+                return true;
+            }
+            case android.R.id.home: {
+                backClickedSavePrompt();
+                return true;
+            }
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
         }
-        return super.onOptionsItemSelected(item);
     }
 
-    void showSaveNotePrompt() {
-        List<View> views = new ArrayList<>();
-        views.add(findViewById(R.id.editTitle));
-        views.add(findViewById(R.id.editNotes));
-        views.add(findViewById(R.id.editTitle));
-        hideKeyboard(views);
-
-        DialogUtil.makeAndShow(NoteActivity.this,
-                "Save Note Prompt",
-                "Would you like to save the current note before moving on?",
-                "Yes Save",
-                "Dont Save",
-                this::showSaveNotePrompt,
-                this::onBackPressed
-        );
-    }
 
     /**
      * Sets event listener TextWatcher to each of the input fields in the NoteActivity
@@ -345,10 +365,9 @@ public class NoteActivity extends BaseActivity {
         List<View> views = new ArrayList<>();
         views.add(findViewById(R.id.editTitle));
         views.add(findViewById(R.id.editNotes));
-        views.add(findViewById(R.id.editTitle));
 
         if (views.size() > 0) {
-            hideKeyboard(views);
+            hideKeyboard(this, views);
         }
 
         if (currentNote.getNoteName() == null || currentNote.getContent() == null) {

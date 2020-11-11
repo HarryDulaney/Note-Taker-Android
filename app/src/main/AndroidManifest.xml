@@ -14,56 +14,88 @@
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <!-- Application Flow Delegation Activity -->
         <activity
-            android:name=".auth.AppFlowActivity"
-            android:parentActivityName=".ListActivity">
+            android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
+            android:launchMode="standard"
+            tools:replace="android:launchMode" />
+
+        <!-- Application Flow Delegation Activity -->
+        <activity android:name=".auth.AppFlowActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- The List Activity -->
-        <activity
-            android:name=".ListActivity"
-            android:label="@string/title_activity_list" />
-        <!-- The Edit/New Note Activity -->
-        <activity
-            android:name=".NoteActivity"
-            android:label="@string/title_note_activity"
-            android:parentActivityName=".ListActivity" />
-
         <!-- Login Activity -->
         <activity
             android:name=".auth.UserLoginActivity"
-            android:label="@string/title_activity_user_login" />
+            android:label="@string/title_activity_user_login"
+            android:parentActivityName=".auth.AppFlowActivity" />
 
         <!-- Register New User Activity -->
         <activity
             android:name=".auth.UserRegisterActivity"
-            android:label="Create New Account" />
+            android:label="Create New Account"
+            android:parentActivityName=".auth.AppFlowActivity" />
+
 
         <!-- User Update Account Activity -->
         <activity
             android:name=".auth.UpdateProfileActivity"
-            android:label="Account Update" />
+            android:label="Account Update"
+            android:parentActivityName=".auth.AppFlowActivity" />
+
+        <!-- The List Activity -->
+        <activity
+            android:name=".ListActivity"
+            android:label="@string/title_activity_list"
+            android:parentActivityName=".auth.AppFlowActivity" />
+
+        <!-- The Edit/New Note Activity -->
+        <activity
+            android:name=".NoteActivity"
+            android:label="@string/title_note_activity"
+            android:parentActivityName=".ListActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ethical_techniques.notemaker.ListActivity" />
+        </activity>
 
         <!-- The Settings (Preferences) Activity -->
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".ListActivity"/>
+            android:parentActivityName=".ListActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ethical_techniques.notemaker.ListActivity" />
+        </activity>
 
         <!-- Category List Activity -->
         <activity
             android:name=".CategoryListActivity"
-            android:label="Note Categories" />
+            android:label="Note Categories"
+            android:parentActivityName=".ListActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ethical_techniques.notemaker.ListActivity" />
+        </activity>
 
         <!-- The New/Edit Category Activity -->
         <activity
             android:name=".CreateCategoryActivity"
-            android:label="New Category" />
+            android:label="New Category"
+            android:parentActivityName=".ListActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ethical_techniques.notemaker.ListActivity" />
+        </activity>
     </application>
 
 </manifest>

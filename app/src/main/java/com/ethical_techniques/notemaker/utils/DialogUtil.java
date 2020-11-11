@@ -46,28 +46,21 @@ public class DialogUtil {
     }
 
     public static void makeAndShow(final Context context,
-                                   final String title,
-                                   final String message,
-                                   final String posButton,
-                                   final String negButton,
-                                   DialogAction positiveAction,
-                                   DialogAction negativeAction) {
+                                               final String title,
+                                               final String message,
+                                               final String yesButton,
+                                               final String noButton,
+                                               DialogAction yesAction,
+                                               DialogAction noAction) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.setNegativeButton(negButton, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                negativeAction.onAction();
-            }
-        });
-        builder.setPositiveButton(posButton, (dialog, usersChoice) -> {
-
-            positiveAction.onAction();
-
-        });
-        builder.create().show();
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(yesButton, (dialog, which) -> yesAction.onAction())
+                .setNegativeButton(noButton, (dialog, usersChoice) -> {
+                    noAction.onAction();
+                })
+                .create()
+                .show();
     }
 
 
