@@ -4,10 +4,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+
+import com.ethical_techniques.notemaker.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -17,23 +24,61 @@ import com.google.firebase.auth.UserProfileChangeRequest;
  *
  * @author Harry Dulaney
  */
-public class UpdateProfileActivity extends BaseActivity {
+public class UpdateProfileActivity extends BaseActivity implements View.OnClickListener {
 
     private final String TAG = getClass().getName();
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_update_profile);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private void initUIProfileInfo(FirebaseUser firebaseUser) {
+        String fbaseUsername = firebaseUser.getDisplayName();
+        String email = firebaseUser.getEmail();
+        Uri uriPhoto = firebaseUser.getPhotoUrl();
+
+        EditText userName = findViewById(R.id.editTextInputUserNameUpdate);
+        if (fbaseUsername != null) {
+            if (!fbaseUsername.isEmpty()) {
+                userName.setText(fbaseUsername);
+            } else {
+                userName.setText("Set Display Name Here");
+            }
+        }
+        TextView emailView = findViewById(R.id.emailAddressDisplay);
+        if (email != null) {
+            if (!email.isEmpty()) {
+                emailView.setText(email);
+            } else {
+                emailView.setText("No Email Set");
+            }
+        }
+        ImageView photoView = findViewById(R.id.imageView);
+        if (uriPhoto != null) {
+            if (!uriPhoto.toString().isEmpty()) {
+                photoView.setImageURI(uriPhoto);
+            }
+        }
+
+
     }
+
 
     @Override
     protected void onStart() {
         super.onStart();
+        initUIProfileInfo(FirebaseAuth.getInstance().getCurrentUser());
     }
 
     /**
@@ -93,4 +138,23 @@ public class UpdateProfileActivity extends BaseActivity {
     }
 
 
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.changeProfilePic) {
+
+        } else if (id == R.id.updateEmailAddressButton) {
+
+        } else if (id == R.id.handleRegisterSubmit) {
+
+        } else if (id == R.id.exitProfileUpdate) {
+
+        }
+
+    }
 }

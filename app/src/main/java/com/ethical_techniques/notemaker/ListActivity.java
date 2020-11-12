@@ -50,6 +50,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The Main Activity containing the navigation drawer, most other activities,excluding authentication activities
@@ -84,7 +85,6 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         setSupportActionBar(toolbar);
         //initialize Categories Dropdown (i.e. Spinner)
         spinner = findViewById(R.id.list_activity_category_spinner);
-
         //Handle create new note floating button
         FloatingActionButton floatingActionButton = findViewById(R.id.new_note_float_button);
         floatingActionButton.setOnLongClickListener((v) -> {
@@ -100,7 +100,6 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
             startActivity(intent);
 
         });
-
         //Handle Nav Drawer
         DrawerLayout navDrawer = findViewById(R.id.drawer_layout_list);
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, navDrawer,
@@ -141,6 +140,14 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
      * Display choice dialog prompting the user to login to their cloud account
      */
     private void showSyncDecisionDialog() {
+        DialogUtil.makeAndShow(this,
+                "Welcome back what would you like to do first?",
+                "Would you like to sign into your account now?",
+                () -> {
+                    Intent i = new Intent(this, UserLoginActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i);
+                });
 
     }
 
@@ -218,6 +225,8 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
                 startActivity(i3);
                 break;
             case R.id.nav_logout:
+                FirebaseAuth.getInstance().signOut();
+                Snackbar.make(getCurrentFocus(),"",Snackbar.LENGTH_LONG).show();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + item.getItemId());

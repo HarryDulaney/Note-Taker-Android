@@ -19,7 +19,8 @@ import com.ethical_techniques.notemaker.model.Note;
 public class DialogUtil {
 
     /**
-     * Make and show a Dialog with a definable DialogAction.
+     * Make and show a Dialog with a definable DialogAction. Default negative button
+     * triggers dialog.cancel()
      *
      * @param context the context
      * @param title   the title
@@ -45,6 +46,17 @@ public class DialogUtil {
         builder.create().show();
     }
 
+    /**
+     * Make and show.
+     *
+     * @param context   the context Context
+     * @param title     the title String
+     * @param message   the message String
+     * @param yesButton the yes button String
+     * @param noButton  the no button String
+     * @param yesAction the yes action DialogAction
+     * @param noAction  the no action DialogAction
+     */
     public static void makeAndShow(final Context context,
                                                final String title,
                                                final String message,

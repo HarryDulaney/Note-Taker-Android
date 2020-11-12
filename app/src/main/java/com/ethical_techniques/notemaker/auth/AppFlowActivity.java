@@ -40,7 +40,6 @@ public class AppFlowActivity extends BaseActivity {
         FirebaseAuth fAuth = FirebaseAuth.getInstance();
         delegateFlow(fAuth, hasNotes);
 
-
     }
 
     @Override

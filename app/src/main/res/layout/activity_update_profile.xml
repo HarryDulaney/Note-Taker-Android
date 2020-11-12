@@ -67,6 +67,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/changeProfilePic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/mediumMargin"
@@ -168,7 +169,7 @@
 
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/handleClearForm"
+                android:id="@+id/exitProfileUpdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/mediumMargin"

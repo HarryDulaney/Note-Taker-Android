@@ -128,18 +128,24 @@ public class NoteActivity extends BaseActivity {
         views.add(title);
         views.add(notes);
         hideKeyboard(this, views);
-        DialogUtil.makeAndShow(this,
-                "Unsaved changes detected",
-                "Hit SAVE to save changes before going back or DONT SAVE to continue to your Notes list without saving.",
-                "SAVE", "DONT SAVE",
-                () -> {
-                    handleSaveNote();
-                    NoteActivity.super.onBackPressed();
-                },
-                NoteActivity.super::onBackPressed
-        );
+
+        if (title.length() != 0 || notes.length() != 0) {
+            DialogUtil.makeAndShow(this,
+                    "Unsaved changes detected",
+                    "Hit SAVE to save changes before going back or DON'T SAVE to continue to your Notes list without saving.",
+                    "SAVE", "DON'T SAVE",
+                    () -> {
+                        handleSaveNote();
+                        NoteActivity.super.onBackPressed();
+                    },
+                    NoteActivity.super::onBackPressed
+            );
+        } else {
+            NoteActivity.super.onBackPressed();
+        }
 
     }
+
 
     /**
      * Initializes the categories list.
@@ -316,7 +322,6 @@ public class NoteActivity extends BaseActivity {
     private void initTextChangedEvents() {
         final EditText etNoteName = findViewById(R.id.editTitle);
         etNoteName.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
