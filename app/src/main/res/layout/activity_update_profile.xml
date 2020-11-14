@@ -22,41 +22,36 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutRegister1"
+    <include
+        android:id="@+id/email_update_layout"
+        layout="@layout/update_email_ui"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_dodgeInsetEdges="top" />
+
+    <RelativeLayout
+        android:id="@+id/layoutUpdateUserProfile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_dodgeInsetEdges="top">
 
-        <TextView
-            android:id="@+id/textViewHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginHorizontal="@dimen/smallMargin"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="@string/update_profile_header"
-            android:textAlignment="center"
-            android:textSize="22sp" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/userProfileImage"
             android:layout_width="match_parent"
-            android:layout_height="@android:dimen/notification_large_icon_height"
-            android:layout_below="@id/textViewHeader"
-            android:layout_marginTop="@dimen/mediumMargin"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/smallMargin"
             android:layoutDirection="ltr">
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="@android:dimen/notification_large_icon_width"
-                android:layout_height="@android:dimen/notification_large_icon_height"
-                android:layout_gravity="center"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
                 android:contentDescription="@string/contentDesc_ProfileImageSet"
                 android:layoutDirection="ltr"
                 android:scaleType="fitCenter"
@@ -70,7 +65,7 @@
                 android:id="@+id/changeProfilePic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/mediumMargin"
+                android:layout_marginStart="@dimen/extraSmMargin"
                 android:gravity="center_vertical"
                 android:layoutDirection="ltr"
                 android:text="@string/change"
@@ -89,7 +84,7 @@
             android:layout_below="@id/userProfileImage"
             android:layout_centerHorizontal="true"
             android:layout_marginHorizontal="@dimen/largeMargin"
-            android:layout_marginTop="@dimen/smallMargin"
+            android:layout_marginTop="@dimen/mediumMargin"
             android:layout_marginBottom="@dimen/mediumMargin"
             app:helperText="User Display Name">
 
@@ -108,62 +103,40 @@
             android:id="@+id/emailAddressDisplay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/TextLayoutUserEmail"
+            android:layout_below="@id/updateEmailAddressButton"
             android:layout_marginHorizontal="@dimen/smallMargin"
-            android:layout_marginBottom="@dimen/mediumMargin"
             android:text="@string/error_message1"
             android:textAlignment="center"
             android:textColor="@color/textColorDefault"
             android:textSize="24sp" />
 
-        <LinearLayout
-            android:id="@+id/TextLayoutUserEmail"
-            android:layout_width="match_parent"
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/updateEmailAddressButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/textInputLayout1"
+            android:layout_below="@id/divider3"
             android:layout_centerHorizontal="true"
-            android:layout_marginHorizontal="@dimen/extraLrgMargin"
+            android:layout_marginStart="@dimen/extraLrgMargin"
             android:layout_marginTop="@dimen/mediumMargin"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/labelEmailProfileUpdate"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/extraLrgMargin"
-                android:gravity="center_vertical"
-                android:text="@string/fui_email_hint"
-                android:textAllCaps="true"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/updateEmailAddressButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginStart="@dimen/mediumMargin"
-                android:gravity="center_vertical"
-                android:onClick="handleUpdateUserEmail"
-                android:text="@string/reset"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:theme="@style/MaterialDesignButton" />
-        </LinearLayout>
+            android:text="@string/reset"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:theme="@style/MaterialDesignButton" />
 
         <RelativeLayout
             android:id="@+id/registerLayoutBottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/emailAddressDisplay"
+            android:layout_below="@id/divider2"
             android:layout_centerHorizontal="true"
-            android:layout_marginVertical="@dimen/mediumMargin">
+            android:layout_marginVertical="@dimen/largeMargin">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/handleRegisterSubmit"
+                android:id="@+id/handleDoneButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/mediumMargin"
-                android:text="@string/submit"
+                android:text="@string/done"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                 android:theme="@style/MaterialDesignButton" />
 
@@ -173,8 +146,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/mediumMargin"
-                android:layout_toEndOf="@id/handleRegisterSubmit"
-                android:onClick="handleUpdateUserProfile"
+                android:layout_toEndOf="@id/handleDoneButton"
                 android:text="@string/cancel_exit"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                 android:theme="@style/MaterialDesignButton" />
@@ -184,15 +156,26 @@
             android:id="@+id/divider2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@id/emailAddressDisplay"
+            android:layout_below="@id/verifyButton"
             android:background="?android:attr/listDivider" />
 
         <View
             android:id="@+id/divider3"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_above="@id/TextLayoutUserEmail"
+            android:layout_below="@id/textInputLayout1"
             android:background="?android:attr/listDivider" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/verifyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/emailAddressDisplay"
+            android:layout_centerHorizontal="true"
+            android:text="@string/verify"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:theme="@style/MaterialDesignButton"
+            app:backgroundTint="@android:color/holo_orange_light" />
 
     </RelativeLayout>
 

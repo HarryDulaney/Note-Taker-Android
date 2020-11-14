@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/updateEmailAddressUI"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".auth.UpdateProfileActivity">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_dodgeInsetEdges="top">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInlayNewEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewRegisterTitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="@dimen/largeMargin"
+            android:layout_marginTop="@dimen/smallMargin"
+            app:helperText="New Email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextNooEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="30"
+                android:hint="@string/email_emailaddress_com"
+                android:inputType="textEmailAddress"
+                android:scrollHorizontally="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/textViewRegisterTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginHorizontal="@dimen/smallMargin"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/emailChange_ui_header"
+            android:textSize="18sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textEmailCheckLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textInlayNewEmail"
+            android:layout_marginHorizontal="@dimen/largeMargin"
+            android:layout_marginTop="@dimen/smallMargin"
+            app:errorIconDrawable="@android:drawable/stat_notify_error"
+            app:helperText="Confirm New Email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextEmailCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:ems="30"
+                android:hint="@string/re_type_new_email"
+                android:inputType="textEmailAddress" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/pword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textEmailCheckLayout"
+            android:layout_marginHorizontal="@dimen/largeMargin"
+            android:layout_marginTop="@dimen/smallMargin"
+            app:errorIconDrawable="@android:drawable/stat_notify_error"
+            app:helperText="@string/password"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextNewPasswordConfirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:ems="30"
+                android:hint="@string/pword_example"
+                android:inputType="textWebPassword" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <RelativeLayout
+            android:id="@+id/registerLayoutBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pword"
+            android:layout_centerHorizontal="true"
+            android:layout_marginVertical="@dimen/mediumMargin">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/submitUpdateEmailAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/mediumMargin"
+                android:text="@string/submit"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:theme="@style/MaterialDesignButton" />
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/handleClearForm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/mediumMargin"
+                android:layout_toEndOf="@id/submitUpdateEmailAddress"
+                android:text="@string/clearform"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:theme="@style/MaterialDesignButton" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

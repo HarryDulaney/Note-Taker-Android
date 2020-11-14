@@ -1,23 +1,45 @@
 package com.ethical_techniques.notemaker.auth;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.Editable;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-
 import com.ethical_techniques.notemaker.R;
+import com.ethical_techniques.notemaker.listeners.TextWatcherImpl;
+import com.ethical_techniques.notemaker.utils.DialogUtil;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthEmailException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The type Update profile activity.
@@ -27,6 +49,9 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 public class UpdateProfileActivity extends BaseActivity implements View.OnClickListener {
 
     private final String TAG = getClass().getName();
+    private ViewGroup mainLayout;
+    private ViewGroup emailUpdateLayout;
+    private ValueHolder valueHolder;
 
 
     @Override
@@ -39,69 +64,92 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
+        mainLayout = findViewById(R.id.layoutUpdateUserProfile);
+        emailUpdateLayout = findViewById(R.id.email_update_layout);
 
     }
 
     private void initUIProfileInfo(FirebaseUser firebaseUser) {
-        String fbaseUsername = firebaseUser.getDisplayName();
-        String email = firebaseUser.getEmail();
-        Uri uriPhoto = firebaseUser.getPhotoUrl();
 
-        EditText userName = findViewById(R.id.editTextInputUserNameUpdate);
-        if (fbaseUsername != null) {
-            if (!fbaseUsername.isEmpty()) {
-                userName.setText(fbaseUsername);
-            } else {
-                userName.setText("Set Display Name Here");
-            }
+        valueHolder = new ValueHolder(firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getPhotoUrl().getPath());
+
+
+        TextInputEditText username = findViewById(R.id.editTextInputUserNameUpdate);
+        if (!valueHolder.currDisName.isEmpty()) {
+            username.setText(valueHolder.currDisName);
+        } else {
+            username.setText(R.string.dis_name_empty_message);
+
         }
-        TextView emailView = findViewById(R.id.emailAddressDisplay);
-        if (email != null) {
-            if (!email.isEmpty()) {
-                emailView.setText(email);
-            } else {
-                emailView.setText("No Email Set");
+
+        username.addTextChangedListener(new TextWatcherImpl() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                valueHolder.nooDisPlayName = username.getText().toString();
             }
+        });
+
+        TextView emailView = findViewById(R.id.emailAddressDisplay);
+        if (!valueHolder.currEmail.isEmpty()) {
+            emailView.setText(valueHolder.currEmail);
+        } else {
+            emailView.setText(R.string.no_email_set);
+
         }
         ImageView photoView = findViewById(R.id.imageView);
-        if (uriPhoto != null) {
-            if (!uriPhoto.toString().isEmpty()) {
-                photoView.setImageURI(uriPhoto);
-            }
+        Uri uriPhoto = firebaseUser.getPhotoUrl();
+
+        if (!valueHolder.currPath.isEmpty()) {
+            photoView.setImageURI(uriPhoto);
+        }
+
+        MaterialButton mb = findViewById(R.id.verifyButton);
+        if (firebaseUser.isEmailVerified()) {
+            mb.setVisibility(View.GONE);
+        } else {
+            mb.setVisibility(View.VISIBLE);
         }
 
 
     }
 
+//    private void() {
+//        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+//        if (fUser != null) {
+//            UserProfileChangeRequest.Builder profileUpdates = new UserProfileChangeRequest.Builder();
+//            if (!nooDisName.isEmpty()) {
+//                profileUpdates.setDisplayName(nooDisName);
+//            } else if (!nooPicPath.isEmpty()) {
+//                profileUpdates.setPhotoUri(Uri.parse(nooPicPath));
+//            }
+//
+//            fUser.updateProfile(profileUpdates.build())
+//                    .addOnCompleteListener(task -> {
+//                        if (task.isSuccessful()) {
+//                            Snackbar.make(mainLayout, "Profile has been updated", Snackbar.LENGTH_LONG).show();
+//
+//                        }
+//                    });
+//        } else {
+//            Log.e(TAG, "Something has gone horribly wrong :( ");
+//        }
+//    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        initUIProfileInfo(FirebaseAuth.getInstance().getCurrentUser());
-    }
-
-    /**
-     * Handle update user profile.
-     *
-     * @param view the view
-     */
-    public void handleUpdateUserProfile(View view) {
-    }
-
-    /**
-     * Handle update user email.
-     *
-     * @param view the view
-     */
-    public void handleUpdateUserEmail(View view) {
+        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (fUser != null) {
+            initUIProfileInfo(fUser);
+        } else {
+            throw new SecurityException("Access Denied");
+        }
     }
 
     /**
      * Send email verification.
      */
-    public void sendEmailVerification() {
-        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+    public void sendEmailVerification(FirebaseUser fUser) {
         if (fUser != null) {
             fUser.sendEmailVerification()
                     .addOnCompleteListener(task -> {
@@ -126,7 +174,6 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     protected void updateName(String name, FirebaseUser fUser) {
         UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
                 .setDisplayName(name)
-                .setPhotoUri(Uri.parse("https://"))
                 .build();
 
         fUser.updateProfile(profileChangeRequest)
@@ -138,8 +185,23 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     }
 
 
+    private void launchTakePicture() {
+        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            startActivityForResult(i, REQUEST_IMAGE_CAPTURE);
+        } catch (ActivityNotFoundException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    private void launchPicFromStorage() {
+
+
+    }
+
+
     /**
-     * Called when a view has been clicked.
+     * Called when a view within the activity_update_profile layout has been clicked.
      *
      * @param v The view that was clicked.
      */
@@ -147,14 +209,219 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.changeProfilePic) {
+            //Change picture options
+            DialogUtil.makeAndShow(this,
+                    "Set Profile Picture",
+                    "From where do you want to retrieve your profile picture?",
+                    "Take Picture",
+                    "Open File Explorer",
+                    "Close Popup",
+                    this::launchTakePicture,
+                    this::launchPicFromStorage,
+                    () -> {
+                        Toast.makeText(this, "Operation Canceled", Toast.LENGTH_SHORT).show();
+                    });
 
         } else if (id == R.id.updateEmailAddressButton) {
-
-        } else if (id == R.id.handleRegisterSubmit) {
+            //launch email update ui and events
+            initUpdateEmail();
+        } else if (id == R.id.handleDoneButton) {
+            //Submit update account user profile
+            onBackPressed();
 
         } else if (id == R.id.exitProfileUpdate) {
+            finish();
+        } else if (id == R.id.verifyButton) {
+            //Launch verify email event sequence
+            sendEmailVerification(FirebaseAuth.getInstance().getCurrentUser());
 
+
+        } else if (id == R.id.handleClearForm) {
+            TextInputEditText nooEmail = findViewById(R.id.editTextNooEmail);
+            TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
+            TextInputEditText pw = findViewById(R.id.pword);
+            Objects.requireNonNull(nooEmail.getText()).clear();
+            Objects.requireNonNull(nooEmailCheck.getText()).clear();
+            Objects.requireNonNull(pw.getText()).clear();
+
+        } else if (id == R.id.submitUpdateEmailAddress) {
+            final TextInputEditText nooEmail = findViewById(R.id.editTextNooEmail);
+            final TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
+            final TextInputEditText pw = findViewById(R.id.pword);
+
+            if (nooEmail.length() < 3 || nooEmailCheck.length() < 3 || pw.length() < 8)
+
+                if (nooEmail.getText().equals(nooEmailCheck.getText())) {
+                    if (validateEmail(nooEmail.getText())) {
+                        if (validatePassword(pw.getText())) {
+
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            AuthCredential creds = EmailAuthProvider
+                                    .getCredential(valueHolder.currEmail, pw.getText().toString());
+                            user.reauthenticate(creds)
+                                    .addOnCompleteListener(task -> {
+                                        Log.d(TAG, "User re-authenticated.");
+                                        try {
+                                            updateUserEmailAddress(user, nooEmail.getText().toString());
+                                        } catch (FirebaseAuthEmailException | FirebaseAuthInvalidCredentialsException fee) {
+                                            fee.printStackTrace();
+                                        } catch (FirebaseAuthUserCollisionException ffce) {
+                                            Toast.makeText(this, "The email address you entered already belongs to an existing account, please re-try with a different email address.", Toast.LENGTH_LONG).show();
+
+                                        }
+
+                                    });
+
+                        } else {
+                            Toast.makeText(this, "The password you entered appears to be in an invalid format, please check again and re-try.", Toast.LENGTH_SHORT).show();
+
+                        }
+                    } else {
+                        Toast.makeText(this, "The email address you entered is not a valid format, please double check.", Toast.LENGTH_SHORT).show();
+
+                    }
+                } else {
+                    Toast.makeText(this, "The both email address above must be equal, please check again.", Toast.LENGTH_SHORT).show();
+                }
+
+
+        } else {
+            Log.e(TAG, "Unknown or unhandled view clicked");
         }
 
     }
+
+    private void updateUserEmailAddress(FirebaseUser firebaseUser, String str) throws FirebaseAuthInvalidCredentialsException,
+            FirebaseAuthEmailException, FirebaseAuthUserCollisionException {
+
+        firebaseUser.updateEmail(str)
+                .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Snackbar.make(emailUpdateLayout, "Your email address has been updated, please use the button on the next screen to verify.", Snackbar.LENGTH_LONG);
+                                Log.d(TAG, "User email address updated.");
+                                reInitMainLayout();
+                            } else {
+                                Snackbar.make(emailUpdateLayout, "Something went wrong, we could not update your email address. Please visit our github page for help.", Snackbar.LENGTH_LONG);
+                                reInitMainLayout();
+                            }
+                        }
+                );
+    }
+
+    private void initUpdateEmail() {
+        mainLayout.setVisibility(View.GONE);
+        emailUpdateLayout.setVisibility(View.VISIBLE);
+
+    }
+
+    private void reInitMainLayout() {
+        emailUpdateLayout.setVisibility(View.GONE);
+        mainLayout.setVisibility(View.VISIBLE);
+    }
+
+    private static class ValueHolder {
+        private String nooDisPlayName;
+        private String nooPicPath;
+
+        private String currPath;
+        private String currEmail;
+        private String currDisName;
+
+        ValueHolder() {
+            throw new SecurityException("Unsupported Operation");
+        }
+
+        ValueHolder(String currDisName, String currEmail, String currPath) {
+            if (currDisName != null) {
+                this.currDisName = currDisName;
+            } else {
+                this.currDisName = "";
+            }
+            if (currEmail != null) {
+                this.currEmail = currEmail;
+            } else {
+                this.currEmail = "";
+            }
+            if (currPath != null) {
+                this.currPath = currPath;
+            } else {
+                this.currPath = "";
+            }
+        }
+
+        int nooDnLen() {
+            return nooDisPlayName.length();
+        }
+
+        int picStrLen() {
+            return nooPicPath.length();
+        }
+
+        public boolean isCurrDnDiff() {
+            return !nooDisPlayName.equals(currDisName);
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+        if (fuser != null) {
+            if (valueHolder.nooDnLen() > 0 && valueHolder.isCurrDnDiff()) {
+                updateName(valueHolder.nooDisPlayName, fuser);
+            }
+        }
+        super.onBackPressed();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.app_bar_top_list_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return true;
+    }
+
+    /**
+     * @param item that was selected
+     * @return true if the item is recognized
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here.
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            onBackPressed();
+        }
+
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    private static boolean validatePassword(CharSequence charSequence) {
+        if (charSequence == null || charSequence.length() < 8 || charSequence.length() > 20) {
+            return false;
+        }
+        String pwRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$";
+        Pattern pwPattern = Pattern.compile(pwRegex);
+        Matcher matcher = pwPattern.matcher(charSequence);
+        return matcher.matches();
+    }
+
+    private static boolean validateEmail(CharSequence charSequence) {
+        if (charSequence == null || charSequence.length() < 3) {
+            return false;
+        }
+        final String emailValidationRegEx = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+        Pattern emailPat = Pattern.compile(emailValidationRegEx);
+        Matcher matcher = emailPat.matcher(charSequence);
+        return matcher.matches();
+    }
+
+
 }

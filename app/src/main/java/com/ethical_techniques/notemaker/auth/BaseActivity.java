@@ -40,6 +40,8 @@ public class BaseActivity extends AppCompatActivity {
      */
     protected static final String PREF_KEY_LOCAL_MODE = "com.ethical_techniques.user.pref.key.local.mode";
 
+    static final int REQUEST_IMAGE_CAPTURE = 12471;
+
 
     /**
      * Hide keyboard.

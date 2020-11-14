@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
+    tools:context=".auth.UpdateProfileActivity" >
+
+<!--    &lt;!&ndash; Return to previous activity &ndash;&gt;-->
+<!--    <item-->
+<!--        android:id="@+id/customBackButton"-->
+<!--        android:contentDescription=""-->
+<!--        android:enabled="false"-->
+<!--        android:icon="@drawable/ic_arrow_left_white_24dp"-->
+<!--        android:title="@string/priority_level"-->
+<!--        app:showAsAction="always" />-->
+
+
+</menu>

@@ -34,6 +34,7 @@ import androidx.core.content.ContextCompat;
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.auth.AppFlowActivity;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
+import com.ethical_techniques.notemaker.listeners.TextWatcherImpl;
 import com.ethical_techniques.notemaker.model.Category;
 import com.ethical_techniques.notemaker.model.Note;
 import com.ethical_techniques.notemaker.model.PRIORITY;
@@ -321,17 +322,7 @@ public class NoteActivity extends BaseActivity {
      */
     private void initTextChangedEvents() {
         final EditText etNoteName = findViewById(R.id.editTitle);
-        etNoteName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
+        etNoteName.addTextChangedListener(new TextWatcherImpl() {
             /**
              * Updates the current Note with the users input
              * @param editable reference to the editTitle EditText
@@ -345,17 +336,7 @@ public class NoteActivity extends BaseActivity {
         });
 
         final EditText etNoteBody = findViewById(R.id.editNotes);
-        etNoteBody.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
+        etNoteBody.addTextChangedListener(new TextWatcherImpl() {
             @Override
             public void afterTextChanged(Editable editable) {
                 currentNote.setNoteContent(etNoteBody.getText().toString());
@@ -379,9 +360,7 @@ public class NoteActivity extends BaseActivity {
             Toast.makeText(NoteActivity.this, "Make sure to fill in the name and the " +
                     "\n note content fields of the note before saving", Toast.LENGTH_LONG).show();
         } else {
-
             currentNote.setDateCreated(Calendar.getInstance());
-
 
             boolean success = false;
             try {
