@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +37,8 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -52,6 +55,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     private ViewGroup mainLayout;
     private ViewGroup emailUpdateLayout;
     private ValueHolder valueHolder;
+    private Boolean waitingForVerifyEmail;
 
 
     @Override
@@ -146,12 +150,18 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         }
     }
 
+
     /**
      * Send email verification.
      */
     public void sendEmailVerification(FirebaseUser fUser) {
-        if (fUser != null) {
-            fUser.sendEmailVerification()
+        if (fUser != null) {//TODO: Replace the below url with the whitelisted one from the Firebase console.
+            String url = "http://www.example.com/verify?uid=" + fUser.getUid();
+            ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
+                    .setUrl(url)
+                    .build();
+
+            fUser.sendEmailVerification(actionCodeSettings)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Toast.makeText(this,
