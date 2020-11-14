@@ -259,7 +259,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
             final TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
             final TextInputEditText pw = findViewById(R.id.pword);
 
-            if (nooEmail.length() < 3 || nooEmailCheck.length() < 3 || pw.length() < 8)
+            if (nooEmail.length() < 3 || nooEmailCheck.length() < 3 || pw.length() < 8) {
 
                 if (nooEmail.getText().equals(nooEmailCheck.getText())) {
                     if (validateEmail(nooEmail.getText())) {
@@ -293,6 +293,10 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
                 } else {
                     Toast.makeText(this, "The both email address above must be equal, please check again.", Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                Toast.makeText(this, "Please fill in all of the fields before pressing the Submit button.", Toast.LENGTH_SHORT).show();
+
+            }
 
 
         } else {
