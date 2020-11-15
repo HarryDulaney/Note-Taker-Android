@@ -46,7 +46,6 @@
             android:label="Create New Account"
             android:parentActivityName=".auth.AppFlowActivity" />
 
-
         <!-- User Update Account Activity -->
         <activity
             android:name=".auth.UpdateProfileActivity"

@@ -35,6 +35,7 @@ public class CategoryListActivity extends BaseActivity {
 
     private final String TAG = this.getClass().getName();
     private static List<NoteCategory> categories;
+    private static boolean allNotesPopupShown;
     /**
      * The Recycle adapter.
      */
@@ -95,7 +96,7 @@ public class CategoryListActivity extends BaseActivity {
     public void onResume() {
         super.onResume();
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
 //        //Retrieve Sort By from sp
 //        String sortBy = sp.getString("sort.by.preference", getString(R.string.SORT_BY_DATE));

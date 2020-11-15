@@ -40,7 +40,9 @@
     <string name="SORT_CATEGORY_BY_PREF_ID">noteCategory.sort.by.preference</string>
     <string name="SORT_CATEGORY_ORDER_PREF_ID">noteCategory.sort.order.preference</string>
 
-
+    <string name="CATEG_LIST_OPTIONS_HIDE_ALL_NOTES">noteCategory.hide.allNotes.category.preference</string>
+    <string name="CATEG_LIST_OPTIONS_VIEW_ALL_NOTES">noteCategory.view.allNotes.category.preference</string>
+    
     <string name="ascending">Low to High</string>
     <string name="descending">High to Low</string>
     <string name="high">High</string>
@@ -95,7 +97,7 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="delete_button_for_this_note">Delete button for this note</string>
-    <string name="edit_list">"EDIT "</string>
+    <string name="edit_list">EDIT</string>
     <string name="my_notes">All Notes</string>
     <string name="share">Share</string>
     <string name="send">Send</string>

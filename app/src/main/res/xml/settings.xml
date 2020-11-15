@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings"
     android:visibility="visible">
-
+    <!-- Settings for the Notes List-->
     <PreferenceCategory app:title="@string/Notes_list_set">
 
         <ListPreference
@@ -20,6 +20,7 @@
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
+    <!-- Settings for the NoteCategories List-->
 
     <PreferenceCategory app:title="@string/categ_list_settings">
 
@@ -36,5 +37,30 @@
             app:title="@string/SORT_BY"
             app:useSimpleSummaryProvider="true" />
 
+        <ListPreference
+            app:entries="@array/show_categ_list_entries"
+            app:entryValues="@array/show_categ_list_values"
+            app:key="@string/SORT_CATEGORY_BY_PREF_ID"
+            app:title="@string/SORT_BY"
+            app:useSimpleSummaryProvider="true" />
+
+
     </PreferenceCategory>
+    <!--    &lt;!&ndash; Settings for Cate&ndash;&gt;-->
+    <!--    <PreferenceCategory app:title="">-->
+
+    <!--        <ListPreference-->
+    <!--            app:entries="@array/sort_order_entries"-->
+    <!--            app:entryValues="@array/sort_order_values"-->
+    <!--            app:key="@string/SORT_CATEGORY_ORDER_PREF_ID"-->
+    <!--            app:title="@string/SORT_ORDER"-->
+    <!--            app:useSimpleSummaryProvider="true" />-->
+    <!--        <ListPreference-->
+    <!--            app:entries="@array/sort_by_entries"-->
+    <!--            app:entryValues="@array/sort_by_values"-->
+    <!--            app:key="@string/SORT_CATEGORY_BY_PREF_ID"-->
+    <!--            app:title="@string/SORT_BY"-->
+    <!--            app:useSimpleSummaryProvider="true" />-->
+
+    <!--    </PreferenceCategory>-->
 </PreferenceScreen>
