@@ -19,7 +19,7 @@ import com.ethical_techniques.notemaker.adapters.CategoryRecycleAdapter.Category
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.decorators.SpacingItemDecoration;
-import com.ethical_techniques.notemaker.model.Category;
+import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -27,14 +27,14 @@ import java.util.List;
 
 
 /**
- * The type Category list activity controls the behavior of the list of categories.
+ * The type NoteCategory list activity controls the behavior of the list of categories.
  *
  * @author Harry Dulaney
  */
 public class CategoryListActivity extends BaseActivity {
 
     private final String TAG = this.getClass().getName();
-    private static List<Category> categories;
+    private static List<NoteCategory> categories;
     /**
      * The Recycle adapter.
      */
@@ -66,7 +66,7 @@ public class CategoryListActivity extends BaseActivity {
         FloatingActionButton floatingActionButton = findViewById(R.id.new_category_float_button);
         floatingActionButton.setOnLongClickListener((v) -> {
             Snackbar.make(v,
-                    "Create a new category", Snackbar.LENGTH_LONG)
+                    "Create a new noteCategory", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
 
             return true;
@@ -119,13 +119,13 @@ public class CategoryListActivity extends BaseActivity {
                 intent.putExtra(getString(R.string.CATEGORY_ID_KEY), categoryId);
                 startActivity(intent);
             } else {
-                Toast.makeText(this, "This is a default category and is necessary for grouping un-categorized Notes. " +
-                        "Please try creating a new category with the button below.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "This is a default noteCategory and is necessary for grouping un-categorized Notes. " +
+                        "Please try creating a new noteCategory with the button below.", Toast.LENGTH_LONG).show();
             }
 
         });
         recycleAdapter.setShortClickListener((view, position) -> {
-            Toast.makeText(this, "Hold a long click on the list item to open the Category for editing.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Hold a long click on the list item to open the NoteCategory for editing.", Toast.LENGTH_LONG).show();
         });
         recyclerView.addItemDecoration(new SpacingItemDecoration(1, false, true));
         recyclerView.setAdapter(recycleAdapter);
@@ -199,19 +199,19 @@ public class CategoryListActivity extends BaseActivity {
         // Handle action bar item clicks here.
         int id = item.getItemId();
         if (id == R.id.action_bar_editSwitch) {
-            // Turn on edit mode for the Category Fragments in the RecyclerView by
+            // Turn on edit mode for the NoteCategory Fragments in the RecyclerView by
             // showing the Edit button on each list item.
             for (int i = 0; i < recycleAdapter.getItemCount(); i++) {
                 CategoryViewHolder viewHolder = (CategoryViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
                 if (viewHolder != null) {
-                    if (Category.MAIN_NAME.contentEquals(viewHolder.name.getText())) {
+                    if (NoteCategory.MAIN_NAME.contentEquals(viewHolder.name.getText())) {
                         continue;
                     } else if (viewHolder.deleteButton.getVisibility() == View.VISIBLE) {
                         viewHolder.deleteButton.setVisibility(View.INVISIBLE);
                     } else if (viewHolder.deleteButton.getVisibility() == View.INVISIBLE) {
                         viewHolder.deleteButton.setVisibility(View.VISIBLE);
                     }
-                    Log.i(TAG, "Edit button on Category list item " + i + "set to visible");
+                    Log.i(TAG, "Edit button on NoteCategory list item " + i + "set to visible");
                 } else {
                     Log.e(TAG, " Error occurred at RecycleAdapter position: " + i);
                 }

@@ -13,14 +13,14 @@ import com.ethical_techniques.notemaker.R;
 import com.ethical_techniques.notemaker.listeners.ListClickListener;
 import com.ethical_techniques.notemaker.listeners.ListLongClickListener;
 import com.ethical_techniques.notemaker.listeners.ViewListener;
-import com.ethical_techniques.notemaker.model.Category;
+import com.ethical_techniques.notemaker.model.NoteCategory;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link Category}.
+ * {@link RecyclerView.Adapter} that can display a {@link NoteCategory}.
  *
  * @author Harry Dulaney
  */
@@ -32,7 +32,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
         void clicked(View v, int position);
     }
 
-    private List<Category> categories;
+    private List<NoteCategory> categories;
     private DataSource dataSource;
 
     /**
@@ -40,18 +40,18 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
      */
     DeleteClickListener deleteButtonListener;
     /**
-     * The Category short click listener.
+     * The NoteCategory short click listener.
      */
     ListClickListener categoryShortClickListener;
     /**
-     * The Category long click listener.
+     * The NoteCategory long click listener.
      */
     ListLongClickListener categoryLongClickListener;
 
     /**
      * Sets short click listener.
      *
-     * @param categoryShortClickListener the category short click listener
+     * @param categoryShortClickListener the noteCategory short click listener
      */
     public void setShortClickListener(ListClickListener categoryShortClickListener) {
         this.categoryShortClickListener = categoryShortClickListener;
@@ -60,7 +60,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
     /**
      * Sets long click listener.
      *
-     * @param categoryLongClickListener the category long click listener
+     * @param categoryLongClickListener the noteCategory long click listener
      */
     public void setLongClickListener(ListLongClickListener categoryLongClickListener) {
         this.categoryLongClickListener = categoryLongClickListener;
@@ -76,11 +76,11 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
     }
 
     /**
-     * Instantiates a new Category recycle adapter.
+     * Instantiates a new NoteCategory recycle adapter.
      *
      * @param items the items
      */
-    public CategoryRecycleAdapter(List<Category> items) {
+    public CategoryRecycleAdapter(List<NoteCategory> items) {
         categories = items;
     }
 
@@ -95,7 +95,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
     @Override
     public void onBindViewHolder(final CategoryViewHolder holder, int position) {
 
-        holder.category = categories.get(position);
+        holder.noteCategory = categories.get(position);
         holder.name.setText(categories.get(position).getName());
         holder.mView.setBackgroundColor(categories.get(position).getColor());
         holder.deleteButton.setVisibility(View.INVISIBLE);
@@ -115,18 +115,18 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
     }
 
     /**
-     * The type Category view holder.
+     * The type NoteCategory view holder.
      */
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
         /**
-         * The Category's view.
+         * The NoteCategory's view.
          */
         public final View mView;
         /**
-         * The Category.
+         * The NoteCategory.
          */
-        public Category category;
+        public NoteCategory noteCategory;
         /**
          * The Name.
          */
@@ -137,7 +137,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
         public final ImageButton deleteButton;
 
         /**
-         * Instantiates a new Category view holder.
+         * Instantiates a new NoteCategory view holder.
          *
          * @param v the v
          */
@@ -159,6 +159,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
                 if (categoryShortClickListener != null) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
+                        view.setAlpha(0.7f);
                         categoryShortClickListener.clicked(view, position);
                     }
                 }
@@ -180,7 +181,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
         @NotNull
         @Override
         public String toString() {
-            return super.toString() + "'" + category.getName() + "'" + category.getId() + "'" + category.getColor() + "'";
+            return super.toString() + "'" + noteCategory.getName() + "'" + noteCategory.getId() + "'" + noteCategory.getColor() + "'";
         }
 
 

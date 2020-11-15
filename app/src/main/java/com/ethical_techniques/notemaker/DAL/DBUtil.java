@@ -3,9 +3,7 @@ package com.ethical_techniques.notemaker.DAL;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.ethical_techniques.notemaker.model.Category;
+import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.ethical_techniques.notemaker.model.Note;
 
 import java.sql.SQLException;
@@ -116,11 +114,11 @@ public class DBUtil {
      * Gets categories.
      *
      * @param context of the calling Activity
-     * @return list of all Category objects
+     * @return list of all NoteCategory objects
      * @throws SQLException the sql exception
      */
-    public static List<Category> getCategories(Context context) throws SQLException {
-        List<Category> categories;
+    public static List<NoteCategory> getCategories(Context context) throws SQLException {
+        List<NoteCategory> categories;
         DataSource ds = new DataSource(context);
         ds.open();
         categories = ds.getCategories();
@@ -129,56 +127,56 @@ public class DBUtil {
     }
 
     /**
-     * Find category category.
+     * Find noteCategory noteCategory.
      *
      * @param context the context
      * @param id      the id
-     * @return the category
+     * @return the noteCategory
      * @throws SQLException the sql exception
      */
-    public static Category findCategory(Context context, int id) throws SQLException {
+    public static NoteCategory findCategory(Context context, int id) throws SQLException {
         DataSource ds = new DataSource(context);
         ds.open();
-        Category category = ds.getSpecificCategory(id);
+        NoteCategory noteCategory = ds.getSpecificCategory(id);
         ds.close();
 
-        return category;
+        return noteCategory;
 
     }
 
-    private static Category findCategory(Context context, String name) throws SQLException {
+    private static NoteCategory findCategory(Context context, String name) throws SQLException {
         DataSource ds = new DataSource(context);
         ds.open();
-        Category category = ds.getCategoryByName(name);
+        NoteCategory noteCategory = ds.getCategoryByName(name);
         ds.close();
-        return category;
+        return noteCategory;
     }
 
     /**
-     * Save category boolean.
+     * Save noteCategory boolean.
      *
      * @param context  the context
-     * @param category the category
+     * @param noteCategory the noteCategory
      * @return the boolean
      * @throws SQLException the sql exception
      */
-    public static boolean saveCategory(Context context, Category category) throws SQLException {
+    public static boolean saveCategory(Context context, NoteCategory noteCategory) throws SQLException {
         DataSource ds = new DataSource(context);
         boolean wasSuccess = false;
         ds.open();
-        if (category.getId() == -2) {
-            Category checkExists = findCategory(context, category.getName());
-            if (checkExists.getId() != -2) { //Category name clashes with existing Category;
+        if (noteCategory.getId() == -2) {
+            NoteCategory checkExists = findCategory(context, noteCategory.getName());
+            if (checkExists.getId() != -2) { //NoteCategory name clashes with existing NoteCategory;
                 //TODO: throw new DataNameClashException();
             } else {
-                wasSuccess = ds.insertCategory(category); //Insert the new Category
+                wasSuccess = ds.insertCategory(noteCategory); //Insert the new NoteCategory
             }
             if (wasSuccess) {
                 int id = ds.getLastCategoryId();
-                category.setId(id);
+                noteCategory.setId(id);
             }
         } else {
-            wasSuccess = ds.update(category);
+            wasSuccess = ds.update(noteCategory);
         }
 
         ds.close();

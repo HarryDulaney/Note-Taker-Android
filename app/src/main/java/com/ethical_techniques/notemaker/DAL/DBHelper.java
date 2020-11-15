@@ -66,10 +66,10 @@ public class DBHelper extends SQLiteOpenHelper {
                     + CATEGORY_NAME + " TEXT NOT NULL, " + CATEGORY_COLOR_INT + " INTEGER)";
 
     /**
-     * A Note that isn't explicitly assigned a Category remains assigned to the default category i.e.("All") and
-     * is grouped with other Notes of this Category util reassigned.
+     * A Note that isn't explicitly assigned a NoteCategory remains assigned to the default noteCategory i.e.("All") and
+     * is grouped with other Notes of this NoteCategory util reassigned.
      *
-     * The Note holds a reference INTEGER to the _id of the Category of which it was assigned. This dependency is implemented
+     * The Note holds a reference INTEGER to the _id of the NoteCategory of which it was assigned. This dependency is implemented
      * programmatically instead of through DB constraints
      */
     private static final String CREATE_TABLE_NOTE =

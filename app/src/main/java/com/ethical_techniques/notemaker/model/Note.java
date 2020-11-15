@@ -3,7 +3,6 @@ package com.ethical_techniques.notemaker.model;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -31,7 +30,7 @@ public class Note implements Parcelable {
      */
     private String noteName;
     /**
-     * The default Category is "All Notes". All Notes are set to Category.MAIN_ID at creation but users can change this reference at any time.
+     * The default NoteCategory is "All Notes". All Notes are set to NoteCategory.MAIN_ID at creation but users can change this reference at any time.
      */
     private int categoryId;
 
@@ -54,7 +53,7 @@ public class Note implements Parcelable {
      */
     public Note() {
         noteID = -1;
-        categoryId = Category.MAIN_ID;
+        categoryId = NoteCategory.MAIN_ID;
         PRIORITY_LEVEL = PRIORITY.LOW;
     }
 

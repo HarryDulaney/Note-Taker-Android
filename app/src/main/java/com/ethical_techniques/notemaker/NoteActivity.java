@@ -16,15 +16,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.view.menu.MenuItemImpl;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.MenuItemCompat;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.listeners.TextWatcherImpl;
-import com.ethical_techniques.notemaker.model.Category;
+import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.ethical_techniques.notemaker.model.Note;
 import com.ethical_techniques.notemaker.model.PRIORITY;
 import com.ethical_techniques.notemaker.utils.DialogUtil;
@@ -50,8 +48,8 @@ public class NoteActivity extends BaseActivity {
 
     private final String TAG = this.getClass().getSimpleName();
     private Note currentNote;
-    private List<Category> categories;
-    private Category currentNoteCategory;
+    private List<NoteCategory> categories;
+    private NoteCategory currentNoteCategory;
     Spinner dropDownSpinner;
     private MenuItem priorityStar;
     ArrayAdapter<String> categoryArrayAdapter;
@@ -70,8 +68,8 @@ public class NoteActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-
         }
+        dropDownSpinner = findViewById(R.id.categorySpinner);
 
         /* Check and Load info based from previous activity */
         Bundle extras = getIntent().getExtras();
@@ -80,15 +78,12 @@ public class NoteActivity extends BaseActivity {
             //Load the note using the noteID
             initNote(extras.getInt(getString(R.string.NOTE_ID_KEY)));
         } else {
-            //create a new blank note
+            //create a new note
             currentNote = new Note();
-            //Refresh dropdown Spinner
-            dropDownSpinner = findViewById(R.id.categorySpinner);
-            if (initCategories()) {
-                initDropDown(dropDownSpinner);
-            }
 
-        }//Initialize listeners on text input fields
+        }
+
+        //Initialize listeners on text input fields
         initTextChangedEvents();
 
     }
@@ -97,7 +92,10 @@ public class NoteActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        //Refresh dropdown Spinner
+        if (!refreshCategories()) {
+            Snackbar.make(findViewById(R.id.note_activity), "We had an issue loading categories, please try reloading the current screen.", Snackbar.LENGTH_LONG);
+        }
     }
 
     @Override
@@ -135,39 +133,38 @@ public class NoteActivity extends BaseActivity {
 
 
     /**
-     * Initializes the categories list.
-     * Handles adding the default category (Un-Categorized) in the event that
-     * it has not been persisted into database yet.
+     * Initializes and refreshes the categories list, by accessing saved categories.
      *
      * @return true if operation was successful
      */
-    private boolean initCategories() {
+    private boolean refreshCategories() {
         try {
             categories = DBUtil.getCategories(this);
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
+        initDropDown();
         return true;
     }
 
     /**
      * Init drop down.
-     *
-     * @param spinner the spinner
      */
-    void initDropDown(Spinner spinner) {
-        List<String> categoryStrings = new ArrayList<>();
-        // Add all Categories names to the list for the dropdown spinner
-        for (Category category : categories) {
-            categoryStrings.add(category.getName());
-        }
+    void initDropDown() {
+        List<String> catDnames = NoteCategory.getDisplayNames(categories);
 
         categoryArrayAdapter = new ArrayAdapter<>(this,
-                R.layout.dropdown_item_simple, categoryStrings);
-        spinner.setAdapter(categoryArrayAdapter);
-        spinner.setSelection(0);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                R.layout.dropdown_item_simple, catDnames);
+        dropDownSpinner.setAdapter(categoryArrayAdapter);
+
+        if (currentNote.getNoteID() > -1) {
+            dropDownSpinner.setSelection(NoteCategory.getPosition(currentNoteCategory.getName(), catDnames));
+        } else {
+            dropDownSpinner.setSelection(0);
+        }
+        dropDownSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -206,19 +203,6 @@ public class NoteActivity extends BaseActivity {
 
         editName.setText(currentNote.getNoteName());
         editNote.setText(currentNote.getContent());
-        dropDownSpinner = findViewById(R.id.categorySpinner);
-
-        if (initCategories()) {
-            initDropDown(dropDownSpinner);
-        }
-        int currentPosition = 0;
-        for (int i = 0; i < categories.size(); i++) {
-            if (categories.get(i).getName().equals(currentNoteCategory.getName())) {
-                currentPosition = i;
-                break;
-            }
-
-        }
     }
 
     @Override

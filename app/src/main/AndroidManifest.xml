@@ -81,7 +81,7 @@
                 android:value="com.ethical_techniques.notemaker.ListActivity" />
         </activity>
 
-        <!-- Category List Activity -->
+        <!-- NoteCategory List Activity -->
         <activity
             android:name=".CategoryListActivity"
             android:label="Note Categories"
@@ -92,7 +92,7 @@
                 android:value="com.ethical_techniques.notemaker.ListActivity" />
         </activity>
 
-        <!-- The New/Edit Category Activity -->
+        <!-- The New/Edit NoteCategory Activity -->
         <activity
             android:name=".CreateCategoryActivity"
             android:label="New Category"

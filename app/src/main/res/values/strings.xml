@@ -37,8 +37,8 @@
 
 
     <!-- CATEGORIES -->
-    <string name="SORT_CATEGORY_BY_PREF_ID">category.sort.by.preference</string>
-    <string name="SORT_CATEGORY_ORDER_PREF_ID">category.sort.order.preference</string>
+    <string name="SORT_CATEGORY_BY_PREF_ID">noteCategory.sort.by.preference</string>
+    <string name="SORT_CATEGORY_ORDER_PREF_ID">noteCategory.sort.order.preference</string>
 
 
     <string name="ascending">Low to High</string>
@@ -88,7 +88,7 @@
     <string name="nav_header_subtitle">By: harrydulaney.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="NOTE_ID_KEY">note.id.constant.key</string>
-    <string name="CATEGORY_ID_KEY">category.id.constant.key</string>
+    <string name="CATEGORY_ID_KEY">noteCategory.id.constant.key</string>
 
 
     <string name="menu_home">Home</string>
@@ -126,7 +126,7 @@
     <string name="clearform">Clear Form</string>
     <string name="colors">Colors</string>
     <string name="title_activity_create_category">CreateCategoryActivity</string>
-    <string name="enter_category_name">Enter a name for this category</string>
+    <string name="enter_category_name">Enter a name for this noteCategory</string>
     <string name="category_color">Category Color</string>
     <string name="open_this_note_for_editing">Open this note for editing</string>
     <string name="select_and_deselect_this_note_as_high_priority">Select and deselect this note as high priority</string>

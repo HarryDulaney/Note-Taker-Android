@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!-- The layout for Category creating dialog in Main Activity -->
+<?xml version="1.0" encoding="utf-8"?><!-- The layout for NoteCategory creating dialog in Main Activity -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

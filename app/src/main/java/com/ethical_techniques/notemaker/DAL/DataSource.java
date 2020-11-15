@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.ethical_techniques.notemaker.model.Category;
+import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.ethical_techniques.notemaker.model.Note;
 
 import java.sql.SQLException;
@@ -37,12 +37,12 @@ public class DataSource {
     }
 
     /**
-     * @return defCategory, the ContentValues to persist for the fallback/ default Category
+     * @return defCategory, the ContentValues to persist for the fallback/ default NoteCategory
      */
     public static ContentValues getDefaultCategory() {
         ContentValues defCategory = new ContentValues();
-        defCategory.put(DBHelper.CATEGORY_NAME, Category.MAIN_NAME);
-        defCategory.put(DBHelper.CATEGORY_COLOR_INT, Category.MAIN_COLOR);
+        defCategory.put(DBHelper.CATEGORY_NAME, NoteCategory.MAIN_NAME);
+        defCategory.put(DBHelper.CATEGORY_COLOR_INT, NoteCategory.MAIN_COLOR);
         return defCategory;
     }
 
@@ -236,30 +236,30 @@ public class DataSource {
 
     }
 
-    /* ************************************** Category DataSource Methods ***************************************  */
+    /* ************************************** NoteCategory DataSource Methods ***************************************  */
 
     /**
-     * Gets specific category.
+     * Gets specific noteCategory.
      *
-     * @param categoryId the category id
-     * @return the specific category
+     * @param categoryId the noteCategory id
+     * @return the specific noteCategory
      */
-    protected Category getSpecificCategory(int categoryId) {
-        Category category = new Category();
+    protected NoteCategory getSpecificCategory(int categoryId) {
+        NoteCategory noteCategory = new NoteCategory();
 
         String query = "SELECT * FROM " + DBHelper.CATEGORY_TABLE + " WHERE " + DBHelper.ID + "=" + categoryId;
         Cursor cursor = database.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
 
-            category.setId(cursor.getInt(0));
-            category.setName(cursor.getString(1));
-            category.setColor(cursor.getInt(2));
+            noteCategory.setId(cursor.getInt(0));
+            noteCategory.setName(cursor.getString(1));
+            noteCategory.setColor(cursor.getInt(2));
 
             cursor.close();
         }
 
-        return category;
+        return noteCategory;
 
     }
 
@@ -268,20 +268,20 @@ public class DataSource {
      *
      * @return the categories
      */
-    protected List<Category> getCategories() {
-        List<Category> categories = new ArrayList<>();
+    protected List<NoteCategory> getCategories() {
+        List<NoteCategory> categories = new ArrayList<>();
         try {
             String categoryQuery = "SELECT * FROM " + DBHelper.CATEGORY_TABLE;
             Cursor catCursor = database.rawQuery(categoryQuery, null);
             catCursor.moveToFirst();
 
             while (!catCursor.isAfterLast()) {
-                Category category = new Category();
-                category.setId(catCursor.getInt(0));
-                category.setName(catCursor.getString(1));
-                category.setColor(catCursor.getInt(2));
+                NoteCategory noteCategory = new NoteCategory();
+                noteCategory.setId(catCursor.getInt(0));
+                noteCategory.setName(catCursor.getString(1));
+                noteCategory.setColor(catCursor.getInt(2));
 
-                categories.add(category);
+                categories.add(noteCategory);
                 catCursor.moveToNext();
             }
 
@@ -292,29 +292,29 @@ public class DataSource {
             Log.e(TAG, "Exception @DataSource.getCategories()");
         }
         if (categories.size() == 0) {
-            insertCategory(Category.getMain());
+            insertCategory(NoteCategory.getMain());
             return getCategories();
         }
 
         return categories;
     }
 
-    protected Category getCategoryByName(String name) {
-        Category category = new Category();
+    protected NoteCategory getCategoryByName(String name) {
+        NoteCategory noteCategory = new NoteCategory();
 
         String query = "SELECT * FROM " + DBHelper.CATEGORY_TABLE + " WHERE " + DBHelper.CATEGORY_NAME + "=" + name;
         Cursor cursor = database.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
 
-            category.setId(cursor.getInt(0));
-            category.setName(cursor.getString(1));
-            category.setColor(cursor.getInt(2));
+            noteCategory.setId(cursor.getInt(0));
+            noteCategory.setName(cursor.getString(1));
+            noteCategory.setColor(cursor.getInt(2));
 
             cursor.close();
         }
 
-        return category;
+        return noteCategory;
 
     }
 
@@ -332,47 +332,47 @@ public class DataSource {
     }
 
     /**
-     * DataSource.delete(Category category)
+     * DataSource.delete(NoteCategory noteCategory)
      * <p>
-     * Deletes the Category from persistent memory
+     * Deletes the NoteCategory from persistent memory
      *
-     * @param category to be deleted
+     * @param noteCategory to be deleted
      * @return true if it was a success
-     * @throws Exception while trying to delete the Category
+     * @throws Exception while trying to delete the NoteCategory
      */
-    protected boolean delete(Category category) throws Exception {
+    protected boolean delete(NoteCategory noteCategory) throws Exception {
         boolean deleted = false;
 
-        String query = "SELECT * FROM " + DBHelper.CATEGORY_TABLE + " WHERE " + DBHelper.ID + "=" + category.getId();
+        String query = "SELECT * FROM " + DBHelper.CATEGORY_TABLE + " WHERE " + DBHelper.ID + "=" + noteCategory.getId();
 
         try {
-            deleted = database.delete(DBHelper.CATEGORY_TABLE, DBHelper.ID + "=" + category.getId(), null) > 0;
+            deleted = database.delete(DBHelper.CATEGORY_TABLE, DBHelper.ID + "=" + noteCategory.getId(), null) > 0;
 
         } catch (Exception e) {
-            Log.e(TAG, "Exception @ delete(Category c) where Category ID is "
-                    + category.getId() + " and Category Name is " + category.getName(), e.getCause());
+            Log.e(TAG, "Exception @ delete(NoteCategory c) where NoteCategory ID is "
+                    + noteCategory.getId() + " and NoteCategory Name is " + noteCategory.getName(), e.getCause());
         }
         return deleted;
     }
 
     /**
-     * Insert category boolean.
+     * Insert noteCategory boolean.
      *
-     * @param category the category
+     * @param noteCategory the noteCategory
      * @return the boolean
      */
-    public boolean insertCategory(Category category) {
+    public boolean insertCategory(NoteCategory noteCategory) {
         boolean didSucceed = false;
         try {
             ContentValues contentValues = new ContentValues();
-            contentValues.put(DBHelper.CATEGORY_NAME, category.getName());
-            contentValues.put(DBHelper.CATEGORY_COLOR_INT, category.getColor());
+            contentValues.put(DBHelper.CATEGORY_NAME, noteCategory.getName());
+            contentValues.put(DBHelper.CATEGORY_COLOR_INT, noteCategory.getColor());
 
             didSucceed = database.insert(DBHelper.CATEGORY_TABLE, null, contentValues) > 0;
 
         } catch (Exception ex) {
 
-            Log.e(TAG, "@ DataSource.insertCategory(Category c) ", ex);
+            Log.e(TAG, "@ DataSource.insertCategory(NoteCategory c) ", ex);
             ex.printStackTrace();
 
         }
@@ -381,27 +381,27 @@ public class DataSource {
     }
 
     /**
-     * Update Category in DB.
+     * Update NoteCategory in DB.
      *
-     * @param category the category
+     * @param noteCategory the noteCategory
      * @return the boolean
      */
-    protected boolean update(Category category) {
+    protected boolean update(NoteCategory noteCategory) {
 
         boolean didSucceed = false;
 
         try {
-            int categoryId = category.getId(); // Get the ID
+            int categoryId = noteCategory.getId(); // Get the ID
             ContentValues contentValues = new ContentValues();
 
-            contentValues.put(DBHelper.CATEGORY_NAME, category.getName());
-            contentValues.put(DBHelper.CATEGORY_COLOR_INT, category.getColor());
+            contentValues.put(DBHelper.CATEGORY_NAME, noteCategory.getName());
+            contentValues.put(DBHelper.CATEGORY_COLOR_INT, noteCategory.getColor());
 
             didSucceed = database.update(DBHelper.CATEGORY_TABLE, contentValues, DBHelper.ID + "=" + categoryId, null) > 0;
 
         } catch (Exception ex) {
 
-            Log.e(TAG, "@ DataSource.updateNote(Category c)", ex);
+            Log.e(TAG, "@ DataSource.updateNote(NoteCategory c)", ex);
         }
         return didSucceed;
     }
@@ -412,7 +412,7 @@ public class DataSource {
      * @return the ID aka.'noteID', of the last note to be inserted into the database
      */
     protected int getLastCategoryId() {
-        int id = Category.MAIN_ID;
+        int id = NoteCategory.MAIN_ID;
         try {
             String query = "Select MAX(" + DBHelper.ID + ") from " + DBHelper.CATEGORY_TABLE;
             Cursor cursor = database.rawQuery(query, null);
@@ -422,7 +422,7 @@ public class DataSource {
             cursor.close();
 
         } catch (Exception e) {
-            id = Category.MAIN_ID;
+            id = NoteCategory.MAIN_ID;
             Log.e(TAG, "@ getLastCategoryId()");
         }
         return id;

@@ -11,7 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
-import com.ethical_techniques.notemaker.model.Category;
+import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
@@ -19,14 +19,14 @@ import java.util.Objects;
 
 
 /**
- * The type Create category activity.
+ * The type Create noteCategory activity.
  *
  * @author Harry Dulaney
  */
 public class CreateCategoryActivity extends BaseActivity {
 
     private final String TAG = getClass().getName();
-    private Category currentCategory;
+    private NoteCategory currentNoteCategory;
 
     @Override
     public void onCreate(Bundle saveInstanceBundle) {
@@ -42,7 +42,7 @@ public class CreateCategoryActivity extends BaseActivity {
             initCategory(extras.getInt(getString(R.string.CATEGORY_ID_KEY)));
         } else {
             //create a new blank note
-            currentCategory = new Category();
+            currentNoteCategory = new NoteCategory();
 
         }
         //Initialize the Toolbar
@@ -66,14 +66,14 @@ public class CreateCategoryActivity extends BaseActivity {
 
     /**
      * Opens a connection to the database and uses getSpecificCategory() to retrieve the
-     * Category and then sets the local views with its values.
+     * NoteCategory and then sets the local views with its values.
      *
-     * @param categoryId identifier for the category
+     * @param categoryId identifier for the noteCategory
      */
     private void initCategory(int categoryId) {
 
         try {
-            currentCategory = DBUtil.findCategory(this, categoryId);
+            currentNoteCategory = DBUtil.findCategory(this, categoryId);
 
         } catch (Exception e) {
             Log.w(TAG, e);
@@ -83,10 +83,10 @@ public class CreateCategoryActivity extends BaseActivity {
         }
 
         EditText editName = findViewById(R.id.editCategoryName);
-        editName.setText(currentCategory.getName());
+        editName.setText(currentNoteCategory.getName());
 
         ImageButton colorPickButton = findViewById(R.id.colorPickerView);
-        colorPickButton.setColorFilter(currentCategory.getColor());
+        colorPickButton.setColorFilter(currentNoteCategory.getColor());
 
 
     }
@@ -100,7 +100,7 @@ public class CreateCategoryActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (currentCategory.getName() != null) {
+        if (currentNoteCategory.getName() != null) {
             //handle Dialog to save changes
 
         }
@@ -109,24 +109,24 @@ public class CreateCategoryActivity extends BaseActivity {
 
 
     /**
-     * Handle save category.
+     * Handle save noteCategory.
      *
      * @param view SaveButton view object
      */
     public void handleSaveCategory(View view) {
-        Category category = new Category();
+        NoteCategory noteCategory = new NoteCategory();
         EditText nameInput = findViewById(R.id.editCategoryName);
         if (nameInput.getText().toString().isEmpty()) {
-            Snackbar.make(view, "Please input a name for the Category before saving. ", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "Please input a name for the NoteCategory before saving. ", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         } else {
-            category.setName(nameInput.getText().toString());
-//            category.setColor();
+            noteCategory.setName(nameInput.getText().toString());
+//            noteCategory.setColor();
             try {
-                DBUtil.saveCategory(this, category);
+                DBUtil.saveCategory(this, noteCategory);
             } catch (Exception e) {
-                Snackbar.make(view, "The Category name is already used for another Category, " +
-                        "please delete the other Category or revise the name", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "The NoteCategory name is already used for another NoteCategory, " +
+                        "please delete the other NoteCategory or revise the name", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 e.printStackTrace();
 

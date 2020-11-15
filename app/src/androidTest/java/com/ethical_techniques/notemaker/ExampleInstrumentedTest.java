@@ -1,23 +1,5 @@
 package com.ethical_techniques.notemaker;
 
-import android.content.Context;
-import android.graphics.Color;
-
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.ethical_techniques.notemaker.model.Category;
-import com.ethical_techniques.notemaker.model.Note;
-import com.ethical_techniques.notemaker.model.PRIORITY;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
 /**
  * Instrumented test, which will execute on an Android device.
  *
@@ -29,10 +11,10 @@ public class ExampleInstrumentedTest {
 //    @Before
 //    public void testObjects() {
 //        List<Note> notes = new ArrayList<>();
-//        List<Category> categories = new ArrayList<>();
+//        List<NoteCategory> categories = new ArrayList<>();
 //
-//        int category = new Category(11,"To Do's", Color.valueOf(Color.CYAN));
-//        Note note = new Note(17,"Test Note",category,"This is a test Note", Calendar.getInstance(), PRIORITY.HIGH);
+//        int noteCategory = new NoteCategory(11,"To Do's", Color.valueOf(Color.CYAN));
+//        Note note = new Note(17,"Test Note",noteCategory,"This is a test Note", Calendar.getInstance(), PRIORITY.HIGH);
 //
 //    }
 //

@@ -33,11 +33,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.adapters.NoteRecycleAdapter;
-import com.ethical_techniques.notemaker.auth.AppFlowActivity;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.auth.UpdateProfileActivity;
 import com.ethical_techniques.notemaker.auth.UserLoginActivity;
-import com.ethical_techniques.notemaker.model.Category;
+import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.ethical_techniques.notemaker.model.Note;
 import com.ethical_techniques.notemaker.model.PRIORITY;
 import com.ethical_techniques.notemaker.utils.DialogUtil;
@@ -50,7 +49,6 @@ import com.google.firebase.auth.FirebaseUser;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * The Main Activity containing the navigation drawer, most other activities,excluding authentication activities
@@ -66,10 +64,10 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
     RecyclerView recyclerView;
     NoteRecycleAdapter noteRecycleAdapter;
     boolean editModeActive;
-    private List<Category> categories;
+    private List<NoteCategory> categories;
     private Spinner spinner;
     private SharedPreferences sharedPreferences;
-    ArrayAdapter<Category> categoryArrayAdapter;
+    ArrayAdapter<NoteCategory> categoryArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -286,7 +284,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
             return true;
         } else if (id == R.id.list_activity_category_spinner) {
             String categoryName = (String) spinner.getSelectedItem();
-            Toast.makeText(this, "Category by the name of " + categoryName + " was selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "NoteCategory by the name of " + categoryName + " was selected", Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -453,7 +451,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     /**
-     * Initialize the category dropdown menu
+     * Initialize the noteCategory dropdown menu
      */
     private void initDropDown() {
         try {
@@ -463,8 +461,8 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         }
         List<String> categoryStrings = new ArrayList<>();
         // Add all Categories names to the list for the dropdown spinner
-        for (Category category : categories) {
-            categoryStrings.add(category.getName());
+        for (NoteCategory noteCategory : categories) {
+            categoryStrings.add(noteCategory.getName());
         }
 
         ArrayAdapter<String> categoryArrayAdapter = new ArrayAdapter<>(this,
