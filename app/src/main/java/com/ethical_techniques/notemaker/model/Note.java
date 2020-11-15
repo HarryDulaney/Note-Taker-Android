@@ -31,9 +31,10 @@ public class Note implements Parcelable {
      */
     private String noteName;
     /**
-     * Optional category, if categoryId = -5, Default category or (undefined) category is set
+     * The default Category is "All Notes". All Notes are set to Category.MAIN_ID at creation but users can change this reference at any time.
      */
     private int categoryId;
+
     /**
      * The body or main text of the Note
      */

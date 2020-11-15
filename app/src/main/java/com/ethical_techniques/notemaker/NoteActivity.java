@@ -219,6 +219,11 @@ public class NoteActivity extends BaseActivity {
         editName.setText(currentNote.getNoteName());
         editNote.setText(currentNote.getContent());
         dropDownSpinner = findViewById(R.id.categorySpinner);
+        if (currentNote.getPRIORITY_LEVEL().equals(PRIORITY.high())) {
+            handleTogglePriorityStar(true);
+        } else {
+            handleTogglePriorityStar(false);
+        }
 
         if (initCategories()) {
             initDropDown(dropDownSpinner);
@@ -231,23 +236,6 @@ public class NoteActivity extends BaseActivity {
             }
 
         }
-        // Set the priority level ie color in star
-        initPriorityStar(currentNote);
-    }
-
-    /**
-     * Set's RatingBar to the Note's saved value
-     *
-     * @param note populating the Activity fields
-     */
-    private void initPriorityStar(Note note) {
-        if (priorityStar != null) {
-            if (note.getPRIORITY_LEVEL().equals("HIGH")) {
-                handleTogglePriorityStar(priorityStar, true);
-            } else {
-                handleTogglePriorityStar(priorityStar, false);
-            }
-        }
     }
 
     /**
@@ -257,15 +245,21 @@ public class NoteActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_bar_top_menu, menu);
-        priorityStar = menu.findItem(R.id.action_bar_priority_star);
+        priorityStar = menu.getItem(1);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        priorityStar = menu.getItem(1);
         return true;
     }
 
     /**
      * Switches the priority star on and off
      */
-    private void handleTogglePriorityStar(MenuItem menuItem, boolean colorTheStar) {
-        Drawable starDrawable = menuItem.getIcon();
+    private void handleTogglePriorityStar(boolean colorTheStar) {
+        Drawable starDrawable = priorityStar.getIcon();
         if (starDrawable != null) {
             starDrawable.mutate();
             if (colorTheStar) {
@@ -296,11 +290,12 @@ public class NoteActivity extends BaseActivity {
                 return true;
             }
             case R.id.action_bar_priority_star: {
-                handleTogglePriorityStar(item, currentNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString()));
-                if (currentNote.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
-                    currentNote.setPRIORITY_LEVEL(PRIORITY.LOW.getString());
+                if (currentNote.getPRIORITY_LEVEL().equals(PRIORITY.high())) {
+                    currentNote.setPRIORITY_LEVEL(PRIORITY.low());
+                    handleTogglePriorityStar(false);
                 } else {
-                    currentNote.setPRIORITY_LEVEL(PRIORITY.HIGH.getString());
+                    currentNote.setPRIORITY_LEVEL(PRIORITY.high());
+                    handleTogglePriorityStar(true);
                 }
                 return true;
             }
