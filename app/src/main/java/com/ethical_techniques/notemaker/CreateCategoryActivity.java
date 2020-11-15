@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
+import com.ethical_techniques.notemaker.listeners.TextWatcherImpl;
 import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.ethical_techniques.notemaker.utils.DialogUtil;
 import com.google.android.material.snackbar.Snackbar;
@@ -41,13 +43,13 @@ import top.defaults.colorpicker.ColorPickerView;
  *
  * @author Harry Dulaney
  */
-public class CreateCategoryActivity extends BaseActivity implements View.OnClickListener {
+public class CreateCategoryActivity extends BaseActivity {
 
     private final String TAG = getClass().getName();
     private NoteCategory currentNoteCategory;
     private ImageButton colorPickButton;
     private EditText editName;
-    private ColorPickerView colorPickerView;
+
 
 
     @Override
@@ -55,6 +57,8 @@ public class CreateCategoryActivity extends BaseActivity implements View.OnClick
         super.onCreate(saveInstanceBundle);
         setContentView(R.layout.activity_categ_create);
 
+        colorPickButton = findViewById(R.id.colorPickerView);
+        editName = findViewById(R.id.editCategoryName);
 
         /* Check and Load info based from calling activity */
         Bundle extras = getIntent().getExtras();
@@ -65,6 +69,7 @@ public class CreateCategoryActivity extends BaseActivity implements View.OnClick
         } else {
             //create a new blank note
             currentNoteCategory = new NoteCategory();
+            setListeners();
 
         }
         //Initialize the Toolbar
@@ -77,8 +82,6 @@ public class CreateCategoryActivity extends BaseActivity implements View.OnClick
         } else {
             Log.e(TAG, "ActionBar was not created properly...");
         }
-        colorPickButton = findViewById(R.id.colorPickerView);
-        editName = findViewById(R.id.editCategoryName);
 
     }
 
@@ -109,8 +112,39 @@ public class CreateCategoryActivity extends BaseActivity implements View.OnClick
         editName.setText(currentNoteCategory.getName());
 
         colorPickButton.getDrawable().mutate();
-        colorPickButton.getDrawable().setTint(currentNoteCategory.getColor());
+        colorPickButton.getDrawable().setTint(Color.BLUE);
 
+        setListeners();
+
+    }
+
+    private void setListeners() {
+        colorPickButton.setOnClickListener(v -> {
+            if (v.getId() == R.id.colorPickerView) {
+                new ColorPickerPopup.Builder(this)
+                        .initialColor(currentNoteCategory.getColor())
+                        .enableBrightness(true)
+                        .okTitle("Choose")
+                        .cancelTitle("Cancel")
+                        .showIndicator(true)
+                        .showValue(true)
+                        .build()
+                        .show(v, new ColorPickerPopup.ColorPickerObserver() {
+                            @Override
+                            public void onColorPicked(int color) {
+                                currentNoteCategory.setColor(color);
+                                v.setBackgroundColor(color);
+                            }
+                        });
+
+            }
+        });
+        editName.addTextChangedListener(new TextWatcherImpl() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                currentNoteCategory.setName(editName.getText().toString());
+            }
+        });
     }
 
     @Override
@@ -157,8 +191,6 @@ public class CreateCategoryActivity extends BaseActivity implements View.OnClick
      * Handle save noteCategory.
      */
     public void handleSaveCategory() {
-        currentNoteCategory.setName(editName.getText().toString());
-
         //            noteCategory.setColor();
 
         if (editName.getText().toString().isEmpty()) {
@@ -205,33 +237,6 @@ public class CreateCategoryActivity extends BaseActivity implements View.OnClick
                         Toast.LENGTH_LONG).show();
 
             }
-
-        }
-    }
-
-    /**
-     * Called when a view has been clicked.
-     *
-     * @param v The view that was clicked.
-     */
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.colorPickerView) {
-            new ColorPickerPopup.Builder(this)
-                    .initialColor(currentNoteCategory.getColor())
-                    .enableBrightness(true)
-                    .okTitle("Choose")
-                    .cancelTitle("Cancel")
-                    .showIndicator(true)
-                    .showValue(true)
-                    .build()
-                    .show(v, new ColorPickerPopup.ColorPickerObserver() {
-                        @Override
-                        public void onColorPicked(int color) {
-                            currentNoteCategory.setColor(color);
-                            v.setBackgroundColor(color);
-                        }
-                    });
 
         }
 

@@ -196,5 +196,6 @@
     <string name="pref_key_local_mode">com.ethical_techniques.user.pref.key.local.mode</string>
     <string name="login_bundle_key">com.ethical_techniques.notemaker.FirebaseUser</string>
     <string name="user_bundle_key">com.ethical_techniques.notemaker.UserProfile</string>
+    <string name="colorpicker">colorpicker</string>
 
 </resources>
