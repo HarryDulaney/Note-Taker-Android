@@ -1,46 +1,33 @@
 package com.ethical_techniques.notemaker;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.activity.ComponentActivity;
-import androidx.activity.OnBackPressedCallback;
-import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuItemImpl;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NavUtils;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
-import com.ethical_techniques.notemaker.auth.AppFlowActivity;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.listeners.TextWatcherImpl;
 import com.ethical_techniques.notemaker.model.Category;
 import com.ethical_techniques.notemaker.model.Note;
 import com.ethical_techniques.notemaker.model.PRIORITY;
-import com.ethical_techniques.notemaker.utils.DialogAction;
 import com.ethical_techniques.notemaker.utils.DialogUtil;
-import com.google.android.gms.common.util.Strings;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.sql.SQLException;
@@ -66,8 +53,9 @@ public class NoteActivity extends BaseActivity {
     private List<Category> categories;
     private Category currentNoteCategory;
     Spinner dropDownSpinner;
-    MenuItem priorityStar;
+    private MenuItem priorityStar;
     ArrayAdapter<String> categoryArrayAdapter;
+    private boolean editMode;
 
 
     @Override
@@ -82,8 +70,8 @@ public class NoteActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
+        }
 
         /* Check and Load info based from previous activity */
         Bundle extras = getIntent().getExtras();
@@ -205,7 +193,7 @@ public class NoteActivity extends BaseActivity {
         try {
             currentNote = DBUtil.findNote(this, id);
             currentNoteCategory = DBUtil.findCategory(this, currentNote.getCategory());
-
+            editMode = true;
         } catch (Exception e) {
             Log.w(TAG, e);
             Snackbar.make(findViewById(R.id.note_activity),
@@ -219,11 +207,6 @@ public class NoteActivity extends BaseActivity {
         editName.setText(currentNote.getNoteName());
         editNote.setText(currentNote.getContent());
         dropDownSpinner = findViewById(R.id.categorySpinner);
-        if (currentNote.getPRIORITY_LEVEL().equals(PRIORITY.high())) {
-            handleTogglePriorityStar(true);
-        } else {
-            handleTogglePriorityStar(false);
-        }
 
         if (initCategories()) {
             initDropDown(dropDownSpinner);
@@ -238,28 +221,30 @@ public class NoteActivity extends BaseActivity {
         }
     }
 
-    /**
-     * Initializes the top app bar.
-     * {@inheritDoc}
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_bar_top_menu, menu);
-        priorityStar = menu.getItem(1);
+        priorityStar = menu.findItem(R.id.star);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        priorityStar = menu.getItem(1);
+        MenuItem star = menu.findItem(R.id.star);
+        if (editMode) {
+            //Set the star to the current note's priority level
+            handleTogglePriorityStar(star, currentNote.getPRIORITY_LEVEL().equals(PRIORITY.high()));
+            priorityStar = star;
+        }
+
         return true;
     }
 
     /**
      * Switches the priority star on and off
      */
-    private void handleTogglePriorityStar(boolean colorTheStar) {
-        Drawable starDrawable = priorityStar.getIcon();
+    private void handleTogglePriorityStar(MenuItem item, boolean colorTheStar) {
+        Drawable starDrawable = item.getIcon();
         if (starDrawable != null) {
             starDrawable.mutate();
             if (colorTheStar) {
@@ -285,17 +270,17 @@ public class NoteActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks.
         switch (item.getItemId()) {
-            case R.id.action_bar_save_button: {
+            case R.id.save: {
                 handleSaveNote();
                 return true;
             }
-            case R.id.action_bar_priority_star: {
+            case R.id.star: {
                 if (currentNote.getPRIORITY_LEVEL().equals(PRIORITY.high())) {
                     currentNote.setPRIORITY_LEVEL(PRIORITY.low());
-                    handleTogglePriorityStar(false);
+                    handleTogglePriorityStar(priorityStar, false);
                 } else {
                     currentNote.setPRIORITY_LEVEL(PRIORITY.high());
-                    handleTogglePriorityStar(true);
+                    handleTogglePriorityStar(priorityStar, true);
                 }
                 return true;
             }

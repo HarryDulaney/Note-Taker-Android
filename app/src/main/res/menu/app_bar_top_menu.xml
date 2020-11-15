@@ -7,7 +7,7 @@
 
     <!-- Save -->
     <item
-        android:id="@+id/action_bar_save_button"
+        android:id="@+id/save"
         android:contentDescription="@string/save_note_return_to_list"
         android:icon="@android:drawable/ic_menu_save"
         android:title="@string/save"
@@ -15,11 +15,11 @@
 
     <!-- Priority Star Off-->
     <item
-        android:id="@+id/action_bar_priority_star"
+        android:id="@+id/star"
         android:contentDescription="@string/select_and_deselect_this_note_as_high_priority"
         android:icon="@drawable/ic_star_grey600_36dp"
         android:title="@string/priority_level"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
 
 </menu>
