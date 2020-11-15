@@ -51,7 +51,6 @@ public class CreateCategoryActivity extends BaseActivity {
     private EditText editName;
 
 
-
     @Override
     public void onCreate(Bundle saveInstanceBundle) {
         super.onCreate(saveInstanceBundle);
@@ -112,7 +111,12 @@ public class CreateCategoryActivity extends BaseActivity {
         editName.setText(currentNoteCategory.getName());
 
         colorPickButton.getDrawable().mutate();
-        colorPickButton.getDrawable().setTint(Color.BLUE);
+        if (currentNoteCategory.getColor() != Color.TRANSPARENT) {
+            colorPickButton.getDrawable().setTint(currentNoteCategory.getColor());
+
+        } else {
+
+        }
 
         setListeners();
 
@@ -133,7 +137,8 @@ public class CreateCategoryActivity extends BaseActivity {
                             @Override
                             public void onColorPicked(int color) {
                                 currentNoteCategory.setColor(color);
-                                v.setBackgroundColor(color);
+                                colorPickButton.getDrawable().mutate();
+                                colorPickButton.getDrawable().setTint(color);
                             }
                         });
 
