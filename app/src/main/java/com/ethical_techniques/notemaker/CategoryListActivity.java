@@ -204,11 +204,11 @@ public class CategoryListActivity extends BaseActivity {
             for (int i = 0; i < recycleAdapter.getItemCount(); i++) {
                 CategoryViewHolder viewHolder = (CategoryViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
                 if (viewHolder != null) {
-                    if (viewHolder.name.toString().equals(Category.MAIN_NAME)) continue;
-
-                    if (viewHolder.deleteButton.getVisibility() == View.VISIBLE) {
+                    if (Category.MAIN_NAME.contentEquals(viewHolder.name.getText())) {
+                        continue;
+                    } else if (viewHolder.deleteButton.getVisibility() == View.VISIBLE) {
                         viewHolder.deleteButton.setVisibility(View.INVISIBLE);
-                    } else {
+                    } else if (viewHolder.deleteButton.getVisibility() == View.INVISIBLE) {
                         viewHolder.deleteButton.setVisibility(View.VISIBLE);
                     }
                     Log.i(TAG, "Edit button on Category list item " + i + "set to visible");

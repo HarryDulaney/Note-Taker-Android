@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.util.Log;
@@ -37,9 +38,15 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.type.DateTime;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,9 +81,20 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     }
 
     private void initUIProfileInfo(FirebaseUser firebaseUser) {
+        String pPath = "";
+        String dName = "";
+        String email = "";
+        if (firebaseUser.getDisplayName() != null) {
+            dName = firebaseUser.getDisplayName();
+        }
+        if (firebaseUser.getPhotoUrl() != null) {
+            pPath = firebaseUser.getPhotoUrl().getPath();
+        }
+        if (firebaseUser.getEmail() != null) {
+            email = firebaseUser.getEmail();
+        }
 
-        valueHolder = new ValueHolder(firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getPhotoUrl().getPath());
-
+        valueHolder = new ValueHolder(dName, email, pPath);
 
         TextInputEditText username = findViewById(R.id.editTextInputUserNameUpdate);
         if (!valueHolder.currDisName.isEmpty()) {
@@ -103,7 +121,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         ImageView photoView = findViewById(R.id.imageView);
         Uri uriPhoto = firebaseUser.getPhotoUrl();
 
-        if (!valueHolder.currPath.isEmpty()) {
+        if (!valueHolder.currPicPath.isEmpty()) {
             photoView.setImageURI(uriPhoto);
         }
 
@@ -234,19 +252,28 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
 
         } else if (id == R.id.updateEmailAddressButton) {
             //launch email update ui and events
+            hideKeyboard(this, findViewById(R.id.updateEmailAddressButton).getRootView());
+
             initUpdateEmail();
         } else if (id == R.id.handleDoneButton) {
+            hideKeyboard(this, findViewById(R.id.handleDoneButton).getRootView());
+
             //Submit update account user profile
             onBackPressed();
 
         } else if (id == R.id.exitProfileUpdate) {
+            hideKeyboard(this, findViewById(R.id.exitProfileUpdate).getRootView());
             finish();
         } else if (id == R.id.verifyButton) {
             //Launch verify email event sequence
+            hideKeyboard(this, findViewById(R.id.submitUpdateEmailAddress).getRootView());
+
             sendEmailVerification(FirebaseAuth.getInstance().getCurrentUser());
 
 
         } else if (id == R.id.handleClearForm) {
+            hideKeyboard(this, findViewById(R.id.handleClearForm).getRootView());
+
             TextInputEditText nooEmail = findViewById(R.id.editTextNooEmail);
             TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
             TextInputEditText pw = findViewById(R.id.pword);
@@ -255,6 +282,8 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
             Objects.requireNonNull(pw.getText()).clear();
 
         } else if (id == R.id.submitUpdateEmailAddress) {
+            hideKeyboard(this, findViewById(R.id.submitUpdateEmailAddress).getRootView());
+
             final TextInputEditText nooEmail = findViewById(R.id.editTextNooEmail);
             final TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
             final TextInputEditText pw = findViewById(R.id.pword);
@@ -333,50 +362,6 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         mainLayout.setVisibility(View.VISIBLE);
     }
 
-    private static class ValueHolder {
-        private String nooDisPlayName;
-        private String nooPicPath;
-
-        private String currPath;
-        private String currEmail;
-        private String currDisName;
-
-        ValueHolder() {
-            throw new SecurityException("Unsupported Operation");
-        }
-
-        ValueHolder(String currDisName, String currEmail, String currPath) {
-            if (currDisName != null) {
-                this.currDisName = currDisName;
-            } else {
-                this.currDisName = "";
-            }
-            if (currEmail != null) {
-                this.currEmail = currEmail;
-            } else {
-                this.currEmail = "";
-            }
-            if (currPath != null) {
-                this.currPath = currPath;
-            } else {
-                this.currPath = "";
-            }
-        }
-
-        int nooDnLen() {
-            return nooDisPlayName.length();
-        }
-
-        int picStrLen() {
-            return nooPicPath.length();
-        }
-
-        public boolean isCurrDnDiff() {
-            return !nooDisPlayName.equals(currDisName);
-        }
-    }
-
-
     @Override
     public void onBackPressed() {
         FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
@@ -391,7 +376,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.app_bar_top_list_menu, menu);
+        getMenuInflater().inflate(R.menu.update_profile_menu, menu);
         return true;
     }
 
@@ -437,5 +422,53 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         return matcher.matches();
     }
 
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_" + "notes_for_android_prof_pic";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        valueHolder.currPicPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private static class ValueHolder {
+        private String nooDisPlayName;
+        private String nooPicPath;
+
+        private String currPicPath;
+        private String currEmail;
+        private String currDisName;
+
+        ValueHolder() {
+            throw new SecurityException("Unsupported Operation");
+        }
+
+        ValueHolder(String currDisName, String currEmail, String currPicPath) {
+            this.currDisName = currDisName;
+            this.currEmail = currEmail;
+            this.currPicPath = currPicPath;
+
+        }
+
+        int nooDnLen() {
+            return nooDisPlayName.length();
+        }
+
+        int picStrLen() {
+            return nooPicPath.length();
+        }
+
+        public boolean isCurrDnDiff() {
+            return !nooDisPlayName.equals(currDisName);
+        }
+    }
 
 }

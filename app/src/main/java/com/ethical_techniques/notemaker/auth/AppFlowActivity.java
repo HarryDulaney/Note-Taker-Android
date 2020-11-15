@@ -1,12 +1,20 @@
 package com.ethical_techniques.notemaker.auth;
 
 import android.content.Intent;
+import android.content.pm.FeatureInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.RequiresApi;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.ListActivity;
 import com.ethical_techniques.notemaker.R;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Arrays;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -16,14 +24,18 @@ import javax.annotation.Nullable;
  * @author Harry Dulaney
  */
 public class AppFlowActivity extends BaseActivity {
-    private static final String LAUNCH_MESSAGE_KEY = "com.ethical_techniques.notemaker.showLoginDecisionDialog";
     private static final String LAUNCH_FROM_NOTE_KEY = "com.ethical_techniques.notemaker.NoteActivity";
 
     //TODO: Network Security configuration
+    //TODO: Read phone features, and set User Preferences
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        checkEnvFeatures();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            checkEnvAPIDependentFeatures();
     }
 
 
@@ -51,7 +63,7 @@ public class AppFlowActivity extends BaseActivity {
         if (fa.getCurrentUser() != null) {// If user is already signed in to cloud account
             flow(ListActivity.class); //Open the Main Menu Notes List
         } else if (hasLclNotes) {  //If the user has locally saved Notes (They are not signed in)
-            flow(LAUNCH_MESSAGE_KEY, ListActivity.class);
+            flow(getString(R.string.launch_key), ListActivity.class);
         } else {
             flow(UserLoginActivity.class); //Open the Sign in Activity
 
@@ -65,18 +77,18 @@ public class AppFlowActivity extends BaseActivity {
 
     private void flow(String message, Class<?> clazz) {
         Intent i1 = new Intent(this, clazz);
-        i1.putExtra(LAUNCH_MESSAGE_KEY, true);
+        i1.putExtra(message, true);
         startActivity(i1);
     }
 
-    /**
-     * Gets launch key.
-     *
-     * @return the launch key
-     */
-    public static String getLaunchKey() {
-        return LAUNCH_MESSAGE_KEY;
+    private void checkEnvFeatures() {
+        hasCamera = getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
+        hasWidgets = getPackageManager().hasSystemFeature(PackageManager.FEATURE_APP_WIDGETS);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void checkEnvAPIDependentFeatures() {
+        hasFingerPrint = getPackageManager().hasSystemFeature(PackageManager.FEATURE_FINGERPRINT);
+    }
 
 }

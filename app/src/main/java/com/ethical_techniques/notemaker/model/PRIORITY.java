@@ -8,16 +8,26 @@ package com.ethical_techniques.notemaker.model;
  * @author Harry Dulaney
  */
 public enum PRIORITY {
+
     HIGH("high"),
     LOW("low");
 
     String stringIdentifier;
 
+
     PRIORITY(String stringIdentifier) {
         this.stringIdentifier = stringIdentifier;
     }
 
-   public String getString() {
+    public String getString() {
         return stringIdentifier;
+    }
+
+    public static String high() {
+        return "high";
+    }
+
+    public static String low() {
+        return "low";
     }
 }

@@ -25,22 +25,24 @@ public class DialogUtil {
      * @param context the context
      * @param title   the title
      * @param message the message
-     * @param action  the action to perform when DialogAction.onAction() is called.
+     * @param positiveAction  the positiveAction to perform when DialogAction.onAction() is called.
      */
     public static void makeAndShow(final Context context,
                                    final String title,
                                    final String message,
-                                   DialogAction action) {
+                                   final String positiveButtonString,
+                                   final String negativeButtonString,
+                                   DialogAction positiveAction) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         builder.setMessage(message);
-        builder.setNegativeButton("CANCEL", (dialog, which) -> {
+        builder.setNegativeButton(negativeButtonString, (dialog, which) -> {
             Toast.makeText(context, "Cancelled delete Note operation.", Toast.LENGTH_LONG).show();
             dialog.cancel();
         });
-        builder.setPositiveButton("DELETE", (dialog, usersChoice) -> {
+        builder.setPositiveButton(positiveButtonString, (dialog, usersChoice) -> {
             //Handle deleting the Note
-            action.onAction();
+            positiveAction.onAction();
 
         });
         builder.create().show();
@@ -49,27 +51,27 @@ public class DialogUtil {
     /**
      * Make and show.
      *
-     * @param context   the context Context
-     * @param title     the title String
-     * @param message   the message String
-     * @param yesButton the yes button String
-     * @param noButton  the no button String
-     * @param yesAction the yes action DialogAction
-     * @param noAction  the no action DialogAction
+     * @param context              the context Context
+     * @param title                the title String
+     * @param message              the message String
+     * @param positiveButtonString the yes button String
+     * @param negativeButtonString the no button String
+     * @param positiveAction       the yes action DialogAction
+     * @param negativeAction       the no action DialogAction
      */
     public static void makeAndShow(final Context context,
                                    final String title,
                                    final String message,
-                                   final String yesButton,
-                                   final String noButton,
-                                   DialogAction yesAction,
-                                   DialogAction noAction) {
+                                   final String positiveButtonString,
+                                   final String negativeButtonString,
+                                   DialogAction positiveAction,
+                                   DialogAction negativeAction) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(yesButton, (dialog, which) -> yesAction.onAction())
-                .setNegativeButton(noButton, (dialog, usersChoice) -> {
-                    noAction.onAction();
+                .setPositiveButton(positiveButtonString, (dialog, which) -> positiveAction.onAction())
+                .setNegativeButton(negativeButtonString, (dialog, usersChoice) -> {
+                    negativeAction.onAction();
                 })
                 .create()
                 .show();
@@ -78,30 +80,30 @@ public class DialogUtil {
     /**
      * Make and show.
      *
-     * @param context       the context Context
-     * @param title         the title String
-     * @param message       the message String
-     * @param yesButton     the yes button String
-     * @param noButton      the no button String
-     * @param neutralButton the neutral button
-     * @param yesAction     the yes action DialogAction
-     * @param noAction      the no action DialogAction
-     * @param neutralAction the neutral action
+     * @param context        the context Context
+     * @param title          the title String
+     * @param message        the message String
+     * @param positiveString the yes button String
+     * @param negativeString the no button String
+     * @param neutralButton  the neutral button
+     * @param positiveAction the yes action DialogAction
+     * @param negativeAction the no action DialogAction
+     * @param neutralAction  the neutral action
      */
     public static void makeAndShow(final Context context,
                                    final String title,
                                    final String message,
-                                   final String yesButton,
-                                   final String noButton,
+                                   final String positiveString,
+                                   final String negativeString,
                                    final String neutralButton,
-                                   DialogAction yesAction,
-                                   DialogAction noAction,
+                                   DialogAction positiveAction,
+                                   DialogAction negativeAction,
                                    DialogAction neutralAction) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(yesButton, (dialog, which) -> yesAction.onAction())
-                .setNegativeButton(noButton, (dialog, usersChoice) -> noAction.onAction())
+                .setPositiveButton(positiveString, (dialog, which) -> positiveAction.onAction())
+                .setNegativeButton(negativeString, (dialog, usersChoice) -> negativeAction.onAction())
                 .setNeutralButton(neutralButton, ((dialog, which) -> {
                             neutralAction.onAction();
                             dialog.cancel();

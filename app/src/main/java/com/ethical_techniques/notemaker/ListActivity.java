@@ -74,7 +74,6 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         checkMessages();
         //Initialize SharedPreferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -130,7 +129,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
     private void checkMessages() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            if (extras.getBoolean(AppFlowActivity.getLaunchKey())) {
+            if (extras.getBoolean(getString(R.string.launch_key))) {
                 showSyncDecisionDialog();
             }
         }
@@ -141,12 +140,19 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
      */
     private void showSyncDecisionDialog() {
         DialogUtil.makeAndShow(this,
-                "Welcome back what would you like to do first?",
-                "Would you like to sign into your account now?",
+                "Welcome back!",
+                "Click SYNC to sign into your account and synchronize your notes now or CONTINUE to " +
+                        "take notes now.",
+                "SIGN-IN",
+                "CONTINUE",
                 () -> {
                     Intent i = new Intent(this, UserLoginActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
+
+                },
+                () -> {
+
                 });
 
     }
@@ -226,7 +232,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
-                Snackbar.make(getCurrentFocus(),"",Snackbar.LENGTH_LONG).show();
+                Snackbar.make(getCurrentFocus(), "", Snackbar.LENGTH_LONG).show();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + item.getItemId());
@@ -323,7 +329,6 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
             Log.e(TAG, "Error in onResume, inspect DataSource. ");
             Toast.makeText(this, "Error retrieving notes, please try reloading. ", Toast.LENGTH_LONG).show();
         }
-
         initDropDown();
         recyclerView = findViewById(R.id.recycleList);
         TextView emptyListMessageTopHalf = findViewById(R.id.empty_view1);
@@ -360,21 +365,49 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
                 , Toast.LENGTH_LONG).show());
 
         noteRecycleAdapter.setPriorityStarListener((priorityView, position) -> {
+            String toast = "";
+            boolean saved = false;
             Note note = notes.get(position);
-            if (note.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
-
+            if (note.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) { //Note is currently high priority and user desires to change to low priority
                 note.setPRIORITY_LEVEL(PRIORITY.LOW.getString());
-                handleTogglePriorityStar(priorityView, false);
-                Toast.makeText(ListActivity.this,
-                        "This note is set to " + note.getPRIORITY_LEVEL() + " priority",
-                        Toast.LENGTH_SHORT).show();
-            } else {
+
+                try {
+                    saved = DBUtil.saveNote(this, note);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "Exception trying to save note with ID# " + note.getNoteID() + " and title " + note.getNoteName());
+                }
+                if (saved) {
+                    handleTogglePriorityStar(priorityView, false);
+                    toast = "This note is set to " + note.getPRIORITY_LEVEL() + " priority";
+
+                } else {
+                    toast = "Something went wrong we could not save the note to " + note.getPRIORITY_LEVEL() + " priority";
+                }
+
+            } else { //Note is currently Low priority and the user is pressing the star to change it to High priority
                 note.setPRIORITY_LEVEL(PRIORITY.HIGH.getString());
-                handleTogglePriorityStar(priorityView, true);
-                Toast.makeText(ListActivity.this,
-                        "This note is set to: " + note.getPRIORITY_LEVEL() + " priority",
-                        Toast.LENGTH_SHORT).show();
+
+                try {
+                    saved = DBUtil.saveNote(this, note);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "Exception trying to save note with ID# " + note.getNoteID() + " and title " + note.getNoteName());
+                }
+
+                if (saved) {
+                    handleTogglePriorityStar(priorityView, true);
+                    toast = "This note is set to " + note.getPRIORITY_LEVEL() + " priority";
+
+                } else {
+                    toast = "Something went wrong we could not save the note to " + note.getPRIORITY_LEVEL() + " priority";
+                }
             }
+
+            Toast.makeText(ListActivity.this,
+                    toast,
+                    Toast.LENGTH_SHORT).show();
+
             noteRecycleAdapter.notifyDataSetChanged();
         });
         /* Set listener event behavior for regular click on delete button */
@@ -382,8 +415,10 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
             Note note = notes.get(position);
 
             DialogUtil.makeAndShow(this,
-                    "Confirm",
+                    "Confirmation Popup",
                     "Are you sure you want to permanently delete the Note: " + note.getNoteName(),
+                    "delete",
+                    "cancel",
                     () -> {
                         try {
                             DBUtil.deleteNote(this, note.getNoteID());
@@ -452,12 +487,6 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
 
             }
         });
-    }
-
-    @Override
-    protected void onPause() {
-        saveNoteChanges();
-        super.onPause();
     }
 
     /**

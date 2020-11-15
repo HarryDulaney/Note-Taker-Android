@@ -126,9 +126,7 @@ public class NoteActivity extends BaseActivity {
         List<View> views = new ArrayList<>();
         final EditText title = findViewById(R.id.editTitle);
         final EditText notes = findViewById(R.id.editNotes);
-        views.add(title);
-        views.add(notes);
-        hideKeyboard(this, views);
+        hideKeyboard(this, title, notes);
 
         if (title.length() != 0 || notes.length() != 0) {
             DialogUtil.makeAndShow(this,
@@ -244,7 +242,7 @@ public class NoteActivity extends BaseActivity {
      */
     private void initPriorityStar(Note note) {
         if (priorityStar != null) {
-            if (note.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) {
+            if (note.getPRIORITY_LEVEL().equals("HIGH")) {
                 handleTogglePriorityStar(priorityStar, true);
             } else {
                 handleTogglePriorityStar(priorityStar, false);
@@ -348,13 +346,7 @@ public class NoteActivity extends BaseActivity {
      * Save button clicked
      */
     public void handleSaveNote() {
-        List<View> views = new ArrayList<>();
-        views.add(findViewById(R.id.editTitle));
-        views.add(findViewById(R.id.editNotes));
-
-        if (views.size() > 0) {
-            hideKeyboard(this, views);
-        }
+        hideKeyboard(this, findViewById(R.id.editTitle), findViewById(R.id.editNotes));
 
         if (currentNote.getNoteName() == null || currentNote.getContent() == null) {
             Toast.makeText(NoteActivity.this, "Make sure to fill in the name and the " +

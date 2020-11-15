@@ -53,7 +53,7 @@ public class Note implements Parcelable {
      */
     public Note() {
         noteID = -1;
-        categoryId = -7;
+        categoryId = Category.MAIN_ID;
         PRIORITY_LEVEL = PRIORITY.LOW;
     }
 

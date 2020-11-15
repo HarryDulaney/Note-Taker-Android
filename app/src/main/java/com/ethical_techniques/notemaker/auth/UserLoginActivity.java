@@ -46,7 +46,6 @@ public class UserLoginActivity extends BaseActivity {
 
     private void openMainMenu() {
         Intent i1 = new Intent(UserLoginActivity.this, ListActivity.class);
-        i1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         UserLoginActivity.this.startActivity(i1);
 
     }
@@ -62,6 +61,7 @@ public class UserLoginActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.skip_login_button) {
+
             Intent i1 = new Intent(UserLoginActivity.this, ListActivity.class);
             i1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             UserLoginActivity.this.startActivity(i1);
@@ -90,6 +90,7 @@ public class UserLoginActivity extends BaseActivity {
      * @param view the view from the triggered onClick
      */
     public void handleOpenRegisterUser(View view) {
+        hideKeyboard(this, view.getRootView());
         Intent intent = new Intent(UserLoginActivity.this, UserRegisterActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         UserLoginActivity.this.startActivity(intent);
@@ -101,6 +102,7 @@ public class UserLoginActivity extends BaseActivity {
      * @param view the view from the triggered onClick
      */
     public void handleUserLoginEvent(View view) {
+        hideKeyboard(this, view.getRootView());
         final EditText edTextEmail = findViewById(R.id.editTextLoginEmailAddress);
         final EditText edTextPword = findViewById(R.id.editTextPwordLogin);
         if (TextUtils.isEmpty(edTextEmail.getText()) || TextUtils.isEmpty(edTextPword.getText())) {

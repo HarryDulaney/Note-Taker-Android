@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/categoryRecycleFragment"
     android:background="@color/hgdivDarkItems"
+    android:layout_margin="@dimen/mediumMargin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -11,12 +12,11 @@
         android:id="@+id/categoryName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/smallMargin"
         android:text="@string/category_name"
-        android:padding="@dimen/mediumMargin"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:maxEms="16"
+        android:maxEms="12"
         android:textSize="20sp"
         android:textStyle="bold" />
 

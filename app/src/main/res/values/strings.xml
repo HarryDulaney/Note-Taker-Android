@@ -183,12 +183,16 @@
     <string name="reset">reset email address</string>
     <string name="nav_drawer_username_default">Set Display Name</string>
     <string name="LAUNCH_MESSAGE_KEY">com.ethical_techniques.notemaker.showLoginDecisionDialog</string>
-    <string name="dis_name_empty_message">Set Display Name Here</string>
+    <string name="dis_name_empty_message">Set Display Name</string>
     <string name="no_email_set">No Email Set</string>
     <string name="verify">Verify</string>
     <string name="emailChange_ui_header">Enter the following fields and hit submit to change your the email address we use to link you to your account.</string>
     <string name="new_email_address">New Email Address</string>
     <string name="re_type_new_email">Re-Type New Email</string>
     <string name="done">done</string>
+    <string name="launch_key">com.ethical_techniques.notemaker.showLoginDecisionDialog</string>
+    <string name="pref_key_local_mode">com.ethical_techniques.user.pref.key.local.mode</string>
+    <string name="login_bundle_key">com.ethical_techniques.notemaker.FirebaseUser</string>
+    <string name="user_bundle_key">com.ethical_techniques.notemaker.UserProfile</string>
 
 </resources>
