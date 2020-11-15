@@ -3,6 +3,9 @@ package com.ethical_techniques.notemaker.DAL;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+
 import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.ethical_techniques.notemaker.model.Note;
 
@@ -155,7 +158,7 @@ public class DBUtil {
     /**
      * Save noteCategory boolean.
      *
-     * @param context  the context
+     * @param context      the context
      * @param noteCategory the noteCategory
      * @return the boolean
      * @throws SQLException the sql exception
@@ -164,20 +167,14 @@ public class DBUtil {
         DataSource ds = new DataSource(context);
         boolean wasSuccess = false;
         ds.open();
-        if (noteCategory.getId() == -2) {
-            NoteCategory checkExists = findCategory(context, noteCategory.getName());
-            if (checkExists.getId() != -2) { //NoteCategory name clashes with existing NoteCategory;
-                //TODO: throw new DataNameClashException();
-            } else {
-                wasSuccess = ds.insertCategory(noteCategory); //Insert the new NoteCategory
-            }
-            if (wasSuccess) {
-                int id = ds.getLastCategoryId();
-                noteCategory.setId(id);
-            }
-        } else {
-            wasSuccess = ds.update(noteCategory);
-        }
+        wasSuccess = ds.insertCategory(noteCategory); //Insert the new NoteCategory
+//        }
+//        if (wasSuccess) {
+//            int id = ds.getLastCategoryId();
+//            noteCategory.setId(id);
+//        } else {
+//            wasSuccess = ds.update(noteCategory);
+//        }
 
         ds.close();
 
@@ -195,6 +192,16 @@ public class DBUtil {
         dataSource.open();
         dataSource.delete(noteId);
         dataSource.close();
+    }
+
+    public static boolean updateCategory(Context context, NoteCategory noteCategory) throws SQLException {
+        boolean success = false;
+        DataSource ds = new DataSource(context);
+        ds.open();
+        success = ds.update(noteCategory);
+        ds.close();
+        return success;
+
     }
 }
 

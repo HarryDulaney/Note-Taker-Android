@@ -99,7 +99,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
         holder.name.setText(categories.get(position).getName());
         holder.mView.setBackgroundColor(categories.get(position).getColor());
         holder.deleteButton.setVisibility(View.INVISIBLE);
-        if (position == 0) holder.deleteButton.setColorFilter(R.color.deactivated_link);
+        if (holder.noteCategory.getName().equals(NoteCategory.MAIN_NAME)) holder.deleteButton.setColorFilter(R.color.deactivated_link);
 
     }
 
@@ -159,7 +159,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
                 if (categoryShortClickListener != null) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        view.setAlpha(0.7f);
+//                        view.setAlpha(0.7f);
                         categoryShortClickListener.clicked(view, position);
                     }
                 }

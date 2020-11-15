@@ -1,21 +1,39 @@
 package com.ethical_techniques.notemaker;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatViewInflater;
 import androidx.appcompat.widget.Toolbar;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.model.NoteCategory;
+import com.ethical_techniques.notemaker.utils.DialogUtil;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
+import top.defaults.colorpicker.ColorPickerPopup;
+import top.defaults.colorpicker.ColorPickerView;
 
 
 /**
@@ -23,10 +41,14 @@ import java.util.Objects;
  *
  * @author Harry Dulaney
  */
-public class CreateCategoryActivity extends BaseActivity {
+public class CreateCategoryActivity extends BaseActivity implements View.OnClickListener {
 
     private final String TAG = getClass().getName();
     private NoteCategory currentNoteCategory;
+    private ImageButton colorPickButton;
+    private EditText editName;
+    private ColorPickerView colorPickerView;
+
 
     @Override
     public void onCreate(Bundle saveInstanceBundle) {
@@ -55,6 +77,8 @@ public class CreateCategoryActivity extends BaseActivity {
         } else {
             Log.e(TAG, "ActionBar was not created properly...");
         }
+        colorPickButton = findViewById(R.id.colorPickerView);
+        editName = findViewById(R.id.editCategoryName);
 
     }
 
@@ -82,27 +106,48 @@ public class CreateCategoryActivity extends BaseActivity {
                     Snackbar.LENGTH_INDEFINITE);
         }
 
-        EditText editName = findViewById(R.id.editCategoryName);
         editName.setText(currentNoteCategory.getName());
 
-        ImageButton colorPickButton = findViewById(R.id.colorPickerView);
-        colorPickButton.setColorFilter(currentNoteCategory.getColor());
-
+        colorPickButton.getDrawable().mutate();
+        colorPickButton.getDrawable().setTint(currentNoteCategory.getColor());
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            case R.id.save:
+                handleSaveCategory();
+                startActivity(new Intent(this, CategoryListActivity.class));
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.app_bar_back_button, menu);
+        getMenuInflater().inflate(R.menu.app_bar_top_menu, menu);
+        menu.removeItem(R.id.star);
         return true;
     }
 
     @Override
     public void onBackPressed() {
         if (currentNoteCategory.getName() != null) {
-            //handle Dialog to save changes
-
+            //handle Dialog to save change
+            DialogUtil.makeAndShow(this,
+                    "Do you want to save your changes?",
+                    "Click SAVE to save changes or click DONT SAVE to " +
+                            "continue without saving.",
+                    "SAVE",
+                    "DONT SAVE",
+                    this::handleSaveCategory
+            );
         }
         super.onBackPressed();
     }
@@ -110,27 +155,85 @@ public class CreateCategoryActivity extends BaseActivity {
 
     /**
      * Handle save noteCategory.
-     *
-     * @param view SaveButton view object
      */
-    public void handleSaveCategory(View view) {
-        NoteCategory noteCategory = new NoteCategory();
-        EditText nameInput = findViewById(R.id.editCategoryName);
-        if (nameInput.getText().toString().isEmpty()) {
-            Snackbar.make(view, "Please input a name for the NoteCategory before saving. ", Snackbar.LENGTH_LONG)
+    public void handleSaveCategory() {
+        currentNoteCategory.setName(editName.getText().toString());
+
+        //            noteCategory.setColor();
+
+        if (editName.getText().toString().isEmpty()) {
+            Snackbar.make(editName.getRootView(), "Please input a name for the NoteCategory before saving. ", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-        } else {
-            noteCategory.setName(nameInput.getText().toString());
-//            noteCategory.setColor();
+        } else if (currentNoteCategory.getId() == -1) {
+            List<String> catNamesExisting = new ArrayList<>();
             try {
-                DBUtil.saveCategory(this, noteCategory);
+                List<NoteCategory> categories = DBUtil.getCategories(this);
+                for (NoteCategory noteCategory : categories) {
+                    catNamesExisting.add(noteCategory.getName());
+                }
+                if (catNamesExisting.contains(currentNoteCategory.getName())) {
+                    Snackbar.make(editName.getRootView(), "The NoteCategory name is already used for another NoteCategory, " +
+                            "please delete the other NoteCategory or revise the name", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                } else {
+                    try {
+                        DBUtil.saveCategory(this, currentNoteCategory);
+                        Toast.makeText(this, "The new Category " + currentNoteCategory.getName() + " has been saved", Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, " An error occurred while saving the NoteCategory. The Category may not have been saved. ",
+                                Toast.LENGTH_LONG).show();
+
+                    }
+
+
+                }
+
             } catch (Exception e) {
-                Snackbar.make(view, "The NoteCategory name is already used for another NoteCategory, " +
-                        "please delete the other NoteCategory or revise the name", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                e.printStackTrace();
+                Log.e(TAG, "Error pulling the categories from the db.");
+                Toast.makeText(this, "Error retrieving categories, please try reloading. ", Toast.LENGTH_LONG).show();
+            }
+
+        } else { //overwrite existing note using update (the category has an id that is != -1 so it must existing in the db already)
+            try {
+                DBUtil.updateCategory(this, currentNoteCategory);
+                Toast.makeText(this, "Your changes to the note have been saved.",
+                        Toast.LENGTH_LONG).show();
+            } catch (SQLException exp) {
+                exp.printStackTrace();
+                Toast.makeText(this, "An error occurred trying to open the database, the note category may not have been updated correctly.",
+                        Toast.LENGTH_LONG).show();
 
             }
+
         }
+    }
+
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.colorPickerView) {
+            new ColorPickerPopup.Builder(this)
+                    .initialColor(currentNoteCategory.getColor())
+                    .enableBrightness(true)
+                    .okTitle("Choose")
+                    .cancelTitle("Cancel")
+                    .showIndicator(true)
+                    .showValue(true)
+                    .build()
+                    .show(v, new ColorPickerPopup.ColorPickerObserver() {
+                        @Override
+                        public void onColorPicked(int color) {
+                            currentNoteCategory.setColor(color);
+                            v.setBackgroundColor(color);
+                        }
+                    });
+
+        }
+
     }
 }

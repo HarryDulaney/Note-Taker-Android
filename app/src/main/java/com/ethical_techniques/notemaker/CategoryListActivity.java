@@ -128,8 +128,9 @@ public class CategoryListActivity extends BaseActivity {
         recycleAdapter.setShortClickListener((view, position) -> {
             Toast.makeText(this, "Hold a long click on the list item to open the NoteCategory for editing.", Toast.LENGTH_LONG).show();
         });
-        recyclerView.addItemDecoration(new SpacingItemDecoration(1, false, true));
+//        recyclerView.addItemDecoration(new SpacingItemDecoration(1, false, true));
         recyclerView.setAdapter(recycleAdapter);
+        recycleAdapter.notifyDataSetChanged();
 
     }
 
@@ -188,7 +189,7 @@ public class CategoryListActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_bar_top_list_menu, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     /**

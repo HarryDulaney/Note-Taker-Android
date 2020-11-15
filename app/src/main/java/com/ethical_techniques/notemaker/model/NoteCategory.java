@@ -68,11 +68,13 @@ public class NoteCategory implements Parcelable {
 
     public NoteCategory() {
         id = -1;
+        color = Color.GRAY;
     }
 
     public NoteCategory(int id, String name) {
         this.id = id;
         this.name = name;
+        color = Color.GRAY;
 
     }
 

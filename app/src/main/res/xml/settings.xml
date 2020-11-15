@@ -41,7 +41,7 @@
             app:entries="@array/show_categ_list_entries"
             app:entryValues="@array/show_categ_list_values"
             app:key="@string/SORT_CATEGORY_BY_PREF_ID"
-            app:title="@string/SORT_BY"
+            app:title="Show 'All Notes (default)' Category in Categories List"
             app:useSimpleSummaryProvider="true" />
 
 

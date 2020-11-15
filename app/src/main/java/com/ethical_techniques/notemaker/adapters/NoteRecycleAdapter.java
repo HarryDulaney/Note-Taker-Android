@@ -120,7 +120,7 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
                 if (noteListener != null) {
                     int pos = getAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION) {
-                        vw.setAlpha(0.7f);
+//                        vw.setAlpha(0.7f);
                         noteListener.clicked(vw, pos);
                     }
                 }

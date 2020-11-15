@@ -39,10 +39,10 @@
     <!-- CATEGORIES -->
     <string name="SORT_CATEGORY_BY_PREF_ID">noteCategory.sort.by.preference</string>
     <string name="SORT_CATEGORY_ORDER_PREF_ID">noteCategory.sort.order.preference</string>
+    <string name="CATEG_LIST_HIDE_DEFAULT_CATEGORY_PREF_ID">noteCategory.hide.allNotes.category.preference</string>
 
-    <string name="CATEG_LIST_OPTIONS_HIDE_ALL_NOTES">noteCategory.hide.allNotes.category.preference</string>
-    <string name="CATEG_LIST_OPTIONS_VIEW_ALL_NOTES">noteCategory.view.allNotes.category.preference</string>
-    
+    <string name="showAllNotes">Show</string>
+    <string name="hideAllNotes">Hide</string>
     <string name="ascending">Low to High</string>
     <string name="descending">High to Low</string>
     <string name="high">High</string>
@@ -183,7 +183,7 @@
     <string name="cancel_exit">Cancel</string>
     <string name="error_message1">Oops..Something Went Wrong</string>
     <string name="reset">reset email address</string>
-    <string name="nav_drawer_username_default">Set Display Name</string>
+    <string name="nav_drawer_username_default">Set by "/"Edit Account Info"/"</string>
     <string name="LAUNCH_MESSAGE_KEY">com.ethical_techniques.notemaker.showLoginDecisionDialog</string>
     <string name="dis_name_empty_message">Set Display Name</string>
     <string name="no_email_set">No Email Set</string>

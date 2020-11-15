@@ -169,22 +169,6 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
             displayName.setText(fUser.getDisplayName());
         } else {
             displayName.setText(R.string.nav_drawer_username_default);
-            displayName.setOnClickListener(e -> {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ListActivity.this);
-                final EditText dialogInput = new EditText(this);
-                dialogInput.setInputType(InputType.TYPE_CLASS_TEXT);
-                dialogBuilder.setView(dialogInput);
-                dialogBuilder.setTitle("Username not set");
-                dialogBuilder.setMessage("What do you like to be called?");
-                dialogBuilder.setPositiveButton("SUBMIT", (dialogInterface, which) -> {
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    String res = dialogInput.getText().toString();
-
-                });
-                dialogBuilder.setNegativeButton("CANCEL", (dialogInterface, which) -> {
-                    dialogInterface.cancel();
-                });
-            });
         }
     }
 
