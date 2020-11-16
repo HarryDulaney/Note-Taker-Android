@@ -106,6 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/mediumMargin"
+                android:onClick="handleSubmitEmailAddress"
                 android:text="@string/submit"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                 android:theme="@style/MaterialDesignButton" />
@@ -115,6 +116,7 @@
                 android:id="@+id/handleClearForm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="handleClearForm"
                 android:layout_marginHorizontal="@dimen/mediumMargin"
                 android:layout_toEndOf="@id/submitUpdateEmailAddress"
                 android:text="@string/clearform"

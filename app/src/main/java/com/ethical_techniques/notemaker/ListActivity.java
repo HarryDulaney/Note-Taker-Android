@@ -214,7 +214,9 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
-                Snackbar.make(getCurrentFocus(), "", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(spinner.getRootView(), "You are now signed out of your account. " +
+                                "Please continue using Notes For Android and sign in to sync notes later on..",
+                        Snackbar.LENGTH_LONG).show();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + item.getItemId());

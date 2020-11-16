@@ -63,6 +63,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/changeProfilePic"
+                android:onClick="handleChangeProfPic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/extraSmMargin"
@@ -115,6 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/divider3"
+            android:onClick="handleEmailAddressChange"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="@dimen/extraLrgMargin"
             android:layout_marginTop="@dimen/mediumMargin"
@@ -134,6 +136,7 @@
                 android:id="@+id/handleDoneButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="handleSubmitButton"
                 android:layout_marginHorizontal="@dimen/mediumMargin"
                 android:text="@string/done"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
@@ -146,6 +149,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/mediumMargin"
                 android:layout_toEndOf="@id/handleDoneButton"
+                android:onClick="handleExitProfileUpdate"
                 android:text="@string/cancel_exit"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                 android:theme="@style/MaterialDesignButton" />
@@ -169,12 +173,13 @@
             android:id="@+id/verifyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="handleVerifyEmailAddress"
             android:layout_below="@id/emailAddressDisplay"
             android:layout_centerHorizontal="true"
             android:text="@string/verify"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:theme="@style/MaterialDesignButton"
-            app:backgroundTint="@android:color/holo_orange_light" />
+            app:backgroundTint="@android:color/holo_blue_bright" />
 
     </RelativeLayout>
 

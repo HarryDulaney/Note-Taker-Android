@@ -12,12 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
@@ -25,13 +23,12 @@ import androidx.core.content.FileProvider;
 import com.ethical_techniques.notemaker.R;
 import com.ethical_techniques.notemaker.listeners.TextWatcherImpl;
 import com.ethical_techniques.notemaker.utils.DialogUtil;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthEmailException;
@@ -39,9 +36,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.type.DateTime;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,13 +51,13 @@ import java.util.regex.Pattern;
  *
  * @author Harry Dulaney
  */
-public class UpdateProfileActivity extends BaseActivity implements View.OnClickListener {
+public class UpdateProfileActivity extends BaseActivity {
 
     private final String TAG = getClass().getName();
     private ViewGroup mainLayout;
     private ViewGroup emailUpdateLayout;
     private ValueHolder valueHolder;
-    private Boolean waitingForVerifyEmail;
+    private boolean emailUpdateScreen;
 
 
     @Override
@@ -108,7 +102,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         username.addTextChangedListener(new TextWatcherImpl() {
             @Override
             public void afterTextChanged(Editable s) {
-                valueHolder.nooDisPlayName = username.getText().toString();
+                valueHolder.currDisName = username.getText().toString();
             }
         });
 
@@ -136,27 +130,6 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
 
     }
 
-//    private void() {
-//        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-//        if (fUser != null) {
-//            UserProfileChangeRequest.Builder profileUpdates = new UserProfileChangeRequest.Builder();
-//            if (!nooDisName.isEmpty()) {
-//                profileUpdates.setDisplayName(nooDisName);
-//            } else if (!nooPicPath.isEmpty()) {
-//                profileUpdates.setPhotoUri(Uri.parse(nooPicPath));
-//            }
-//
-//            fUser.updateProfile(profileUpdates.build())
-//                    .addOnCompleteListener(task -> {
-//                        if (task.isSuccessful()) {
-//                            Snackbar.make(mainLayout, "Profile has been updated", Snackbar.LENGTH_LONG).show();
-//
-//                        }
-//                    });
-//        } else {
-//            Log.e(TAG, "Something has gone horribly wrong :( ");
-//        }
-//    }
 
     @Override
     protected void onStart() {
@@ -169,25 +142,23 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         }
     }
 
-
     /**
      * Send email verification.
      */
     public void sendEmailVerification(FirebaseUser fUser) {
-        if (fUser != null) {//TODO: Replace the below url with the whitelisted one from the Firebase console.
-            String url = "http://www.example.com/verify?uid=" + fUser.getUid();
-            ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
-                    .setUrl(url)
-                    .build();
-
-            fUser.sendEmailVerification(actionCodeSettings)
+        if (fUser != null) {
+            fUser.sendEmailVerification()
                     .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
+                        if (task.isComplete()) {
                             Toast.makeText(this,
-                                    "We sent a confirmation to your the email address associated with your account." +
-                                            " Please check your email to complete verification.",
+                                    "We sent a confirmation link to your email address." +
+                                            " Please check your email and click the link to complete verification.",
                                     Toast.LENGTH_LONG).show();
                             Log.d(TAG, "Verification email sent.");
+                        } else {
+                            Toast.makeText(this,
+                                    "Something went wrong, we couldn't send the verification link. Please try again later.",
+                                    Toast.LENGTH_LONG).show();
                         }
                     });
         }
@@ -228,105 +199,93 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
 
     }
 
+    public void handleExitProfileUpdate(View view) {
+        hideKeyboard(this, findViewById(R.id.exitProfileUpdate).getRootView());
+        finish();
+    }
+
+    public void handleVerifyEmailAddress(View view) {
+        //Launch verify email event sequence
+        hideKeyboard(this, findViewById(R.id.submitUpdateEmailAddress).getRootView());
+        sendEmailVerification(FirebaseAuth.getInstance().getCurrentUser());
+    }
+
+    public void handleClearForm(View view) {
+        hideKeyboard(this, findViewById(R.id.handleClearForm).getRootView());
+
+        TextInputEditText nooEmail = findViewById(R.id.editTextNooEmail);
+        TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
+        TextInputEditText pw = findViewById(R.id.pword);
+        Objects.requireNonNull(nooEmail.getText()).clear();
+        Objects.requireNonNull(nooEmailCheck.getText()).clear();
+        Objects.requireNonNull(pw.getText()).clear();
+
+    }
+
+    public void handleSubmitEmailAddress(View view) {
+        hideKeyboard(this, findViewById(R.id.submitUpdateEmailAddress).getRootView());
+
+        final TextInputEditText nooEmail = findViewById(R.id.editTextNooEmail);
+        final TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
+        final TextInputEditText pw = findViewById(R.id.pword);
+
+        if (nooEmail.length() < 3 || nooEmailCheck.length() < 3 || pw.length() < 8) {
+
+            if (nooEmail.getText().equals(nooEmailCheck.getText())) {
+                if (validateEmail(nooEmail.getText())) {
+                    if (validatePassword(pw.getText())) {
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        AuthCredential creds = EmailAuthProvider
+                                .getCredential(valueHolder.currEmail, pw.getText().toString());
+                        user.reauthenticate(creds)
+                                .addOnCompleteListener(task -> {
+                                    Log.d(TAG, "User re-authenticated.");
+                                    try {
+                                        updateUserEmailAddress(user, nooEmail.getText().toString());
+                                    } catch (FirebaseAuthEmailException | FirebaseAuthInvalidCredentialsException fee) {
+                                        fee.printStackTrace();
+                                    } catch (FirebaseAuthUserCollisionException ffce) {
+                                        Toast.makeText(this, "The email address you entered already belongs to an existing account, please re-try with a different email address.", Toast.LENGTH_LONG).show();
+
+                                    }
+
+                                });
+
+                    } else {
+                        Toast.makeText(this, "The password you entered appears to be in an invalid format, please check again and re-try.", Toast.LENGTH_SHORT).show();
+
+                    }
+                } else {
+                    Toast.makeText(this, "The email address you entered is not a valid format, please double check.", Toast.LENGTH_SHORT).show();
+
+                }
+            } else {
+                Toast.makeText(this, "The both email address above must be equal, please check again.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Please fill in all of the fields before pressing the Submit button.", Toast.LENGTH_SHORT).show();
+
+        }
+
+
+    }
+
 
     /**
      * Called when a view within the activity_update_profile layout has been clicked.
      *
      * @param v The view that was clicked.
      */
-    @Override
     public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.changeProfilePic) {
-            //Change picture options
-            DialogUtil.makeAndShow(this,
-                    "Set Profile Picture",
-                    "From where do you want to retrieve your profile picture?",
-                    "Take Picture",
-                    "Open File Explorer",
-                    "Close Popup",
-                    this::launchTakePicture,
-                    this::launchPicFromStorage,
-                    () -> {
-                        Toast.makeText(this, "Operation Canceled", Toast.LENGTH_SHORT).show();
-                    });
+        if (v == findViewById(R.id.exitProfileUpdate)) {
 
-        } else if (id == R.id.updateEmailAddressButton) {
-            //launch email update ui and events
-            hideKeyboard(this, findViewById(R.id.updateEmailAddressButton).getRootView());
-
-            initUpdateEmail();
-        } else if (id == R.id.handleDoneButton) {
-            hideKeyboard(this, findViewById(R.id.handleDoneButton).getRootView());
-
-            //Submit update account user profile
-            onBackPressed();
-
-        } else if (id == R.id.exitProfileUpdate) {
-            hideKeyboard(this, findViewById(R.id.exitProfileUpdate).getRootView());
-            finish();
-        } else if (id == R.id.verifyButton) {
-            //Launch verify email event sequence
-            hideKeyboard(this, findViewById(R.id.submitUpdateEmailAddress).getRootView());
-
-            sendEmailVerification(FirebaseAuth.getInstance().getCurrentUser());
+        } else if (v == findViewById(R.id.verifyButton)) {
 
 
-        } else if (id == R.id.handleClearForm) {
-            hideKeyboard(this, findViewById(R.id.handleClearForm).getRootView());
+        } else if (v == findViewById(R.id.handleClearForm)) {
 
-            TextInputEditText nooEmail = findViewById(R.id.editTextNooEmail);
-            TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
-            TextInputEditText pw = findViewById(R.id.pword);
-            Objects.requireNonNull(nooEmail.getText()).clear();
-            Objects.requireNonNull(nooEmailCheck.getText()).clear();
-            Objects.requireNonNull(pw.getText()).clear();
-
-        } else if (id == R.id.submitUpdateEmailAddress) {
-            hideKeyboard(this, findViewById(R.id.submitUpdateEmailAddress).getRootView());
-
-            final TextInputEditText nooEmail = findViewById(R.id.editTextNooEmail);
-            final TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
-            final TextInputEditText pw = findViewById(R.id.pword);
-
-            if (nooEmail.length() < 3 || nooEmailCheck.length() < 3 || pw.length() < 8) {
-
-                if (nooEmail.getText().equals(nooEmailCheck.getText())) {
-                    if (validateEmail(nooEmail.getText())) {
-                        if (validatePassword(pw.getText())) {
-
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            AuthCredential creds = EmailAuthProvider
-                                    .getCredential(valueHolder.currEmail, pw.getText().toString());
-                            user.reauthenticate(creds)
-                                    .addOnCompleteListener(task -> {
-                                        Log.d(TAG, "User re-authenticated.");
-                                        try {
-                                            updateUserEmailAddress(user, nooEmail.getText().toString());
-                                        } catch (FirebaseAuthEmailException | FirebaseAuthInvalidCredentialsException fee) {
-                                            fee.printStackTrace();
-                                        } catch (FirebaseAuthUserCollisionException ffce) {
-                                            Toast.makeText(this, "The email address you entered already belongs to an existing account, please re-try with a different email address.", Toast.LENGTH_LONG).show();
-
-                                        }
-
-                                    });
-
-                        } else {
-                            Toast.makeText(this, "The password you entered appears to be in an invalid format, please check again and re-try.", Toast.LENGTH_SHORT).show();
-
-                        }
-                    } else {
-                        Toast.makeText(this, "The email address you entered is not a valid format, please double check.", Toast.LENGTH_SHORT).show();
-
-                    }
-                } else {
-                    Toast.makeText(this, "The both email address above must be equal, please check again.", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, "Please fill in all of the fields before pressing the Submit button.", Toast.LENGTH_SHORT).show();
-
-            }
+        } else if (v == findViewById(R.id.submitUpdateEmailAddress)) {
 
 
         } else {
@@ -353,25 +312,29 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     }
 
     private void initUpdateEmail() {
+        emailUpdateScreen = true;
         mainLayout.setVisibility(View.GONE);
         emailUpdateLayout.setVisibility(View.VISIBLE);
 
     }
 
     private void reInitMainLayout() {
+        emailUpdateScreen = false;
         emailUpdateLayout.setVisibility(View.GONE);
         mainLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onBackPressed() {
-        FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
-        if (fuser != null) {
-            if (valueHolder.nooDnLen() > 0 && valueHolder.isCurrDnDiff()) {
-                updateName(valueHolder.nooDisPlayName, fuser);
+        if (emailUpdateScreen) {
+            reInitMainLayout();
+        } else {
+            FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+            if (fuser != null) {
+                updateName(valueHolder.currDisName, fuser);
             }
+            super.onBackPressed();
         }
-        super.onBackPressed();
 
     }
 
@@ -394,12 +357,15 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here.
         int id = item.getItemId();
-
         if (id == android.R.id.home) {
-            onBackPressed();
+            if (emailUpdateScreen) {
+                reInitMainLayout();
+            } else {
+                onBackPressed();
+            }
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
 
     }
 
@@ -446,7 +412,6 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         }
     }
 
-
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
@@ -463,9 +428,34 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         return image;
     }
 
+    public void handleChangeProfPic(View view) {
+        //Change picture options
+        DialogUtil.makeAndShow(this,
+                "Set Profile Picture",
+                "From where do you want to retrieve your profile picture?",
+                "Take Picture",
+                "Open File Explorer",
+                "Close Popup",
+                this::launchTakePicture,
+                this::launchPicFromStorage,
+                () -> {
+                    Toast.makeText(this, "Operation Canceled", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    public void handleEmailAddressChange(View view) {
+        //launch email update ui and events
+        hideKeyboard(this, findViewById(R.id.updateEmailAddressButton).getRootView());
+        initUpdateEmail();
+    }
+
+    public void handleSubmitButton(View view) {
+        hideKeyboard(this, findViewById(R.id.handleDoneButton).getRootView());
+        //Submit update account user profile
+        onBackPressed();
+    }
+
     private static class ValueHolder {
-        private String nooDisPlayName;
-        private String nooPicPath;
 
         private String currPicPath;
         private String currEmail;
@@ -480,18 +470,6 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
             this.currEmail = currEmail;
             this.currPicPath = currPicPath;
 
-        }
-
-        int nooDnLen() {
-            return nooDisPlayName.length();
-        }
-
-        int picStrLen() {
-            return nooPicPath.length();
-        }
-
-        public boolean isCurrDnDiff() {
-            return !nooDisPlayName.equals(currDisName);
         }
     }
 
