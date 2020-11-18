@@ -61,20 +61,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <ImageButton
                 android:id="@+id/changeProfilePic"
-                android:onClick="handleChangeProfPic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/extraSmMargin"
+                android:background="@color/fui_transparent"
+                android:layout_marginStart="@dimen/largeMargin"
                 android:gravity="center_vertical"
                 android:layoutDirection="ltr"
-                android:text="@string/change"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:theme="@style/MaterialDesignButton"
+                android:onClick="handleChangeProfPic"
+                android:src="@drawable/ic_camera_black_36dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/imageView"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/find_or_take_a_new_picture" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -87,7 +87,9 @@
             android:layout_marginHorizontal="@dimen/largeMargin"
             android:layout_marginTop="@dimen/mediumMargin"
             android:layout_marginBottom="@dimen/mediumMargin"
+            android:visibility="gone"
             app:helperText="User Display Name">
+
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextInputUserNameUpdate"
@@ -96,33 +98,52 @@
                 android:ems="30"
                 android:hint="@string/example_username"
                 android:inputType="textAutoCorrect"
-                android:scrollHorizontally="true" />
+                android:scrollHorizontally="true"
+                android:visibility="gone" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/emailAddressDisplay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/updateEmailAddressButton"
-            android:layout_marginHorizontal="@dimen/smallMargin"
-            android:text="@string/error_message1"
-            android:textAlignment="center"
-            android:textColor="@color/textColorDefault"
-            android:textSize="24sp" />
-
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/updateEmailAddressButton"
+        <RelativeLayout
+            android:id="@+id/displayNameLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/divider3"
-            android:onClick="handleEmailAddressChange"
             android:layout_centerHorizontal="true"
-            android:layout_marginStart="@dimen/extraLrgMargin"
-            android:layout_marginTop="@dimen/mediumMargin"
-            android:text="@string/reset"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-            android:theme="@style/MaterialDesignButton" />
+            android:layout_marginVertical="@dimen/largeMargin">
+
+            <TextView
+                android:id="@+id/displayNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_toEndOf="@id/editDisNameButton"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginHorizontal="@dimen/mediumMargin"
+                android:onClick="handleEditDisplayName"
+                android:text="@string/display_name"
+                android:textSize="20sp" />
+
+
+            <ImageButton
+                android:id="@+id/editDisNameButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/change_the_display_name"
+                android:background="@android:color/transparent"
+                android:onClick="handleExitProfileUpdate"
+                android:src="@drawable/ic_square_edit_outline_black_36dp" />
+
+        </RelativeLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/verifyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rlEmailAddress"
+            android:layout_centerHorizontal="true"
+            android:onClick="handleVerifyEmailAddress"
+            android:text="@string/verify"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small"
+            android:theme="@style/Theme.MaterialComponents"
+            app:cornerRadius="1dp" />
 
         <RelativeLayout
             android:id="@+id/registerLayoutBottom"
@@ -136,8 +157,8 @@
                 android:id="@+id/handleDoneButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="handleSubmitButton"
                 android:layout_marginHorizontal="@dimen/mediumMargin"
+                android:onClick="handleSubmitButton"
                 android:text="@string/done"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                 android:theme="@style/MaterialDesignButton" />
@@ -160,6 +181,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/verifyButton"
+            android:layout_marginTop="@dimen/largeMargin"
             android:background="?android:attr/listDivider" />
 
         <View
@@ -169,17 +191,36 @@
             android:layout_below="@id/textInputLayout1"
             android:background="?android:attr/listDivider" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/verifyButton"
+
+        <RelativeLayout
+            android:id="@+id/rlEmailAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="handleVerifyEmailAddress"
-            android:layout_below="@id/emailAddressDisplay"
-            android:layout_centerHorizontal="true"
-            android:text="@string/verify"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-            android:theme="@style/MaterialDesignButton"
-            app:backgroundTint="@android:color/holo_blue_bright" />
+            android:layout_below="@id/displayNameLayout"
+            android:layout_marginHorizontal="@dimen/smallMargin">
+
+
+            <ImageButton
+                android:id="@+id/emailAddressChangeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/mediumMargin"
+                android:contentDescription="@string/change_email_address"
+                android:onClick="handleEmailAddressChange"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_card_account_mail_black_36dp" />
+
+            <TextView
+                android:id="@+id/emailAddressDisplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/emailAddressChangeButton"
+                android:maxEms="18"
+                android:text="@string/error_message1"
+                android:textSize="21sp" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

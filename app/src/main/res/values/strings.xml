@@ -182,8 +182,7 @@
     <string name="change">Change</string>
     <string name="cancel_exit">Cancel</string>
     <string name="error_message1">Oops..Something Went Wrong</string>
-    <string name="reset">reset email address</string>
-    <string name="nav_drawer_username_default">Set by "/"Edit Account Info"/"</string>
+    <string name="nav_drawer_username_default">Display Name</string>
     <string name="LAUNCH_MESSAGE_KEY">com.ethical_techniques.notemaker.showLoginDecisionDialog</string>
     <string name="dis_name_empty_message">Set Display Name</string>
     <string name="no_email_set">No Email Set</string>
@@ -197,5 +196,11 @@
     <string name="login_bundle_key">com.ethical_techniques.notemaker.FirebaseUser</string>
     <string name="user_bundle_key">com.ethical_techniques.notemaker.UserProfile</string>
     <string name="colorpicker">colorpicker</string>
+    <string name="cancel_the_email_address_change_activity">Cancel the email address change activity\'</string>
+    <string name="save_display_name_changes">Save display name changes</string>
+    <string name="change_email_address">Change email address</string>
+    <string name="display_name">Display Name</string>
+    <string name="change_the_display_name">Change the display name associated with this account</string>
+    <string name="find_or_take_a_new_picture">Find or take a new picture</string>
 
 </resources>

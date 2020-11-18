@@ -26,9 +26,7 @@ import com.ethical_techniques.notemaker.utils.DialogUtil;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthEmailException;
@@ -58,6 +56,7 @@ public class UpdateProfileActivity extends BaseActivity {
     private ViewGroup emailUpdateLayout;
     private ValueHolder valueHolder;
     private boolean emailUpdateScreen;
+    private Menu menu;
 
 
     @Override
@@ -200,18 +199,18 @@ public class UpdateProfileActivity extends BaseActivity {
     }
 
     public void handleExitProfileUpdate(View view) {
-        hideKeyboard(this, findViewById(R.id.exitProfileUpdate).getRootView());
+        hideKeyboard(this, view.getRootView());
         finish();
     }
 
     public void handleVerifyEmailAddress(View view) {
         //Launch verify email event sequence
-        hideKeyboard(this, findViewById(R.id.submitUpdateEmailAddress).getRootView());
+        hideKeyboard(this, view.getRootView());
         sendEmailVerification(FirebaseAuth.getInstance().getCurrentUser());
     }
 
     public void handleClearForm(View view) {
-        hideKeyboard(this, findViewById(R.id.handleClearForm).getRootView());
+        hideKeyboard(this, view.getRootView());
 
         TextInputEditText nooEmail = findViewById(R.id.editTextNooEmail);
         TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
@@ -223,7 +222,7 @@ public class UpdateProfileActivity extends BaseActivity {
     }
 
     public void handleSubmitEmailAddress(View view) {
-        hideKeyboard(this, findViewById(R.id.submitUpdateEmailAddress).getRootView());
+        hideKeyboard(this, view.getRootView());
 
         final TextInputEditText nooEmail = findViewById(R.id.editTextNooEmail);
         final TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
@@ -267,35 +266,11 @@ public class UpdateProfileActivity extends BaseActivity {
             Toast.makeText(this, "Please fill in all of the fields before pressing the Submit button.", Toast.LENGTH_SHORT).show();
 
         }
-
-
-    }
-
-
-    /**
-     * Called when a view within the activity_update_profile layout has been clicked.
-     *
-     * @param v The view that was clicked.
-     */
-    public void onClick(View v) {
-        if (v == findViewById(R.id.exitProfileUpdate)) {
-
-        } else if (v == findViewById(R.id.verifyButton)) {
-
-
-        } else if (v == findViewById(R.id.handleClearForm)) {
-
-        } else if (v == findViewById(R.id.submitUpdateEmailAddress)) {
-
-
-        } else {
-            Log.e(TAG, "Unknown or unhandled view clicked");
-        }
-
     }
 
     private void updateUserEmailAddress(FirebaseUser firebaseUser, String str) throws FirebaseAuthInvalidCredentialsException,
             FirebaseAuthEmailException, FirebaseAuthUserCollisionException {
+
 
         firebaseUser.updateEmail(str)
                 .addOnCompleteListener(task -> {
@@ -315,6 +290,7 @@ public class UpdateProfileActivity extends BaseActivity {
         emailUpdateScreen = true;
         mainLayout.setVisibility(View.GONE);
         emailUpdateLayout.setVisibility(View.VISIBLE);
+        onPrepareOptionsMenu(menu);
 
     }
 
@@ -322,6 +298,7 @@ public class UpdateProfileActivity extends BaseActivity {
         emailUpdateScreen = false;
         emailUpdateLayout.setVisibility(View.GONE);
         mainLayout.setVisibility(View.VISIBLE);
+        onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -346,6 +323,15 @@ public class UpdateProfileActivity extends BaseActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        this.menu = menu;
+        MenuItem cancelButton = menu.findItem(R.id.cancel);
+        if (emailUpdateScreen) {
+            cancelButton.setVisible(true);
+
+        }
+        if (!emailUpdateScreen) {
+            cancelButton.setVisible(false);
+        }
         return true;
     }
 
@@ -363,6 +349,9 @@ public class UpdateProfileActivity extends BaseActivity {
             } else {
                 onBackPressed();
             }
+        } else if (id == R.id.cancel) {
+            hideKeyboard(this, emailUpdateLayout.getRootView());
+            reInitMainLayout();
         }
 
         return true;
@@ -445,7 +434,7 @@ public class UpdateProfileActivity extends BaseActivity {
 
     public void handleEmailAddressChange(View view) {
         //launch email update ui and events
-        hideKeyboard(this, findViewById(R.id.updateEmailAddressButton).getRootView());
+        hideKeyboard(this, findViewById(R.id.verifyButton).getRootView());
         initUpdateEmail();
     }
 
@@ -453,6 +442,9 @@ public class UpdateProfileActivity extends BaseActivity {
         hideKeyboard(this, findViewById(R.id.handleDoneButton).getRootView());
         //Submit update account user profile
         onBackPressed();
+    }
+
+    public void handleEditDisplayName(View view) {
     }
 
     private static class ValueHolder {

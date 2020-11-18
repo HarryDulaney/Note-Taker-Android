@@ -5,14 +5,12 @@
     android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
     tools:context=".auth.UpdateProfileActivity" >
 
-<!--    &lt;!&ndash; Return to previous activity &ndash;&gt;-->
-<!--    <item-->
-<!--        android:id="@+id/customBackButton"-->
-<!--        android:contentDescription=""-->
-<!--        android:enabled="false"-->
-<!--        android:icon="@drawable/ic_arrow_left_white_24dp"-->
-<!--        android:title="@string/priority_level"-->
-<!--        app:showAsAction="always" />-->
+    <!-- Cancel Button -->
+    <item
+        android:id="@+id/cancel"
+        android:contentDescription="@string/cancel_the_email_address_change_activity"
+        android:title="@string/cancel"
+        app:showAsAction="always" />
 
 
 </menu>
