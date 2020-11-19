@@ -91,6 +91,8 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="NOTE_ID_KEY">note.id.constant.key</string>
     <string name="CATEGORY_ID_KEY">noteCategory.id.constant.key</string>
+    <string name="SIGNED_OUT_RESTART_ACTIVITY">com.ethical_techniques.notemaker.ShowSuccessfulSignOutSnackbar</string>
+
 
 
     <string name="menu_home">Home</string>
@@ -199,8 +201,8 @@
     <string name="cancel_the_email_address_change_activity">Cancel the email address change activity\'</string>
     <string name="save_display_name_changes">Save display name changes</string>
     <string name="change_email_address">Change email address</string>
-    <string name="display_name">Display Name</string>
     <string name="change_the_display_name">Change the display name associated with this account</string>
     <string name="find_or_take_a_new_picture">Find or take a new picture</string>
+    <string name="edit_account_info">Edit Account Info</string>
 
 </resources>

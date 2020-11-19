@@ -35,12 +35,12 @@
             <item
                 android:id="@+id/nav_update"
                 android:icon="@drawable/ic_account_edit_grey600_48dp"
-                android:title="Edit Account Info" />
+                android:title="@string/edit_account_info" />
 
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/share" />
+<!--            <item-->
+<!--                android:id="@+id/nav_export_notes"-->
+<!--                android:icon="@drawable/ic_menu_send"-->
+<!--                android:title="@string/share" />-->
 
 
         </menu>

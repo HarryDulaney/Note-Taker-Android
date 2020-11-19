@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/extraSmMargin"
     android:layout_marginTop="@dimen/extraSmMargin"
     android:layout_marginEnd="@dimen/extraSmMargin"
     android:layout_marginBottom="@dimen/extraSmMargin"
-    android:background="@color/listbg"
-    android:padding="@dimen/extraSmMargin">    <!-- Note Title-->
+    android:background="@color/hgdivDarkItems">
+    <!-- Note Title-->
     <TextView
         android:id="@+id/textNoteTitle"
         android:layout_width="wrap_content"
@@ -19,7 +18,6 @@
         android:maxEms="30"
         android:text="@string/title"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:textColor="@color/hgdivTextOne"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -42,7 +40,7 @@
         android:padding="@dimen/extraSmMargin"
         android:scaleType="center"
         android:visibility="gone"
-        app:srcCompat="@drawable/ic_delete_forever_white_36dp" />
+        app:srcCompat="@drawable/ic_delete_forever_black_36dp" />
 
     <!-- High Priority On / Off Switch -->
     <ImageButton
@@ -76,6 +74,7 @@
         android:padding="@dimen/fab_margin"
         android:text="@string/d_a_t_e"
         android:textAllCaps="true"
+        android:visibility="gone"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textColor="@color/hgdivTextOne" />
 </RelativeLayout>

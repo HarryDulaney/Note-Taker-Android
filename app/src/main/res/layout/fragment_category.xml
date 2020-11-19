@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/categoryRecycleFragment"
-    android:background="@color/hgdivDarkItems"
-    android:layout_margin="@dimen/mediumMargin"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/extraSmMargin"
+    android:layout_marginTop="@dimen/extraSmMargin"
+    android:layout_marginEnd="@dimen/extraSmMargin"
+    android:layout_marginBottom="@dimen/extraSmMargin"
+    android:background="@color/hgdivDarkItems">
 
     <TextView
         android:id="@+id/categoryName"
@@ -14,9 +15,9 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/smallMargin"
+        android:maxEms="12"
         android:text="@string/category_name"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:maxEms="12"
         android:textSize="20sp"
         android:textStyle="bold" />
 

@@ -58,7 +58,6 @@ public class UpdateProfileActivity extends BaseActivity {
     private boolean emailUpdateScreen;
     private Menu menu;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,8 +124,6 @@ public class UpdateProfileActivity extends BaseActivity {
         } else {
             mb.setVisibility(View.VISIBLE);
         }
-
-
     }
 
 
@@ -143,6 +140,8 @@ public class UpdateProfileActivity extends BaseActivity {
 
     /**
      * Send email verification.
+     *
+     * @param fUser the f user
      */
     public void sendEmailVerification(FirebaseUser fUser) {
         if (fUser != null) {
@@ -198,20 +197,36 @@ public class UpdateProfileActivity extends BaseActivity {
 
     }
 
+    /**
+     * Handle exit profile update.
+     *
+     * @param view the view
+     */
     public void handleExitProfileUpdate(View view) {
         hideKeyboard(this, view.getRootView());
         finish();
     }
 
+    /**
+     * Handle verify email address.
+     *
+     * @param view the view
+     */
     public void handleVerifyEmailAddress(View view) {
+
         //Launch verify email event sequence
         hideKeyboard(this, view.getRootView());
         sendEmailVerification(FirebaseAuth.getInstance().getCurrentUser());
     }
 
+    /**
+     * Handle clear form.
+     *
+     * @param view the view
+     */
     public void handleClearForm(View view) {
-        hideKeyboard(this, view.getRootView());
 
+        hideKeyboard(this, view.getRootView());
         TextInputEditText nooEmail = findViewById(R.id.editTextNooEmail);
         TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
         TextInputEditText pw = findViewById(R.id.pword);
@@ -221,6 +236,11 @@ public class UpdateProfileActivity extends BaseActivity {
 
     }
 
+    /**
+     * Handle submit email address.
+     *
+     * @param view the view
+     */
     public void handleSubmitEmailAddress(View view) {
         hideKeyboard(this, view.getRootView());
 
@@ -417,6 +437,11 @@ public class UpdateProfileActivity extends BaseActivity {
         return image;
     }
 
+    /**
+     * Handle change prof pic.
+     *
+     * @param view the view
+     */
     public void handleChangeProfPic(View view) {
         //Change picture options
         DialogUtil.makeAndShow(this,
@@ -432,18 +457,33 @@ public class UpdateProfileActivity extends BaseActivity {
                 });
     }
 
+    /**
+     * Handle email address change.
+     *
+     * @param view the view
+     */
     public void handleEmailAddressChange(View view) {
         //launch email update ui and events
         hideKeyboard(this, findViewById(R.id.verifyButton).getRootView());
         initUpdateEmail();
     }
 
+    /**
+     * Handle submit button.
+     *
+     * @param view the view
+     */
     public void handleSubmitButton(View view) {
         hideKeyboard(this, findViewById(R.id.handleDoneButton).getRootView());
         //Submit update account user profile
         onBackPressed();
     }
 
+    /**
+     * Handle edit display name.
+     *
+     * @param view the view
+     */
     public void handleEditDisplayName(View view) {
     }
 
@@ -453,10 +493,20 @@ public class UpdateProfileActivity extends BaseActivity {
         private String currEmail;
         private String currDisName;
 
+        /**
+         * Instantiates a new Value holder.
+         */
         ValueHolder() {
             throw new SecurityException("Unsupported Operation");
         }
 
+        /**
+         * Instantiates a new Value holder.
+         *
+         * @param currDisName the curr dis name
+         * @param currEmail   the curr email
+         * @param currPicPath the curr pic path
+         */
         ValueHolder(String currDisName, String currEmail, String currPicPath) {
             this.currDisName = currDisName;
             this.currEmail = currEmail;

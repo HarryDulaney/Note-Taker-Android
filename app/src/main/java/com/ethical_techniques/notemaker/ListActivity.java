@@ -6,14 +6,12 @@ import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -22,7 +20,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -36,8 +33,8 @@ import com.ethical_techniques.notemaker.adapters.NoteRecycleAdapter;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.auth.UpdateProfileActivity;
 import com.ethical_techniques.notemaker.auth.UserLoginActivity;
-import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.ethical_techniques.notemaker.model.Note;
+import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.ethical_techniques.notemaker.model.PRIORITY;
 import com.ethical_techniques.notemaker.utils.DialogUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -72,7 +69,6 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkMessages();
         //Initialize SharedPreferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.drawer_layout_list);
@@ -82,6 +78,9 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         setSupportActionBar(toolbar);
         //initialize Categories Dropdown (i.e. Spinner)
         spinner = findViewById(R.id.list_activity_category_spinner);
+
+        checkMessages();
+
         //Handle create new note floating button
         FloatingActionButton floatingActionButton = findViewById(R.id.new_note_float_button);
         floatingActionButton.setOnLongClickListener((v) -> {
@@ -129,6 +128,9 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         if (extras != null) {
             if (extras.getBoolean(getString(R.string.launch_key))) {
                 showSyncDecisionDialog();
+            } else if (extras.containsKey(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY))) {
+                Snackbar.make(spinner.getRootView(), extras.getString(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY)),
+                        Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -213,6 +215,9 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
                 startActivity(i3);
                 break;
             case R.id.nav_logout:
+                String message = "You are now signed out of your account. " +
+                        "Please continue using Notes For Android and sign in to sync notes later on..";
+                ;
                 DialogUtil.makeAndShow(this,
                         "Confirm Sign Out",
                         "Are you sure you want to sign out of your account?",
@@ -220,13 +225,18 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
                         "NO, GO BACK",
                         () -> {
                             FirebaseAuth.getInstance().signOut();
-                            Snackbar.make(spinner.getRootView(), "You are now signed out of your account. " +
-                                            "Please continue using Notes For Android and sign in to sync notes later on..",
-                                    Snackbar.LENGTH_LONG).show();
-                            recreate();
+                            Intent intentRes = Intent.makeRestartActivityTask(getIntent().getComponent());
+                            intentRes.putExtra(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY), message);
+                            startActivity(intentRes);
                         });
-
                 break;
+//            case R.id.nav_share:
+//                DialogUtil.makeAndShow(this,
+//                        "Share Options",
+//                        "",
+//                        "","");
+//
+//                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + item.getItemId());
         }
@@ -324,27 +334,32 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         }
         initDropDown();
         recyclerView = findViewById(R.id.recycleList);
-        TextView emptyListMessageTopHalf = findViewById(R.id.empty_view1);
-        ImageView emptyListImage = findViewById(R.id.empty_view2);
         noteRecycleAdapter = new NoteRecycleAdapter(notes);
 
         if (notes.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyListMessageTopHalf.setVisibility(View.VISIBLE);
-            emptyListImage.setVisibility(View.VISIBLE);
+            toggleEmptyListMessage(View.GONE, View.VISIBLE, View.VISIBLE);
         } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyListMessageTopHalf.setVisibility(View.GONE);
-            emptyListImage.setVisibility(View.GONE);
-            initNoteList();
+            toggleEmptyListMessage(View.VISIBLE, View.GONE, View.GONE);
+            reloadNoteList(NoteCategory.getMain());
         }
+
+    }
+
+    void toggleEmptyListMessage(int recyView, int emptImage, int emptyMessage) {
+        //Empty List state vies
+        TextView emptyListMessage = findViewById(R.id.empty_view1);
+        ImageView emptyListImage = findViewById(R.id.empty_view2);
+
+        recyclerView.setVisibility(recyView);
+        emptyListMessage.setVisibility(emptyMessage);
+        emptyListImage.setVisibility(emptImage);
 
     }
 
     /**
      * Initialize the list of notes and define listener events
      */
-    private void initNoteList() {
+    private void reloadNoteList(NoteCategory noteCategory) {
         /* Set listener event behavior for long click on list item event */
         noteRecycleAdapter.setNoteLongClickListener((view, position) -> {
             int noteId = (int) noteRecycleAdapter.getItemId(position);
@@ -469,6 +484,9 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 String categoryName = (String) parent.getItemAtPosition(position);
+
+
+
                 Toast.makeText(ListActivity.this,
                         "Displaying " + categoryName + " notes",
                         Toast.LENGTH_LONG).show();
