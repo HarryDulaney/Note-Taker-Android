@@ -176,10 +176,14 @@ public class CreateCategoryActivity extends BaseActivity {
                             "continue without saving.",
                     "SAVE",
                     "DONT SAVE",
-                    this::handleSaveCategory
-            );
+                    () -> {
+                        handleSaveCategory();
+                        super.onBackPressed();
+                    });
+
+        } else {
+            super.onBackPressed();
         }
-        super.onBackPressed();
     }
 
 

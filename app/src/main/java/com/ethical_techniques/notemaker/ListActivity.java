@@ -69,6 +69,8 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
     private Spinner spinner;
     private NoteCategory activeNoteCategory;
     private String CURRENT_CATEGORY_KEY;
+    private String SORT_BY_PREFERENCE;
+    private String SORT_ORDER_PREFERENCE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +86,9 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         //Initialize SharedPreferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //Retrieve Sort By from sp
-        String SORT_BY_PREFERENCE = sharedPreferences.getString(NOTE_SORT_BY_PREF_KEY, SORT_BY_DEFAULT);
+        SORT_BY_PREFERENCE = sharedPreferences.getString(NOTE_SORT_BY_PREF_KEY, SORT_BY_DEFAULT);
         //Retrieves Sort Order from sp
-        String SORT_ORDER_PREFERENCE = sharedPreferences.getString(NOTE_ORDER_PREF_KEY, SORT_ORDER_DEFAULT);
+        SORT_ORDER_PREFERENCE = sharedPreferences.getString(NOTE_ORDER_PREF_KEY, SORT_ORDER_DEFAULT);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -363,10 +365,19 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void refreshListWithByCategory(NoteCategory noteCategory) {
         currentNotes.clear();
-        currentNotes.addAll(allNotes);
-        for (Note note : allNotes) {
-            if (!(note.getNoteCategory().equals(noteCategory))) {
-                currentNotes.remove(note);
+        try {
+            allNotes = DBUtil.findNotes(this, SORT_BY_PREFERENCE, SORT_ORDER_PREFERENCE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, "SQLException on findNotes in refreshListByCategory(NoteCategory)");
+        }
+        if (noteCategory.equals(NoteCategory.getMain())) {
+            currentNotes.addAll(allNotes);
+        } else {
+            for (Note note : allNotes) {
+                if (note.getNoteCategory().equals(noteCategory)) {
+                    currentNotes.add(note);
+                }
             }
         }
         noteRecycleAdapter.notifyDataSetChanged();
