@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ import com.ethical_techniques.notemaker.utils.DialogUtil;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,6 +60,7 @@ public class UpdateProfileActivity extends BaseActivity {
     private boolean emailUpdateScreen;
     private Menu menu;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +73,6 @@ public class UpdateProfileActivity extends BaseActivity {
         }
         mainLayout = findViewById(R.id.layoutUpdateUserProfile);
         emailUpdateLayout = findViewById(R.id.email_update_layout);
-
     }
 
     private void initUIProfileInfo(FirebaseUser firebaseUser) {
@@ -89,19 +91,35 @@ public class UpdateProfileActivity extends BaseActivity {
 
         valueHolder = new ValueHolder(dName, email, pPath);
 
-        TextInputEditText username = findViewById(R.id.editTextInputUserNameUpdate);
-        if (!valueHolder.currDisName.isEmpty()) {
-            username.setText(valueHolder.currDisName);
-        } else {
-            username.setText(R.string.dis_name_empty_message);
+        TextInputEditText txtInEdiTxtDisName = findViewById(R.id.editTextInputUserNameUpdate);
+        TextView disNameTextView = findViewById(R.id.displayNameTextView);
+        TextInputLayout txtInpLayDisName = findViewById(R.id.textInLayDisName);
+        ImageButton disNameEditButton = findViewById(R.id.editDisNameButton);
 
+        /* Store view references in the valueHolder for view switching */
+        valueHolder.txtInEdiTxtDisName = txtInEdiTxtDisName;
+        valueHolder.disNameTextView = disNameTextView;
+        valueHolder.txtInpLayDisName = txtInpLayDisName;
+        valueHolder.disNameEditButton = disNameEditButton;
+
+        if (!valueHolder.currDisName.isEmpty()) {
+            txtInEdiTxtDisName.setText(valueHolder.currDisName);
+            disNameTextView.setText(valueHolder.currDisName);
         }
 
-        username.addTextChangedListener(new TextWatcherImpl() {
+        valueHolder.txtInEdiTxtDisName.addTextChangedListener(new TextWatcherImpl() {
             @Override
             public void afterTextChanged(Editable s) {
-                valueHolder.currDisName = username.getText().toString();
+                if (s != null && s.length() != 0) {
+                    valueHolder.currDisName = s.toString();
+                    disNameTextView.setText(valueHolder.currDisName);
+
+                }
             }
+        });
+        txtInpLayDisName.setEndIconOnClickListener(v ->{
+            updateName(valueHolder.currDisName, firebaseUser);
+            toggleDisplayNameInput(valueHolder.disNameTextView.getRootView());
         });
 
         TextView emailView = findViewById(R.id.emailAddressDisplay);
@@ -111,6 +129,7 @@ public class UpdateProfileActivity extends BaseActivity {
             emailView.setText(R.string.no_email_set);
 
         }
+
         ImageView photoView = findViewById(R.id.imageView);
         Uri uriPhoto = firebaseUser.getPhotoUrl();
 
@@ -326,10 +345,6 @@ public class UpdateProfileActivity extends BaseActivity {
         if (emailUpdateScreen) {
             reInitMainLayout();
         } else {
-            FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
-            if (fuser != null) {
-                updateName(valueHolder.currDisName, fuser);
-            }
             super.onBackPressed();
         }
 
@@ -482,9 +497,32 @@ public class UpdateProfileActivity extends BaseActivity {
     /**
      * Handle edit display name.
      *
-     * @param view the view
+     * @param view the view clicked
      */
-    public void handleEditDisplayName(View view) {
+    public void handleShowEditDisplayName(View view) {
+        toggleDisplayNameInput(view);
+
+    }
+
+    private void toggleDisplayNameInput(View view) {
+        if (valueHolder.disNameTextView.getVisibility() == View.VISIBLE) {
+
+            valueHolder.disNameTextView.setVisibility(View.GONE);
+            valueHolder.disNameEditButton.setVisibility(View.GONE);
+            valueHolder.txtInpLayDisName.setVisibility(View.VISIBLE);
+
+        } else if (valueHolder.disNameTextView.getVisibility() == View.GONE) {
+
+            valueHolder.txtInpLayDisName.setVisibility(View.GONE);
+            valueHolder.disNameTextView.setVisibility(View.VISIBLE);
+            valueHolder.disNameEditButton.setVisibility(View.VISIBLE);
+
+
+        }
+
+    }
+
+    public void handleSaveDNameTogView(View view) {
     }
 
     private static class ValueHolder {
@@ -492,6 +530,14 @@ public class UpdateProfileActivity extends BaseActivity {
         private String currPicPath;
         private String currEmail;
         private String currDisName;
+
+        /* Display Name View References */
+        private TextInputLayout txtInpLayDisName;
+        private TextInputEditText txtInEdiTxtDisName;
+        private TextView disNameTextView;
+        private ImageButton disNameEditButton;
+        private ImageButton edDisNameDoneButton;
+
 
         /**
          * Instantiates a new Value holder.

@@ -7,6 +7,8 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -30,9 +32,9 @@ public class Note implements Parcelable {
      */
     private String noteName;
     /**
-     * The default NoteCategory is "All Notes". All Notes are set to NoteCategory.MAIN_ID at creation but users can change this reference at any time.
+     * The default NoteCategory is "All Notes". Notes are set to NoteCategory.getMain() at creation but users can change this reference at any time.
      */
-    private int categoryId;
+    private NoteCategory noteCategory;
 
     /**
      * The body or main text of the Note
@@ -53,14 +55,14 @@ public class Note implements Parcelable {
      */
     public Note() {
         noteID = -1;
-        categoryId = NoteCategory.MAIN_ID;
+        noteCategory = NoteCategory.getMain();
         PRIORITY_LEVEL = PRIORITY.LOW;
     }
 
-    public Note(int noteID, String noteName, int categoryId, String noteContent, Calendar dateCreated, String priorityLevel) {
+    public Note(int noteID, String noteName, NoteCategory noteCategory, String noteContent, Calendar dateCreated, String priorityLevel) {
         this.noteID = noteID;
         this.noteName = noteName;
-        this.categoryId = categoryId;
+        this.noteCategory = noteCategory;
         this.noteContent = noteContent;
         this.dateCreated = dateCreated;
         setPRIORITY_LEVEL(priorityLevel);
@@ -97,12 +99,12 @@ public class Note implements Parcelable {
         }
     };
 
-    public int getCategory() {
-        return categoryId;
+    public NoteCategory getNoteCategory() {
+        return noteCategory;
     }
 
-    public void setCategory(int category) {
-        this.categoryId = category;
+    public void setNoteCategory(NoteCategory noteCategory) {
+        this.noteCategory = noteCategory;
     }
 
     public int getNoteID() {
@@ -161,7 +163,7 @@ public class Note implements Parcelable {
         return noteID == note.noteID &&
                 PRIORITY_LEVEL == note.PRIORITY_LEVEL &&
                 Objects.equals(noteName, note.noteName) &&
-                Objects.equals(categoryId, note.categoryId) &&
+                Objects.equals(noteCategory, note.noteCategory) &&
                 Objects.equals(noteContent, note.noteContent) &&
                 Objects.equals(dateCreated, note.dateCreated);
     }
@@ -169,15 +171,16 @@ public class Note implements Parcelable {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public int hashCode() {
-        return Objects.hash(noteID, noteName, categoryId, noteContent, dateCreated, PRIORITY_LEVEL);
+        return Objects.hash(noteID, noteName, noteCategory, noteContent, dateCreated, PRIORITY_LEVEL);
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "Note{" +
                 "noteID=" + noteID +
                 ", noteName='" + noteName + '\'' +
-                ", subject='" + categoryId + '\'' +
+                ", subject='" + noteCategory + '\'' +
                 ", noteContent='" + noteContent + '\'' +
                 ", dateCreated=" + dateCreated +
                 ", priority=" + PRIORITY_LEVEL +

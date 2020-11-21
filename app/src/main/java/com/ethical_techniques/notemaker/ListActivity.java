@@ -50,6 +50,7 @@ import java.util.List;
 /**
  * The Main Activity containing the navigation drawer, most other activities,excluding authentication activities
  * return here have back buttons that will return here.
+ * TODO: Implement NoteFragment for creating the RecyclerView / Note list
  *
  * @author Harry Dulaney
  */
@@ -57,29 +58,41 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
 
     private final String TAG = this.getClass().getName();
 
-    private static List<Note> notes;
+    private List<Note> currentNotes;
+    private List<Note> allNotes;
+
     RecyclerView recyclerView;
     NoteRecycleAdapter noteRecycleAdapter;
-    boolean editModeActive;
+
+    private boolean editModeActive;
     private List<NoteCategory> categories;
     private Spinner spinner;
-    private SharedPreferences sharedPreferences;
-    ArrayAdapter<NoteCategory> categoryArrayAdapter;
+    private NoteCategory activeNoteCategory;
+    private String CURRENT_CATEGORY_KEY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Initialize SharedPreferences
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.drawer_layout_list);
 
-        //Handle Toolbar
+        CURRENT_CATEGORY_KEY = getString(R.string.CURR_CATEGORY_IN_LIST_KEY);
+        String NOTE_SORT_BY_PREF_KEY = getString(R.string.SORT_BY_PREF_ID);
+        String NOTE_ORDER_PREF_KEY = getString(R.string.SORT_ORDER_PREF_ID);
+        String SORT_BY_DEFAULT = getString(R.string.SORT_BY_DATE);
+        String SORT_ORDER_DEFAULT = getString(R.string.SORT_ORDER_HIGH_TO_LOW);
+
+        //Initialize SharedPreferences
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //Retrieve Sort By from sp
+        String SORT_BY_PREFERENCE = sharedPreferences.getString(NOTE_SORT_BY_PREF_KEY, SORT_BY_DEFAULT);
+        //Retrieves Sort Order from sp
+        String SORT_ORDER_PREFERENCE = sharedPreferences.getString(NOTE_ORDER_PREF_KEY, SORT_ORDER_DEFAULT);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //initialize Categories Dropdown (i.e. Spinner)
         spinner = findViewById(R.id.list_activity_category_spinner);
-
-        checkMessages();
+        recyclerView = findViewById(R.id.recycleList);
 
         //Handle create new note floating button
         FloatingActionButton floatingActionButton = findViewById(R.id.new_note_float_button);
@@ -120,18 +133,45 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         menu.findItem(R.id.nav_logout).setEnabled(fUser != null);
         menu.findItem(R.id.nav_update).setEnabled(fUser != null);
 
+        currentNotes = new ArrayList<>();
+
+        try {
+            allNotes = DBUtil.findNotes(this, SORT_BY_PREFERENCE, SORT_ORDER_PREFERENCE); //Fill with All Notes
+        } catch (Exception e) {
+            Log.e(TAG, "Error in onResume, inspect DataSource. ");
+            Toast.makeText(ListActivity.this, "Error retrieving notes, please try reloading. ", Toast.LENGTH_LONG).show();
+        }
+
+        checkMessages(savedInstanceState);
+
+        if (allNotes.isEmpty()) {
+            toggleEmptyListMessage(View.GONE, View.VISIBLE, View.VISIBLE);
+        } else {
+            toggleEmptyListMessage(View.VISIBLE, View.GONE, View.GONE);
+            initNoteList();
+        }
     }
 
     /* load bundle to get message */
-    private void checkMessages() {
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            if (extras.getBoolean(getString(R.string.launch_key))) {
+    private void checkMessages(Bundle savedInstanceState) {
+
+        if (savedInstanceState != null) {
+            savedInstanceState.setClassLoader(getClassLoader());
+
+            if (savedInstanceState.containsKey(CURRENT_CATEGORY_KEY)) {
+                activeNoteCategory = savedInstanceState.getParcelable(CURRENT_CATEGORY_KEY);
+            } else {
+                activeNoteCategory = NoteCategory.getMain(); //Default to "All Notes"
+            }
+
+            if (savedInstanceState.getBoolean(getString(R.string.launch_key))) {
                 showSyncDecisionDialog();
-            } else if (extras.containsKey(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY))) {
-                Snackbar.make(spinner.getRootView(), extras.getString(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY)),
+            } else if (savedInstanceState.containsKey(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY))) {
+                Snackbar.make(spinner.getRootView(), savedInstanceState.getString(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY)),
                         Snackbar.LENGTH_LONG).show();
             }
+        } else {
+            activeNoteCategory = NoteCategory.getMain();
         }
     }
 
@@ -157,6 +197,13 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(CURRENT_CATEGORY_KEY, activeNoteCategory);
+
+    }
+
     private void initUserAvatar(FirebaseUser fUser, NavigationView nv) {
         ImageView imageView = new ImageView(this);
         Glide.with(this).load(fUser.getPhotoUrl()).into(imageView);
@@ -172,6 +219,158 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         } else {
             displayName.setText(R.string.nav_drawer_username_default);
         }
+    }
+
+    /**
+     * Initialize the noteCategory dropdown menu
+     */
+    private void initDropdownMenu() {
+        try {
+            categories = DBUtil.getCategories(this);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Log.e(TAG, "SQLException while loading 'categories' @initDropDown()");
+        }
+
+        ArrayAdapter<NoteCategory> categoryArrayAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item_simple);
+        categoryArrayAdapter.addAll(categories);
+        spinner.setAdapter(categoryArrayAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                NoteCategory noteCategory = categories.get(position);
+                refreshListWithByCategory(noteCategory);
+
+                Toast.makeText(ListActivity.this,
+                        noteCategory.getName(),
+                        Toast.LENGTH_SHORT).show();
+                Log.i("checkedTextView = " + noteCategory.getName(), TAG);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        if (activeNoteCategory.equals(NoteCategory.getMain())) {
+            currentNotes.addAll(allNotes);
+            noteRecycleAdapter.notifyDataSetChanged();
+        } else {
+            int pos = categories.indexOf(activeNoteCategory);
+            spinner.setSelection(pos);
+        }
+
+    }
+
+    /**
+     * Load and re-load the list of notes and define listener events
+     */
+    private void initNoteList() {
+        noteRecycleAdapter = new NoteRecycleAdapter(currentNotes);
+
+        /* Set listener event behavior for long click on list item event */
+        noteRecycleAdapter.setNoteLongClickListener((view, position) -> {
+            int noteId = (int) noteRecycleAdapter.getItemId(position);
+            Intent intent = new Intent(ListActivity.this, NoteActivity.class);
+            intent.putExtra(getString(R.string.NOTE_ID_KEY), noteId);
+            ListActivity.this.startActivity(intent);
+        });
+        /* Set listener event behavior for regular (short) click on list item */
+        noteRecycleAdapter.setNoteClickListener((view, position) -> Toast.makeText(ListActivity.this,
+                "Long click to open the note the editing"
+                , Toast.LENGTH_LONG).show());
+
+        /* Define the behavior for clicking on the Star  */
+        noteRecycleAdapter.setPriorityStarListener((priorityView, position) -> {
+            String toast = "";
+            boolean saved = false;
+            Note note = currentNotes.get(position);
+            if (note.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) { //Note is currently high priority and user desires to change to low priority
+                note.setPRIORITY_LEVEL(PRIORITY.LOW.getString());
+
+                try {
+                    saved = DBUtil.saveNote(this, note);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "Exception trying to save note with ID# " + note.getNoteID() + " and title " + note.getNoteName());
+                }
+                if (saved) {
+                    handleTogglePriorityStar(priorityView, false);
+                    toast = "This note is set to " + note.getPRIORITY_LEVEL() + " priority";
+
+                } else {
+                    toast = "Something went wrong we could not save the note to " + note.getPRIORITY_LEVEL() + " priority";
+                }
+
+            } else { //Note is currently Low priority and the user is pressing the star to change it to High priority
+                note.setPRIORITY_LEVEL(PRIORITY.HIGH.getString());
+
+                try {
+                    saved = DBUtil.saveNote(this, note);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "Exception trying to save note with ID# " + note.getNoteID() + " and title " + note.getNoteName());
+                }
+
+                if (saved) {
+                    handleTogglePriorityStar(priorityView, true);
+                    toast = "This note is set to " + note.getPRIORITY_LEVEL() + " priority";
+
+                } else {
+                    toast = "Something went wrong we could not save the note to " + note.getPRIORITY_LEVEL() + " priority";
+                }
+            }
+
+            Toast.makeText(ListActivity.this,
+                    toast,
+                    Toast.LENGTH_SHORT).show();
+
+            noteRecycleAdapter.notifyItemChanged(position);
+        });
+        /* Set listener event behavior for regular click on delete button */
+        noteRecycleAdapter.setDeleteButtonListener((view, position) -> {
+            Note note = currentNotes.get(position);
+
+            DialogUtil.makeAndShow(this,
+                    "Confirmation Popup",
+                    "Are you sure you want to permanently delete the N" +
+                            "   ote: " + note.getNoteName(),
+                    "delete",
+                    "cancel",
+                    () -> {
+                        try {
+                            DBUtil.deleteNote(this, note.getNoteID());
+                            Toast.makeText(this, "The Note titled " + note.getNoteName() + " was deleted.", Toast.LENGTH_LONG).show();
+                            currentNotes.remove(position);
+                            noteRecycleAdapter.notifyItemRemoved(position);
+
+                        } catch (Exception e) {
+                            Toast.makeText(this, "An error occurred and the note could note be deleted :(", Toast.LENGTH_LONG).show();
+                            Log.e(TAG, "Exception @ delete(int noteID)..NoteId = " + note.getNoteID() +
+                                    " Exception's message: " + e.getMessage(), e);
+                        }
+                    });
+        });
+        //Set the adapter to the RecyclerView
+        recyclerView.setAdapter(noteRecycleAdapter);
+        initDropdownMenu();
+
+    }
+
+
+    private void refreshListWithByCategory(NoteCategory noteCategory) {
+        currentNotes.clear();
+        currentNotes.addAll(allNotes);
+        for (Note note : allNotes) {
+            if (!(note.getNoteCategory().equals(noteCategory))) {
+                currentNotes.remove(note);
+            }
+        }
+        noteRecycleAdapter.notifyDataSetChanged();
+
     }
 
     /**
@@ -224,7 +423,9 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
                         "YES, SIGN OUT",
                         "NO, GO BACK",
                         () -> {
+                            //Sign out
                             FirebaseAuth.getInstance().signOut();
+                            //Restart the list-activity
                             Intent intentRes = Intent.makeRestartActivityTask(getIntent().getComponent());
                             intentRes.putExtra(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY), message);
                             startActivity(intentRes);
@@ -263,10 +464,6 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return true;
-    }
 
     /**
      * @param item that was selected
@@ -317,34 +514,6 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        //Retrieve Sort By from sp
-        String sortBy = sharedPreferences.getString("sort.by.preference", getString(R.string.SORT_BY_DATE));
-        //Retrieves Sort Order from sp
-        String sortOrder = sharedPreferences.getString("sort.order.preference", getString(R.string.SORT_ORDER_HIGH_TO_LOW));
-
-        try {
-            notes = DBUtil.findNotes(this, sortBy, sortOrder);
-
-        } catch (Exception e) {
-            Log.e(TAG, "Error in onResume, inspect DataSource. ");
-            Toast.makeText(this, "Error retrieving notes, please try reloading. ", Toast.LENGTH_LONG).show();
-        }
-        initDropDown();
-        recyclerView = findViewById(R.id.recycleList);
-        noteRecycleAdapter = new NoteRecycleAdapter(notes);
-
-        if (notes.isEmpty()) {
-            toggleEmptyListMessage(View.GONE, View.VISIBLE, View.VISIBLE);
-        } else {
-            toggleEmptyListMessage(View.VISIBLE, View.GONE, View.GONE);
-            reloadNoteList(NoteCategory.getMain());
-        }
-
-    }
-
     void toggleEmptyListMessage(int recyView, int emptImage, int emptyMessage) {
         //Empty List state vies
         TextView emptyListMessage = findViewById(R.id.empty_view1);
@@ -356,149 +525,6 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-    /**
-     * Initialize the list of notes and define listener events
-     */
-    private void reloadNoteList(NoteCategory noteCategory) {
-        /* Set listener event behavior for long click on list item event */
-        noteRecycleAdapter.setNoteLongClickListener((view, position) -> {
-            int noteId = (int) noteRecycleAdapter.getItemId(position);
-            Intent intent = new Intent(ListActivity.this, NoteActivity.class);
-            intent.putExtra(getString(R.string.NOTE_ID_KEY), noteId);
-            ListActivity.this.startActivity(intent);
-        });
-        /* Set listener event behavior for regular (short) click on list item */
-        noteRecycleAdapter.setNoteClickListener((view, position) -> Toast.makeText(ListActivity.this,
-                "Long click to open the note the editing"
-                , Toast.LENGTH_LONG).show());
-
-        noteRecycleAdapter.setPriorityStarListener((priorityView, position) -> {
-            String toast = "";
-            boolean saved = false;
-            Note note = notes.get(position);
-            if (note.getPRIORITY_LEVEL().equals(PRIORITY.HIGH.getString())) { //Note is currently high priority and user desires to change to low priority
-                note.setPRIORITY_LEVEL(PRIORITY.LOW.getString());
-
-                try {
-                    saved = DBUtil.saveNote(this, note);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "Exception trying to save note with ID# " + note.getNoteID() + " and title " + note.getNoteName());
-                }
-                if (saved) {
-                    handleTogglePriorityStar(priorityView, false);
-                    toast = "This note is set to " + note.getPRIORITY_LEVEL() + " priority";
-
-                } else {
-                    toast = "Something went wrong we could not save the note to " + note.getPRIORITY_LEVEL() + " priority";
-                }
-
-            } else { //Note is currently Low priority and the user is pressing the star to change it to High priority
-                note.setPRIORITY_LEVEL(PRIORITY.HIGH.getString());
-
-                try {
-                    saved = DBUtil.saveNote(this, note);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "Exception trying to save note with ID# " + note.getNoteID() + " and title " + note.getNoteName());
-                }
-
-                if (saved) {
-                    handleTogglePriorityStar(priorityView, true);
-                    toast = "This note is set to " + note.getPRIORITY_LEVEL() + " priority";
-
-                } else {
-                    toast = "Something went wrong we could not save the note to " + note.getPRIORITY_LEVEL() + " priority";
-                }
-            }
-
-            Toast.makeText(ListActivity.this,
-                    toast,
-                    Toast.LENGTH_SHORT).show();
-
-            noteRecycleAdapter.notifyDataSetChanged();
-        });
-        /* Set listener event behavior for regular click on delete button */
-        noteRecycleAdapter.setDeleteButtonListener((view, position) -> {
-            Note note = notes.get(position);
-
-            DialogUtil.makeAndShow(this,
-                    "Confirmation Popup",
-                    "Are you sure you want to permanently delete the Note: " + note.getNoteName(),
-                    "delete",
-                    "cancel",
-                    () -> {
-                        try {
-                            DBUtil.deleteNote(this, note.getNoteID());
-                            Toast.makeText(this, "The Note titled " + note.getNoteName() + " was deleted.", Toast.LENGTH_LONG).show();
-                            notes.remove(position);
-                            noteRecycleAdapter.notifyDataSetChanged();
-
-                        } catch (Exception e) {
-                            Toast.makeText(this, "An error occurred and the note could note be deleted :(", Toast.LENGTH_LONG).show();
-                            Log.e(TAG, "Exception @ delete(int noteID)..NoteId = " + note.getNoteID() +
-                                    " Exception's message: " + e.getMessage(), e);
-                        }
-                    });
-        });
-
-        recyclerView.setAdapter(noteRecycleAdapter);
-
-    }
-
-    /**
-     *
-     */
-    void saveNoteChanges() {
-        for (int i = 0; i < noteRecycleAdapter.getItemCount(); i++) {
-            Note note = noteRecycleAdapter.getItem(i);
-            try {
-                DBUtil.saveNote(this, note);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * Initialize the noteCategory dropdown menu
-     */
-    private void initDropDown() {
-        try {
-            categories = DBUtil.getCategories(this);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        List<String> categoryStrings = new ArrayList<>();
-        // Add all Categories names to the list for the dropdown spinner
-        for (NoteCategory noteCategory : categories) {
-            categoryStrings.add(noteCategory.getName());
-        }
-
-        ArrayAdapter<String> categoryArrayAdapter = new ArrayAdapter<>(this,
-                R.layout.dropdown_item_simple, categoryStrings);
-        spinner.setAdapter(categoryArrayAdapter);
-        spinner.setSelection(0);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                String categoryName = (String) parent.getItemAtPosition(position);
-
-
-
-                Toast.makeText(ListActivity.this,
-                        "Displaying " + categoryName + " notes",
-                        Toast.LENGTH_LONG).show();
-                Log.i("checkedTextView = " + categoryName, TAG);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
 
     /**
      * Switches the priority star on and off

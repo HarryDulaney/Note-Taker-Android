@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.ethical_techniques.notemaker.model.Note;
+import com.ethical_techniques.notemaker.model.NoteCategory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public class DataSource {
             contentValues.put(DBHelper.DATE, String.valueOf(note.getDateCreated().getTimeInMillis()));
             contentValues.put(DBHelper.PRIORITY, note.getPRIORITY_LEVEL());
 
-            contentValues.put(DBHelper.REF_CATEGORY_ID, note.getCategory());
+            contentValues.put(DBHelper.REF_CATEGORY_ID, note.getNoteCategory().getId());
 
             didSucceed = database.insert(DBHelper.NOTE_TABLE, null, contentValues) > 0;
 
@@ -128,7 +128,7 @@ public class DataSource {
                     .NOTE_CONTENT, note.getContent());
             contentValues.put(DBHelper.DATE, String.valueOf(note.getDateCreated().getTimeInMillis()));
             contentValues.put(DBHelper.PRIORITY, note.getPRIORITY_LEVEL());
-            contentValues.put(DBHelper.REF_CATEGORY_ID, note.getCategory());
+            contentValues.put(DBHelper.REF_CATEGORY_ID, note.getNoteCategory().getId());
 
             didSucceed = database.update(DBHelper.NOTE_TABLE, contentValues, DBHelper.ID + "=" + rowId, null) > 0;
 
@@ -175,7 +175,7 @@ public class DataSource {
             String noteQuery = "SELECT * FROM " + DBHelper.NOTE_TABLE + " ORDER BY " + sortField + " " + sortOrder;
             Cursor noteCursor = database.rawQuery(noteQuery, null);
             Note note;
-            int category;
+
             noteCursor.moveToFirst(); //Move to first
 
             while (!noteCursor.isAfterLast()) {
@@ -189,7 +189,9 @@ public class DataSource {
                 calendar.setTimeInMillis(Long.parseLong(noteCursor.getString(3)));
                 note.setDateCreated(calendar);
                 note.setPRIORITY_LEVEL(noteCursor.getString(4));
-                note.setCategory(noteCursor.getInt(5));
+
+                NoteCategory noteCategory = getSpecificCategory(noteCursor.getInt(5));
+                note.setNoteCategory(noteCategory);
 
                 notes.add(note);
                 noteCursor.moveToNext();
@@ -227,7 +229,9 @@ public class DataSource {
             calendar.setTimeInMillis(Long.parseLong(cursor.getString(3)));
             note.setDateCreated(calendar);
             note.setPRIORITY_LEVEL(cursor.getString(4));
-            note.setCategory(cursor.getInt(5));
+
+            NoteCategory noteCategory = getSpecificCategory(cursor.getInt(5));
+            note.setNoteCategory(noteCategory);
 
             cursor.close();
         }
@@ -302,7 +306,7 @@ public class DataSource {
     protected NoteCategory getCategoryByName(String name) {
         NoteCategory noteCategory = new NoteCategory();
 
-        String query = "SELECT * FROM " + DBHelper.CATEGORY_TABLE + " WHERE " + DBHelper.CATEGORY_NAME + "=" + name;
+        String query = "SELECT * FROM " + DBHelper.CATEGORY_TABLE + " WHERE " + DBHelper.CATEGORY_NAME + " = " + name;
         Cursor cursor = database.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
@@ -407,12 +411,13 @@ public class DataSource {
     }
 
     /**
-     * Gets last note id.
+     * Gets last note category id to set a newly created category in real time with its correct id;
      *
-     * @return the ID aka.'noteID', of the last note to be inserted into the database
+     * @return the ID aka.'categoryId', of the last noteCategory to be inserted into the database, the highest autoIncremented
+     * ID assigned to a noteCategory;
      */
     protected int getLastCategoryId() {
-        int id = NoteCategory.MAIN_ID;
+        int id;
         try {
             String query = "Select MAX(" + DBHelper.ID + ") from " + DBHelper.CATEGORY_TABLE;
             Cursor cursor = database.rawQuery(query, null);

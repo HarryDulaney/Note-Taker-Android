@@ -1,25 +1,18 @@
 package com.ethical_techniques.notemaker.adapters;
 
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.DAL.DataSource;
+import com.ethical_techniques.notemaker.R;
 import com.ethical_techniques.notemaker.listeners.ImageButtonListener;
 import com.ethical_techniques.notemaker.listeners.NoteClickListener;
-import com.ethical_techniques.notemaker.R;
 import com.ethical_techniques.notemaker.listeners.NoteLongClickListener;
 import com.ethical_techniques.notemaker.model.Note;
 import com.ethical_techniques.notemaker.model.PRIORITY;
@@ -43,6 +36,7 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
     private NoteClickListener deleteButtonListener;
     private NoteLongClickListener noteLongClickListener;
     private ImageButtonListener priorityStarListener;
+//    ContextMenu noteMenu;
 
 
     public NoteRecycleAdapter(List<Note> items) {
@@ -70,6 +64,7 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
         } else {
             holder.priorityStar.getDrawable().setTint(Color.GRAY);
         }
+
     }
 
     @Override
@@ -168,4 +163,5 @@ public class NoteRecycleAdapter extends RecyclerView.Adapter<NoteRecycleAdapter.
             return super.toString() + " '" + title.getText() + "'" + " '" + date.getText() + "'";
         }
     }
+
 }

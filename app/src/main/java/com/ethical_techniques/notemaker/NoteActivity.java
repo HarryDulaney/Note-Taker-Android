@@ -22,8 +22,8 @@ import androidx.core.content.ContextCompat;
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.listeners.TextWatcherImpl;
-import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.ethical_techniques.notemaker.model.Note;
+import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.ethical_techniques.notemaker.model.PRIORITY;
 import com.ethical_techniques.notemaker.utils.DialogUtil;
 import com.google.android.material.snackbar.Snackbar;
@@ -170,7 +170,7 @@ public class NoteActivity extends BaseActivity {
 
                 String checkedTextView = (String) parent.getItemAtPosition(position);
                 System.out.println("checkedTextView = " + checkedTextView);
-                currentNote.setCategory(categories.get(position).getId());
+                currentNote.setNoteCategory(categories.get(position));
             }
 
             @Override
@@ -189,7 +189,7 @@ public class NoteActivity extends BaseActivity {
     private void initNote(int id) {
         try {
             currentNote = DBUtil.findNote(this, id);
-            currentNoteCategory = DBUtil.findCategory(this, currentNote.getCategory());
+            currentNoteCategory = DBUtil.findCategory(this, currentNote.getNoteCategory().getId());
             editMode = true;
         } catch (Exception e) {
             Log.w(TAG, e);

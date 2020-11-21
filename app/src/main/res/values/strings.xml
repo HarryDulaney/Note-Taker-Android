@@ -92,7 +92,7 @@
     <string name="NOTE_ID_KEY">note.id.constant.key</string>
     <string name="CATEGORY_ID_KEY">noteCategory.id.constant.key</string>
     <string name="SIGNED_OUT_RESTART_ACTIVITY">com.ethical_techniques.notemaker.ShowSuccessfulSignOutSnackbar</string>
-
+    <string name="CURR_CATEGORY_IN_LIST_KEY">com.ethical_techniques.notemaker.CurrentlyDisplayedNoteCategoryInList</string>
 
 
     <string name="menu_home">Home</string>
@@ -186,7 +186,6 @@
     <string name="error_message1">Oops..Something Went Wrong</string>
     <string name="nav_drawer_username_default">Display Name</string>
     <string name="LAUNCH_MESSAGE_KEY">com.ethical_techniques.notemaker.showLoginDecisionDialog</string>
-    <string name="dis_name_empty_message">Set Display Name</string>
     <string name="no_email_set">No Email Set</string>
     <string name="verify">Verify</string>
     <string name="emailChange_ui_header">Enter the following fields and hit submit to change your the email address we use to link you to your account.</string>

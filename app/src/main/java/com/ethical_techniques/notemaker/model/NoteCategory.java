@@ -125,7 +125,7 @@ public class NoteCategory implements Parcelable {
     @NotNull
     @Override
     public String toString() {
-        return getName();
+        return name;
     }
 
     @Override

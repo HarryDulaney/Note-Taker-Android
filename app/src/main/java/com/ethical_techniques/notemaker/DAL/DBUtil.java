@@ -3,11 +3,8 @@ package com.ethical_techniques.notemaker.DAL;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
-
-import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.ethical_techniques.notemaker.model.Note;
+import com.ethical_techniques.notemaker.model.NoteCategory;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -44,6 +41,26 @@ public class DBUtil {
         return notes;
 
     }
+//
+//    /**
+//     * Find only notes in specific category.
+//     *
+//     * @param context   the context
+//     * @param sortBy    the sort by
+//     * @param sortOrder the sort order
+//     * @return the list of notes in the category
+//     * @throws Exception the exception
+//     */
+//    public static List<Note> findNotes(Context context, NoteCategory category, String sortBy, String sortOrder) throws Exception {
+//        List<Note> notes;
+//        DataSource nds = new DataSource(context);
+//        nds.open();     //Open connection to DB
+//        notes = nds.getNotes(sortBy, sortOrder);        // Retrieve ArrayList of all note obj's from the DB
+//        nds.close();  //Close connection to the DB
+//
+//        return notes;
+//
+//    }
 
     /**
      * @return true if the user has notes in local persistent memory
