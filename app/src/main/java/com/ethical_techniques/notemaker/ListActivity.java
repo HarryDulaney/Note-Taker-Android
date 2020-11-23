@@ -46,6 +46,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The Main Activity containing the navigation drawer, most other activities,excluding authentication activities
@@ -169,7 +170,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
             if (savedInstanceState.getBoolean(getString(R.string.launch_key))) {
                 showSyncDecisionDialog();
             } else if (savedInstanceState.containsKey(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY))) {
-                Snackbar.make(spinner.getRootView(), savedInstanceState.getString(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY)),
+                Snackbar.make(spinner.getRootView(), Objects.requireNonNull(savedInstanceState.getString(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY))),
                         Snackbar.LENGTH_LONG).show();
             }
         } else {

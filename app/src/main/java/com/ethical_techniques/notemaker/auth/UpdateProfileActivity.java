@@ -1,8 +1,12 @@
 package com.ethical_techniques.notemaker.auth;
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -19,6 +23,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.ethical_techniques.notemaker.R;
@@ -59,6 +65,8 @@ public class UpdateProfileActivity extends BaseActivity {
     private ValueHolder valueHolder;
     private boolean emailUpdateScreen;
     private Menu menu;
+    private final int PERMISSION_REQUEST_CAMERA = 103;
+    private final int CAMERA_REQUEST = 1888;
 
 
     @Override
@@ -117,7 +125,7 @@ public class UpdateProfileActivity extends BaseActivity {
                 }
             }
         });
-        txtInpLayDisName.setEndIconOnClickListener(v ->{
+        txtInpLayDisName.setEndIconOnClickListener(v -> {
             updateName(valueHolder.currDisName, firebaseUser);
             toggleDisplayNameInput(valueHolder.disNameTextView.getRootView());
         });
@@ -127,15 +135,10 @@ public class UpdateProfileActivity extends BaseActivity {
             emailView.setText(valueHolder.currEmail);
         } else {
             emailView.setText(R.string.no_email_set);
-
         }
 
-        ImageView photoView = findViewById(R.id.imageView);
+        valueHolder.profilePic = findViewById(R.id.imageView);
         Uri uriPhoto = firebaseUser.getPhotoUrl();
-
-        if (!valueHolder.currPicPath.isEmpty()) {
-            photoView.setImageURI(uriPhoto);
-        }
 
         MaterialButton mb = findViewById(R.id.verifyButton);
         if (firebaseUser.isEmailVerified()) {
@@ -202,15 +205,6 @@ public class UpdateProfileActivity extends BaseActivity {
     }
 
 
-    private void launchTakePicture() {
-        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        try {
-            startActivityForResult(i, REQUEST_IMAGE_CAPTURE);
-        } catch (ActivityNotFoundException e) {
-            Log.e(TAG, e.getMessage());
-        }
-    }
-
     private void launchPicFromStorage() {
 
 
@@ -246,6 +240,7 @@ public class UpdateProfileActivity extends BaseActivity {
     public void handleClearForm(View view) {
 
         hideKeyboard(this, view.getRootView());
+
         TextInputEditText nooEmail = findViewById(R.id.editTextNooEmail);
         TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
         TextInputEditText pw = findViewById(R.id.pword);
@@ -413,26 +408,74 @@ public class UpdateProfileActivity extends BaseActivity {
         return matcher.matches();
     }
 
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAMERA_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                Bitmap scaledPhoto = Bitmap.createScaledBitmap(photo, 144, 144, true);
+//                imageContact.setImageBitmap(scaledPhoto);
+//                currentContact.setPicture(scaledPhoto);
+            }
+        }
+    }
 
+    private void takePicture23Greater() {
+
+    }
+
+
+    private void takePictureSDKLessthanM() {
+        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            startActivityForResult(i, REQUEST_IMAGE_CAPTURE);
+        } catch (ActivityNotFoundException e) {
+            Log.e(TAG, "ActivityNoteFoundException while starting the MediaStore.ACTION_IMAGE_CAPTURE Intent.", e.getCause());
+        }
+    }
+
+    private void takePicture() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.CAMERA) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                Intent imgCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                // Ensure that there's a camera activity to handle the intent
+                if (imgCapture.resolveActivity(getPackageManager()) != null) {
+                    // Create a local file to store the photo locally
+                    File photoFile;
+
+                    try {
+                        photoFile = createImageFile();
+                        Uri photoURI = FileProvider.getUriForFile(this,
+                                "com.ethical_techniques.notemaker.customFileprovider",
+                                photoFile);
+                        imgCapture.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        startActivityForResult(imgCapture, REQUEST_IMAGE_CAPTURE);
+                    } catch (IOException ex) {
+                        // Error occurred while creating the File
+                        Log.e(TAG, "Error occurred while creating image file to save picture to.", ex.getCause());
+
+                    }
+
+                }
+
+
+            } else {
+                // App needs permissions to use the camera and file system
+                Snackbar.make(mainLayout.getRootView(),
+                        "The app needs permission to take pictures.",
+                        Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Ok", v -> {
+                            ActivityCompat.requestPermissions(UpdateProfileActivity.this,
+                                    new String[]{Manifest.permission.CAMERA},
+                                    PERMISSION_REQUEST_CAMERA);
+                        }).show();
             }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
+
+        } else {
+            takePictureSDKLessthanM();
         }
     }
 
@@ -441,15 +484,15 @@ public class UpdateProfileActivity extends BaseActivity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_" + "notes_for_android_prof_pic";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+        File imageFile = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        valueHolder.currPicPath = image.getAbsolutePath();
-        return image;
+        valueHolder.currPicPath = imageFile.getAbsolutePath();
+        return imageFile;
     }
 
     /**
@@ -458,15 +501,19 @@ public class UpdateProfileActivity extends BaseActivity {
      * @param view the view
      */
     public void handleChangeProfPic(View view) {
-        //Change picture options
+        //Profile picture options
         DialogUtil.makeAndShow(this,
                 "Set Profile Picture",
                 "From where do you want to retrieve your profile picture?",
                 "Take Picture",
                 "Open File Explorer",
                 "Close Popup",
-                this::launchTakePicture,
-                this::launchPicFromStorage,
+                () -> {
+                    takePicture();
+                },
+                () -> {
+                    launchPicFromStorage();
+                },
                 () -> {
                     Toast.makeText(this, "Operation Canceled", Toast.LENGTH_SHORT).show();
                 });
@@ -516,13 +563,8 @@ public class UpdateProfileActivity extends BaseActivity {
             valueHolder.txtInpLayDisName.setVisibility(View.GONE);
             valueHolder.disNameTextView.setVisibility(View.VISIBLE);
             valueHolder.disNameEditButton.setVisibility(View.VISIBLE);
-
-
         }
 
-    }
-
-    public void handleSaveDNameTogView(View view) {
     }
 
     private static class ValueHolder {
@@ -530,6 +572,7 @@ public class UpdateProfileActivity extends BaseActivity {
         private String currPicPath;
         private String currEmail;
         private String currDisName;
+        private ImageView profilePic;
 
         /* Display Name View References */
         private TextInputLayout txtInpLayDisName;
