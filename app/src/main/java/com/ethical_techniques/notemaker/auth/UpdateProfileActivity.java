@@ -449,18 +449,15 @@ public class UpdateProfileActivity extends BaseActivity {
                     try {
                         photoFile = createImageFile();
                         Uri photoURI = FileProvider.getUriForFile(this,
-                                "com.ethical_techniques.notemaker.customFileprovider",
+                                "com.ethical_techniques.notemaker.customFileProvider",
                                 photoFile);
                         imgCapture.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                         startActivityForResult(imgCapture, REQUEST_IMAGE_CAPTURE);
                     } catch (IOException ex) {
                         // Error occurred while creating the File
                         Log.e(TAG, "Error occurred while creating image file to save picture to.", ex.getCause());
-
                     }
-
                 }
-
 
             } else {
                 // App needs permissions to use the camera and file system

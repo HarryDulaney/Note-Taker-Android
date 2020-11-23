@@ -38,7 +38,7 @@
                 android:title="@string/edit_account_info" />
 
 <!--            <item-->
-<!--                android:id="@+id/nav_export_notes"-->
+<!--                android:id="@+id/nav_share"-->
 <!--                android:icon="@drawable/ic_menu_send"-->
 <!--                android:title="@string/share" />-->
 

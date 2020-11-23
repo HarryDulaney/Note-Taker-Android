@@ -72,6 +72,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
     private String CURRENT_CATEGORY_KEY;
     private String SORT_BY_PREFERENCE;
     private String SORT_ORDER_PREFERENCE;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         String SORT_ORDER_DEFAULT = getString(R.string.SORT_ORDER_HIGH_TO_LOW);
 
         //Initialize SharedPreferences
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //Retrieve Sort By from sp
         SORT_BY_PREFERENCE = sharedPreferences.getString(NOTE_SORT_BY_PREF_KEY, SORT_BY_DEFAULT);
         //Retrieves Sort Order from sp
@@ -159,22 +160,18 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
     private void checkMessages(Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
-            savedInstanceState.setClassLoader(getClassLoader());
-
             if (savedInstanceState.containsKey(CURRENT_CATEGORY_KEY)) {
                 activeNoteCategory = savedInstanceState.getParcelable(CURRENT_CATEGORY_KEY);
+
             } else {
+                if (savedInstanceState.getBoolean(getString(R.string.launch_key))) {
+                    showSyncDecisionDialog();
+                } else if (savedInstanceState.containsKey(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY))) {
+                    Snackbar.make(spinner.getRootView(), Objects.requireNonNull(savedInstanceState.getString(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY))),
+                            Snackbar.LENGTH_LONG).show();
+                }
                 activeNoteCategory = NoteCategory.getMain(); //Default to "All Notes"
             }
-
-            if (savedInstanceState.getBoolean(getString(R.string.launch_key))) {
-                showSyncDecisionDialog();
-            } else if (savedInstanceState.containsKey(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY))) {
-                Snackbar.make(spinner.getRootView(), Objects.requireNonNull(savedInstanceState.getString(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY))),
-                        Snackbar.LENGTH_LONG).show();
-            }
-        } else {
-            activeNoteCategory = NoteCategory.getMain();
         }
     }
 
@@ -202,14 +199,16 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putParcelable(CURRENT_CATEGORY_KEY, activeNoteCategory);
+        super.onSaveInstanceState(outState);
 
     }
 
     private void initUserAvatar(FirebaseUser fUser, NavigationView nv) {
         ImageView imageView = new ImageView(this);
-        Glide.with(this).load(fUser.getPhotoUrl()).into(imageView);
+        if (fUser.getPhotoUrl() != null && !fUser.getPhotoUrl().toString().isEmpty()) {
+            Glide.with(this).load(fUser.getPhotoUrl()).into(imageView);
+        }
 
         View navHeaderView = nv.getHeaderView(0);
         TextView displayName = navHeaderView.findViewById(R.id.textViewUserNameDrawer);
@@ -395,34 +394,30 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.nav_new_note:
                 //Open create new note activity
                 Intent intent = new Intent(this, NoteActivity.class);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 break;
 
             case R.id.nav_edit_categories:
                 //Edit the note categories
                 Intent i2 = new Intent(this, CategoryListActivity.class);
-//                i2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i2);
                 break;
 
             case R.id.nav_settings:
                 //Open the settings activity
                 Intent i = new Intent(this, SettingsActivity.class);
-//                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i);
                 break;
 
             case R.id.nav_sync:
                 //Open user login activity
                 Intent intent1 = new Intent(this, UserLoginActivity.class);
-//                intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent1);
                 break;
             case R.id.nav_update:
                 //Open update user profile activity
                 Intent i3 = new Intent(this, UpdateProfileActivity.class);
-//                i3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i3);
                 break;
             case R.id.nav_logout:
@@ -498,7 +493,9 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
             return true;
         } else if (id == R.id.list_activity_category_spinner) {
             String categoryName = (String) spinner.getSelectedItem();
-            Toast.makeText(this, "NoteCategory by the name of " + categoryName + " was selected", Toast.LENGTH_SHORT).show();
+            if (categoryName != NoteCategory.MAIN_NAME) {
+                Toast.makeText(this, "NoteCategory by the name of " + categoryName + " was selected", Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
