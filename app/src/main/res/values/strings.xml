@@ -31,6 +31,7 @@
 
     <string name="SORT_BY_DATE">datecreated</string>
     <string name="SORT_BY_PRIORITY">priority</string>
+    <string name="SORT_BY_NAME">notename</string>
 
     <string name="SORT_ORDER_HIGH_TO_LOW">DESC</string>
     <string name="SORT_ORDER_LOW_TO_HIGH">ASC</string>

@@ -3,12 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ethical_techniques.notemaker">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -21,55 +24,42 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.ethical_techniques.notemaker.customFileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths">
-            </meta-data>
-        </provider>
 
         <activity
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
             android:launchMode="standard"
-            tools:replace="android:launchMode" />
-
-        <!-- Application Flow Delegation Activity -->
-        <activity android:name=".auth.AppFlowActivity">
+            tools:replace="android:launchMode" /> <!-- Application Flow Delegation Activity -->
+        <activity
+            android:name=".auth.AppFlowActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Login Activity -->
+        </activity> <!-- The List Activity -->
+        <activity
+            android:name=".ListActivity"
+            android:launchMode="singleTop" /> <!-- Login Activity -->
         <activity
             android:name=".auth.UserLoginActivity"
             android:label="@string/title_activity_user_login"
-            android:parentActivityName=".auth.AppFlowActivity" />
-
-        <!-- Register New User Activity -->
+            android:parentActivityName=".auth.AppFlowActivity" /> <!-- Register New User Activity -->
         <activity
             android:name=".auth.UserRegisterActivity"
             android:label="Create New Account"
-            android:parentActivityName=".auth.AppFlowActivity" />
-
-        <!-- User Update Account Activity -->
+            android:parentActivityName=".auth.AppFlowActivity" /> <!-- User Update Account Activity -->
         <activity
             android:name=".auth.UpdateProfileActivity"
             android:label="Account Update"
-            android:parentActivityName=".auth.AppFlowActivity" />
 
-        <!-- The List Activity -->
-        <activity
-            android:name=".ListActivity"
-            android:alwaysRetainTaskState="true"
-            android:label="" />
-
-        <!-- The Edit/New Note Activity -->
+            android:parentActivityName=".auth.AppFlowActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item" />
+            </intent-filter>
+        </activity> <!-- The Edit/New Note Activity -->
         <activity
             android:name=".NoteActivity"
             android:label="@string/title_note_activity"
@@ -79,43 +69,47 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ethical_techniques.notemaker.ListActivity" />
-        </activity>
-
-        <!-- The Settings (Preferences) Activity -->
+        </activity> <!-- The Settings (Preferences) Activity -->
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ListActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ethical_techniques.notemaker.ListActivity" />
-        </activity>
-
-        <!-- NoteCategory List Activity -->
+        </activity> <!-- NoteCategory List Activity -->
         <activity
             android:name=".CategoryListActivity"
             android:label="Note Categories"
             android:parentActivityName=".ListActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ethical_techniques.notemaker.ListActivity" />
-        </activity>
-
-        <!-- The New/Edit NoteCategory Activity -->
+        </activity> <!-- The New/Edit NoteCategory Activity -->
         <activity
             android:name=".CreateCategoryActivity"
             android:label="New Category"
             android:parentActivityName=".ListActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ethical_techniques.notemaker.ListActivity" />
         </activity>
 
-
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="true"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
-
 
 </manifest>

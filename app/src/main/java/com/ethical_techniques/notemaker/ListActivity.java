@@ -27,7 +27,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.adapters.NoteRecycleAdapter;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
@@ -164,13 +163,16 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
                 activeNoteCategory = savedInstanceState.getParcelable(CURRENT_CATEGORY_KEY);
 
             } else {
-                if (savedInstanceState.getBoolean(getString(R.string.launch_key))) {
-                    showSyncDecisionDialog();
-                } else if (savedInstanceState.containsKey(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY))) {
-                    Snackbar.make(spinner.getRootView(), Objects.requireNonNull(savedInstanceState.getString(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY))),
-                            Snackbar.LENGTH_LONG).show();
-                }
                 activeNoteCategory = NoteCategory.getMain(); //Default to "All Notes"
+
+            }
+            if (savedInstanceState.getBoolean(getString(R.string.launch_key))) {
+                showSyncDecisionDialog();
+            }
+
+            if (savedInstanceState.containsKey(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY))) {
+                Snackbar.make(spinner.getRootView(), Objects.requireNonNull(savedInstanceState.getString(getString(R.string.SIGNED_OUT_RESTART_ACTIVITY))),
+                        Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -207,7 +209,6 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
     private void initUserAvatar(FirebaseUser fUser, NavigationView nv) {
         ImageView imageView = new ImageView(this);
         if (fUser.getPhotoUrl() != null && !fUser.getPhotoUrl().toString().isEmpty()) {
-            Glide.with(this).load(fUser.getPhotoUrl()).into(imageView);
         }
 
         View navHeaderView = nv.getHeaderView(0);
@@ -257,7 +258,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
             }
         });
 
-        if (activeNoteCategory.equals(NoteCategory.getMain())) {
+        if (activeNoteCategory == NoteCategory.getMain()) {
             currentNotes.addAll(allNotes);
             noteRecycleAdapter.notifyDataSetChanged();
         } else {

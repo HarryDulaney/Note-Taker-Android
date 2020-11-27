@@ -1,40 +1,63 @@
 <resources>
-    <!-- Sort By Preference -->
-    <string-array name="sort_by_entries">
+
+    <!-- Note-list Sort By Preference -->
+    <string-array name="note_pref_sort_by_entries">
         <item>Date</item>
         <item>Priority</item>
         <item>Title</item>
     </string-array>
 
-    <string-array name="sort_by_values">
+    <string-array name="note_pref_sort_by_values">
         <item>@string/SORT_BY_DATE</item>
         <item>@string/SORT_BY_PRIORITY</item>
         <item>@string/SORT_BY_NAME</item>
     </string-array>
 
-    <!-- Sort Order Preference -->
-    <string-array name="sort_order_entries">
+
+    <!-- Note-list Sort Order Preference -->
+    <string-array name="note_pref_sort_order_entries">
         <item>High to Low</item>
         <item>Low to High</item>
     </string-array>
 
-    <string-array name="sort_order_values">
+    <string-array name="note_pref_sort_order_values">
         <item>@string/SORT_ORDER_HIGH_TO_LOW</item>
         <item>@string/SORT_ORDER_LOW_TO_HIGH</item>
     </string-array>
 
-    <!-- Hide/Show Default Category Preference -->
 
-    <string-array name="show_categ_list_entries">
+    <!--Category  Sort By Preference -->
+    <string-array name="category_pref_sort_by_entries">
+        <item>Date</item>
+        <item>Title</item>
+    </string-array>
+
+    <string-array name="category_pref_sort_by_values">
+        <item>@string/SORT_BY_DATE</item>
+        <item>@string/SORT_BY_NAME</item>
+    </string-array>
+
+    <!-- Category-list Sort Order Preference -->
+    <string-array name="category_sort_order_entries">
+        <item>High to Low</item>
+        <item>Low to High</item>
+    </string-array>
+
+    <string-array name="category_sort_order_values">
+        <item>@string/SORT_ORDER_HIGH_TO_LOW</item>
+        <item>@string/SORT_ORDER_LOW_TO_HIGH</item>
+    </string-array>
+
+
+    <!-- Hide/Show Default NoteCategory Preference -->
+    <string-array name="show_default_category_entries">
         <item>Show</item>
         <item>Hide</item>
     </string-array>
 
-    <string-array name="show_categ_list_values">
+    <string-array name="show_default_category_values">
         <item>@string/showAllNotes</item>
         <item>@string/hideAllNotes</item>
     </string-array>
-
-    <string name="SORT_BY_NAME">notename</string>
 
 </resources>

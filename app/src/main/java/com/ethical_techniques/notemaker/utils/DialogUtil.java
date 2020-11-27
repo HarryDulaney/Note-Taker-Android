@@ -1,14 +1,9 @@
 package com.ethical_techniques.notemaker.utils;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
-
-import com.ethical_techniques.notemaker.model.Note;
 
 /**
  * The type {@code DialogUtil.class}
@@ -22,10 +17,10 @@ public class DialogUtil {
      * Make and show a Dialog with a definable DialogAction. Default negative button
      * triggers dialog.cancel()
      *
-     * @param context the context
-     * @param title   the title
-     * @param message the message
-     * @param positiveAction  the positiveAction to perform when DialogAction.onAction() is called.
+     * @param context        the context
+     * @param title          the title
+     * @param message        the message
+     * @param positiveAction the positiveAction to perform when DialogAction.onAction() is called.
      */
     public static void makeAndShow(final Context context,
                                    final String title,
@@ -113,5 +108,7 @@ public class DialogUtil {
                 .show();
     }
 
+    private DialogUtil() {
+    }
 
 }
