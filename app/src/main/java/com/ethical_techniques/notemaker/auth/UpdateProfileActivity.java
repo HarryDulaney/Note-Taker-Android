@@ -5,9 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -25,10 +23,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.ethical_techniques.notemaker.R;
 import com.ethical_techniques.notemaker.listeners.TextWatcherImpl;
 import com.ethical_techniques.notemaker.utils.DialogUtil;
+import com.ethical_techniques.notemaker.utils.FileUtil;
+import com.ethical_techniques.notemaker.utils.PictureUtil;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -41,8 +42,10 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,8 +65,9 @@ public class UpdateProfileActivity extends BaseActivity {
     private final int PERMISSION_REQUEST_CAMERA = 103;
     private final int CAMERA_REQUEST_CODE = 1888;
     public final int PICK_PHOTO_REQUEST_CODE = 3496;
-    private ImageView profilePicture;
+    ImageView profilePicture;
     private String TagForFile = "notesForAndroid";
+    private StorageReference profPicStorageRef;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,10 +81,12 @@ public class UpdateProfileActivity extends BaseActivity {
         }
         mainLayout = findViewById(R.id.layoutUpdateUserProfile);
         emailUpdateLayout = findViewById(R.id.email_update_layout);
+        profilePicture = findViewById(R.id.imageView);
+        //Set CloudStore Reference
+        initCloudStorageUtil();
     }
 
     private void initUIProfileInfo(FirebaseUser firebaseUser) {
-        profilePicture = findViewById(R.id.imageView);
         userHolder = new UserHolder();
 
         //Reference the display name UI elements
@@ -91,28 +97,41 @@ public class UpdateProfileActivity extends BaseActivity {
 
         String dName = "";
         String email = "";
-        Uri pictureUri;
 
 
         if (firebaseUser.getDisplayName() != null) {
             dName = firebaseUser.getDisplayName();
         }
         if (firebaseUser.getPhotoUrl() != null) {
-            pictureUri = firebaseUser.getPhotoUrl();
-
-            Log.e(TAG, "Picture Path:" + pictureUri.toString());
-        } else {
-            pictureUri = MediaStore.Images.Media.INTERNAL_CONTENT_URI;
-
+            userHolder.profPicPath = firebaseUser.getPhotoUrl().toString();
+            Log.e(TAG, "Picture Path in initUserProfile:" + userHolder.profPicPath);
         }
         if (firebaseUser.getEmail() != null) {
             email = firebaseUser.getEmail();
+        } else {
+            email = "none";
         }
-
+        if (dName == null || dName.equals("")) {
+            dName = "display_name_placeholder";
+        }
         userHolder.currDisName = dName;
         userHolder.currEmail = email;
-        userHolder.profPicUri = pictureUri;
-        setProfilePicture(profilePicture);
+
+
+        try {
+            userHolder.profPicFile = FileUtil.getMakeFileByType(dName, FileUtil.PHOTO, UpdateProfileActivity.this);
+            profPicStorageRef.getFile(userHolder.profPicFile)
+                    .addOnSuccessListener(taskSnapshot -> Log.e(TAG, "Downloaded user profile picture to temp file"))
+                    .addOnFailureListener(e -> {
+                        e.printStackTrace();
+                        Log.e(TAG, "Failed to download the users profile picture from Firebase cloud storage" +
+                                " to the local temp file.");
+
+
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         /* Store view references in the userHolder for view switching */
         userHolder.txtInEdiTxtDisName = txtInEdiTxtDisName;
@@ -157,7 +176,6 @@ public class UpdateProfileActivity extends BaseActivity {
             mb.setVisibility(View.VISIBLE);
         }
     }
-
 
     @Override
     protected void onStart() {
@@ -306,7 +324,8 @@ public class UpdateProfileActivity extends BaseActivity {
         }
     }
 
-    private void updateUserEmailAddress(FirebaseUser firebaseUser, String str) throws FirebaseAuthInvalidCredentialsException,
+    private void updateUserEmailAddress(FirebaseUser firebaseUser, String str) throws
+            FirebaseAuthInvalidCredentialsException,
             FirebaseAuthEmailException, FirebaseAuthUserCollisionException {
 
 
@@ -412,11 +431,16 @@ public class UpdateProfileActivity extends BaseActivity {
         return matcher.matches();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_PHOTO_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (resultCode != Activity.RESULT_OK) {
+            Log.e(TAG, "onActivityResult called but resultCode was not equal to RESULT_OK :(");
+            return;
+
+        } else if (requestCode == PICK_PHOTO_REQUEST_CODE) {
             if (data != null) {
 
                 Uri pictureUri = data.getData();
@@ -424,132 +448,136 @@ public class UpdateProfileActivity extends BaseActivity {
                 if (pictureUri != null) {
                     Log.e(TAG, "currentPic URI as called from onActivityStart is: " + pictureUri.getPath());
 
-                    updateProfilePicture(pictureUri);
-                    setProfilePicture(profilePicture);
+                    File imageFile = null;
+                    try {
+                        imageFile = FileUtil.getMakeFileByType(userHolder.currDisName, FileUtil.PHOTO, this);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (imageFile != null) {
+                        userHolder.setProfilePicFile(imageFile);
+                        profilePicture.postInvalidate();
+                        Log.d(TAG, "File path of Image received by onActivityRResult is: " + userHolder.profPicPath);
 
-                }
+                        try {
+                            Bitmap bitmap = PictureUtil.getProfilePicture(userHolder.profPicPath, this);
+                            profilePicture.setImageBitmap(bitmap);
+                            updateProfilePicture(Uri.fromFile(userHolder.profPicFile));
 
-            }
-        } else if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-
-            Uri
-            userHolder.profPicUri = picUri;
-
-            userHolder.profPicPath = picUri.getEncodedPath();
-
-            Log.e(TAG, "profPicPath in onActivityStart is: " + userHolder.profPicPath);
-
-            ImageView imageView = findViewById(R.id.imageView);
-
-            updateProfilePicture(picUri);
-            setProfilePicture(imageView);
-        } else {
-            Log.e(TAG, "onActivityResult was called from an Intent with CAMERA_REQUEST_CODE but the Uri was not passed correctly.");
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    private void setProfilePicture(ImageView targetImageView) {
-
-        Bitmap bitmap = BitmapFactory.decodeFile(userHolder.profPicUri.getEncodedPath());
-        targetImageView.getDrawable().mutate();
-        targetImageView.setImageBitmap(bitmap);
-
-        // Get the dimensions of the View
-//        int targetW = targetImageView.getWidth();
-//        int targetH = targetImageView.getHeight();
-
-        // Get the dimensions of the bitmap
-//        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-//        bmOptions.inJustDecodeBounds = true;
-//
-//        BitmapFactory.decodeFile(userHolder.profPicPath, bmOptions);
-//
-//        int photoW = bmOptions.outWidth;
-//        int photoH = bmOptions.outHeight;
-//
-//        int scaleFactor;
-//
-//        // Determine how much to scale down the image
-//        if (photoH != 0 && photoW != 0 && targetH != 0 && targetW != 0) {
-//            scaleFactor = Math.max(1, Math.min(photoW / targetW, photoH / targetH));
-//        } else if (targetH != 0 && targetW != 0) {
-//            scaleFactor = Math.max(1, Math.min(targetH / targetW, targetW / targetH));
-//        } else {
-//            scaleFactor = 1;
-//        }
-//
-//        // Decode the image file into a Bitmap sized to fill the View
-//        bmOptions.inJustDecodeBounds = false;
-//        bmOptions.inSampleSize = scaleFactor;
-//        bmOptions.inPurgeable = true;
-    }
-
-    private void updateProfilePicture(Uri photoNooUri) {
-        UserProfileChangeRequest upcr = new UserProfileChangeRequest.Builder().setPhotoUri(photoNooUri).build();
-        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (fUser != null) {
-            fUser.updateProfile(upcr)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Snackbar.make(userHolder.disNameEditButton.getRootView(),
-                                    "Your photo has been updated in your account profile",
-                                    Snackbar.LENGTH_LONG).show();
-
-                        } else {
-                            DialogUtil.makeAndShow(this,
-                                    "Something Went Wrong",
-                                    "We couldn't update your picture on Firebase",
-                                    "Acknowledge",
-                                    "Ok",
-                                    () -> {
-
-                                    });
+                            Log.e(TAG, "Updated user's profile picture: SUCCESS");
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    });
+                    } else {
+                        Log.e(TAG, "userHolder.profPicFile is null at the setPicture method.");
+                    }
+                    Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFile);
+                }
+            }
+
+        } else if (requestCode == CAMERA_REQUEST_CODE) { //CAMERA_CAPTURE_INTENT
+
+            profilePicture.postInvalidate();
+
+            Log.d(TAG, "File path of Image received by onActivityRResult is: " + userHolder.profPicPath);
+
+            if (userHolder.profPicFile != null) {
+//                updateProfilePicture(Uri.fromFile(userHolder.profPicFile));
+                try {
+                    Bitmap bitmap = PictureUtil.getProfilePicture(userHolder.profPicPath, this);
+                    profilePicture.setImageBitmap(bitmap);
+
+                    Log.e(TAG, "Updated user's profile picture: SUCCESS");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Log.e(TAG, "userHolder.profPicFile is null at the setPicture method.");
+            }
+
         }
     }
 
+    //Update the reference/'s to the location of the users profile picture
+    private void updateProfilePicture(Uri uri) {
+        profPicStorageRef.putFile(uri).addOnSuccessListener(taskSnapshot -> {
+            UserProfileChangeRequest upcr = new UserProfileChangeRequest.Builder().setPhotoUri(profPicStorageRef.getDownloadUrl().getResult()).build();
+            FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (fUser != null) {
+                fUser.updateProfile(upcr)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
 
-    private void takePicture() {
-        File targetFileDir =
-        // Create intent for taking a photo and saving
-        Intent picIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(picIntent, CAMERA_REQUEST_CODE);
+                                Snackbar.make(userHolder.disNameEditButton.getRootView(),
+                                        "Your photo has been updated in your account profile",
+                                        Snackbar.LENGTH_LONG).show();
 
+
+                            } else {
+                                DialogUtil.makeAndShow(UpdateProfileActivity.this,
+                                        "Something Went Wrong",
+                                        "We couldn't update your picture on Firebase",
+                                        "Acknowledge",
+                                        "Ok",
+                                        () -> {
+
+                                        });
+                            }
+                        });
+            }
+
+        });
+
+
+    }
+
+
+    private void takePicture() throws Exception {
+        try {
+            //Create the File object ref to the save location
+            userHolder.setProfilePicFile(FileUtil.getMakeFileByType(userHolder.currDisName,
+                    FileUtil.PHOTO,
+                    UpdateProfileActivity.this));
+
+            Uri saveLocationUri = FileProvider.getUriForFile(UpdateProfileActivity.this,
+                    FileUtil.FILE_AUTHORITY,
+                    userHolder.profPicFile);
+
+            // Create intent for opening camera and capturing a photo
+            Intent capturePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (capturePicture.resolveActivity(getPackageManager()) != null) {
+
+                capturePicture.putExtra(MediaStore.EXTRA_OUTPUT, saveLocationUri);
+                startActivityForResult(capturePicture, CAMERA_REQUEST_CODE);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void checkCameraPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.CAMERA) ==
-                    PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) ==
+                PackageManager.PERMISSION_GRANTED) {
+            try {
                 takePicture();
-
-            } else {
-                // App needs permissions to use the camera and file system
-                Snackbar.make(mainLayout.getRootView(),
-                        "The app needs permission to take pictures.",
-                        Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Ok", v -> {
-                            ActivityCompat.requestPermissions(UpdateProfileActivity.this,
-                                    new String[]{Manifest.permission.CAMERA},
-                                    PERMISSION_REQUEST_CAMERA);
-                        }).show();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA);
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    takePicture();
-                }
-            } else {
-                takePicture();
-
-            }
+            // App needs permissions to use the camera and file system
+            Snackbar.make(mainLayout.getRootView(),
+                    "The app needs permission to take pictures.",
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Ok", v -> {
+                        ActivityCompat.requestPermissions(UpdateProfileActivity.this,
+                                new String[]{Manifest.permission.CAMERA},
+                                PERMISSION_REQUEST_CAMERA);
+                    }).show();
         }
+
     }
 
 
@@ -647,8 +675,15 @@ public class UpdateProfileActivity extends BaseActivity {
 
     private static class UserHolder {
         //Profile Picture
+        private File profPicFile;
         private String profPicPath;
-        private Uri profPicUri;
+
+        private void setProfilePicFile(File profPicFile) {
+            this.profPicFile = profPicFile;
+            profPicPath = profPicFile.getAbsolutePath();
+        }
+
+
         //Display Name
         private String currDisName;
         private TextInputLayout txtInpLayDisName;
@@ -657,7 +692,6 @@ public class UpdateProfileActivity extends BaseActivity {
         private ImageButton disNameEditButton;
         private ImageButton edDisNameDoneButton;
 
-
         //email
         private String currEmail;
 
@@ -665,8 +699,9 @@ public class UpdateProfileActivity extends BaseActivity {
          * Instantiates a new Value holder.
          */
         private UserHolder() {
-            super();
         }
+
+
     }
 
 }

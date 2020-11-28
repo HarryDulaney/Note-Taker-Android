@@ -52,13 +52,8 @@
         <activity
             android:name=".auth.UpdateProfileActivity"
             android:label="Account Update"
-
             android:parentActivityName=".auth.AppFlowActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.GET_CONTENT" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.item" />
-            </intent-filter>
+
         </activity> <!-- The Edit/New Note Activity -->
         <activity
             android:name=".NoteActivity"
@@ -104,7 +99,7 @@
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
-            android:exported="true"
+            android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"

@@ -1,7 +1,6 @@
 package com.ethical_techniques.notemaker.auth;
 
 import android.content.Intent;
-import android.content.pm.FeatureInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,11 +11,6 @@ import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.ListActivity;
 import com.ethical_techniques.notemaker.R;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Nullable;
 
 /**
  * The type App flow activity.
@@ -61,8 +55,10 @@ public class AppFlowActivity extends BaseActivity {
 
     private void delegateFlow(FirebaseAuth fa, boolean hasLclNotes) {
         if (fa.getCurrentUser() != null) {// If user is already signed in to cloud account
+            signedIn = true;
             flow(ListActivity.class); //Open the Main Menu Notes List
         } else if (hasLclNotes) {  //If the user has locally saved Notes (They are not signed in)
+            signedIn = false;
             flow(getString(R.string.launch_key), ListActivity.class);
         } else {
             flow(UserLoginActivity.class); //Open the Sign in Activity
