@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <include
+        domain="database"
+        path="string"
+        requireFlags="clientSideEncryption" />
+    <include
+        domain="sharedpref"
+        path="string"
+        requireFlags="clientSideEncryption" />
+
+    <include
+        domain="file"
+        path="string"
+        requireFlags="clientSideEncryption" />
+</full-backup-content>
