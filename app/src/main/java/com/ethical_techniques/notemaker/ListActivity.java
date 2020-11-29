@@ -24,6 +24,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -276,11 +277,18 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
 
         /* Set listener event behavior for long click on list item event */
         noteRecycleAdapter.setNoteLongClickListener((view, position) -> {
+
             int noteId = (int) noteRecycleAdapter.getItemId(position);
-            Intent intent = new Intent(ListActivity.this, NoteActivity.class);
-            intent.putExtra(getString(R.string.NOTE_ID_KEY), noteId);
-            ListActivity.this.startActivity(intent);
+            NoteRecycleAdapter.ViewHolder viewHolder = (NoteRecycleAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(noteId);
+            FragmentManager fragManager = getSupportFragmentManager();
+            String fragmentTag = viewHolder.noteViewPopupDialog.getTag();
+            viewHolder.noteViewPopupDialog.show(fragManager, fragmentTag);
+
+//            Intent intent = new Intent(ListActivity.this, NoteActivity.class);
+//            intent.putExtra(getString(R.string.NOTE_ID_KEY), noteId);
+//            ListActivity.this.startActivity(intent);
         });
+
         /* Set listener event behavior for regular (short) click on list item */
         noteRecycleAdapter.setNoteClickListener((view, position) -> Toast.makeText(ListActivity.this,
                 "Long click to open the note the editing"
@@ -339,8 +347,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
 
             DialogUtil.makeAndShow(this,
                     "Confirmation Popup",
-                    "Are you sure you want to permanently delete the N" +
-                            "   ote: " + note.getNoteName(),
+                    "Are you sure you want to permanently delete: " + note.getNoteName(),
                     "delete",
                     "cancel",
                     () -> {
@@ -439,7 +446,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
                             startActivity(intentRes);
                         });
                 break;
-//            case R.id.nav_share:
+//         TODO:   case R.id.nav_share:
 //                DialogUtil.makeAndShow(this,
 //                        "Share Options",
 //                        "",

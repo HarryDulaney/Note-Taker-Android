@@ -1,7 +1,6 @@
 package com.ethical_techniques.notemaker;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,14 +10,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.adapters.CategoryRecycleAdapter;
 import com.ethical_techniques.notemaker.adapters.CategoryRecycleAdapter.CategoryViewHolder;
-import com.ethical_techniques.notemaker.DAL.DBUtil;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
-import com.ethical_techniques.notemaker.decorators.SpacingItemDecoration;
 import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -79,17 +76,7 @@ public class CategoryListActivity extends BaseActivity {
             startActivity(intent);
 
         });
-//        //Handle Nav Drawer
-//        DrawerLayout navDrawer = findViewById(R.id.drawer_layout_list);
-//        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, navDrawer,
-//                toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//
-//        navDrawer.addDrawerListener(drawerToggle);
-//        drawerToggle.syncState();
-//
-//        //Handle NavigationView
-//        NavigationView navigationView = findViewById(R.id.navigation_view);
-//        navigationView.setNavigationItemSelectedListener(CategoryListActivity.this);
+
     }
 
     @Override

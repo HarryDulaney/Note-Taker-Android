@@ -20,7 +20,6 @@ import com.google.firebase.auth.FirebaseAuth;
 public class AppFlowActivity extends BaseActivity {
     private static final String LAUNCH_FROM_NOTE_KEY = "com.ethical_techniques.notemaker.NoteActivity";
 
-    //TODO: Network Security configuration
     //TODO: Read phone features, and set User Preferences
     @Override
     protected void onCreate(Bundle savedInstanceState) {
