@@ -266,11 +266,22 @@ public class UpdateProfileActivity extends BaseActivity {
 
         TextInputEditText nooEmail = findViewById(R.id.editTextNooEmail);
         TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
-        TextInputEditText pw = findViewById(R.id.pword);
+        TextInputEditText pw = findViewById(R.id.editTextPassword);
         nooEmail.getText().clear();
         nooEmailCheck.getText().clear();
         pw.getText().clear();
 
+    }
+
+    private String checkInput(Editable email, Editable emailCheck, Editable pw) {
+        if (email.length() < 3) {
+            return "Check the new email address field";
+        } else if (emailCheck.length() < 3) {
+            return "Check the email address confirmation field";
+        } else if (pw.length() < 8) {
+            return "Check the password field, password must not be blank and be longer than 7 characters";
+        }
+        return "good";
     }
 
     /**
@@ -283,10 +294,11 @@ public class UpdateProfileActivity extends BaseActivity {
 
         final TextInputEditText nooEmail = findViewById(R.id.editTextNooEmail);
         final TextInputEditText nooEmailCheck = findViewById(R.id.editTextEmailCheck);
-        final TextInputEditText pw = findViewById(R.id.pword);
+        final TextInputEditText pw = findViewById(R.id.editTextPassword);
+        String resCheckInput = checkInput(nooEmail.getText(), nooEmailCheck.getText(),
+                pw.getText());
 
-        if (nooEmail.length() < 3 || nooEmailCheck.length() < 3 || pw.length() < 8) {
-
+        if (resCheckInput.equals("good")) {
             if (nooEmail.getText().equals(nooEmailCheck.getText())) {
                 if (validateEmail(nooEmail.getText())) {
                     if (validatePassword(pw.getText())) {
@@ -317,10 +329,12 @@ public class UpdateProfileActivity extends BaseActivity {
 
                 }
             } else {
-                Toast.makeText(this, "The both email address above must be equal, please check again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Both email address above must be equal, please check again.",
+                        Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Please fill in all of the fields before pressing the Submit button.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please confirm that you fill in all fields before submitting. " + resCheckInput,
+                    Toast.LENGTH_SHORT).show();
 
         }
     }
