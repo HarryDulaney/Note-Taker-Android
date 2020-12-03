@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
-import java.io.IOException;
-
 public class PictureUtil {
 
     private static Bitmap getScaledBitmap(String path, Activity activity) {
@@ -43,7 +41,7 @@ public class PictureUtil {
         return BitmapFactory.decodeFile(path, options);
     }
 
-    public static Bitmap getProfilePicture(String filePath, Activity activity) throws IOException {
+    public static Bitmap scaleBitmap(String filePath, Activity activity) {
         return getScaledBitmap(filePath, activity);
 
 

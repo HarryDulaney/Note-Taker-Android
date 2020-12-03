@@ -20,7 +20,8 @@ public class FileUtil {
     private static final Uri DEFAULT_IMAGE_SAVE_DIR = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
     public static final String FILE_AUTHORITY = BuildConfig.APPLICATION_ID + ".fileprovider";
 
-    private FileUtil() {
+    FileUtil() {
+        throw new UnsupportedOperationException("How dare you!, Seriously though please don't do that.");
     }
 
     public static File getMakeFileByType(final String userId, final String fileType, final Context context) throws Exception {

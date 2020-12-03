@@ -95,31 +95,32 @@ public class UpdateProfileActivity extends BaseActivity {
         TextInputLayout txtInpLayDisName = findViewById(R.id.textInLayDisName);
         ImageButton disNameEditButton = findViewById(R.id.editDisNameButton);
 
-        String dName = "";
-        String email = "";
+        String dName;
+        String email;
 
 
-        if (firebaseUser.getDisplayName() != null) {
+        if (firebaseUser.getDisplayName() != null && !firebaseUser.getDisplayName().isEmpty()) {
             dName = firebaseUser.getDisplayName();
+        } else {
+            dName = "What should we call you?";
         }
+
+        if (firebaseUser.getEmail() != null) {
+            email = firebaseUser.getEmail();
+        } else {
+            email = "No Email Set";
+        }
+
+        userHolder.currDisName = dName;
+        userHolder.currEmail = email;
+
         if (firebaseUser.getPhotoUrl() != null) {
             userHolder.profPicPath = firebaseUser.getPhotoUrl().toString();
             Log.e(TAG, "Picture Path in initUserProfile:" + userHolder.profPicPath);
         }
-        if (firebaseUser.getEmail() != null) {
-            email = firebaseUser.getEmail();
-        } else {
-            email = "none";
-        }
-        if (dName == null || dName.equals("")) {
-            dName = "display_name_placeholder";
-        }
-        userHolder.currDisName = dName;
-        userHolder.currEmail = email;
-
 
         try {
-            userHolder.profPicFile = FileUtil.getMakeFileByType(dName, FileUtil.PHOTO, UpdateProfileActivity.this);
+
             profPicStorageRef.getFile(userHolder.profPicFile)
                     .addOnSuccessListener(taskSnapshot -> Log.e(TAG, "Downloaded user profile picture to temp file"))
                     .addOnFailureListener(e -> {
@@ -459,15 +460,12 @@ public class UpdateProfileActivity extends BaseActivity {
                         profilePicture.postInvalidate();
                         Log.d(TAG, "File path of Image received by onActivityRResult is: " + userHolder.profPicPath);
 
-                        try {
-                            Bitmap bitmap = PictureUtil.getProfilePicture(userHolder.profPicPath, this);
-                            profilePicture.setImageBitmap(bitmap);
-                            updateProfilePicture(Uri.fromFile(userHolder.profPicFile));
+                        Bitmap bitmap = PictureUtil.scaleBitmap(userHolder.profPicPath, this);
+                        profilePicture.setImageBitmap(bitmap);
+                        updateProfilePicture(Uri.fromFile(userHolder.profPicFile));
 
-                            Log.e(TAG, "Updated user's profile picture: SUCCESS");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        Log.e(TAG, "Updated user's profile picture: SUCCESS");
+
                     } else {
                         Log.e(TAG, "userHolder.profPicFile is null at the setPicture method.");
                     }
@@ -479,18 +477,13 @@ public class UpdateProfileActivity extends BaseActivity {
 
             profilePicture.postInvalidate();
 
-            Log.d(TAG, "File path of Image received by onActivityRResult is: " + userHolder.profPicPath);
+            Log.d(TAG, "File path of Image received by onActivityResult is: " + userHolder.profPicPath);
 
             if (userHolder.profPicFile != null) {
-//                updateProfilePicture(Uri.fromFile(userHolder.profPicFile));
-                try {
-                    Bitmap bitmap = PictureUtil.getProfilePicture(userHolder.profPicPath, this);
-                    profilePicture.setImageBitmap(bitmap);
+                /* Update the user profile picture image */
+                updateProfilePicture(Uri.fromFile(userHolder.profPicFile));
+                Log.e(TAG, "Updated user's profile picture: SUCCESS");
 
-                    Log.e(TAG, "Updated user's profile picture: SUCCESS");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             } else {
                 Log.e(TAG, "userHolder.profPicFile is null at the setPicture method.");
             }
@@ -498,39 +491,34 @@ public class UpdateProfileActivity extends BaseActivity {
         }
     }
 
-    //Update the reference/'s to the location of the users profile picture
-    private void updateProfilePicture(Uri uri) {
-        profPicStorageRef.putFile(uri).addOnSuccessListener(taskSnapshot -> {
-            UserProfileChangeRequest upcr = new UserProfileChangeRequest.Builder().setPhotoUri(profPicStorageRef.getDownloadUrl().getResult()).build();
-            FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-            if (fUser != null) {
-                fUser.updateProfile(upcr)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
+    private void updateProfilePicture(Uri fileUri) {
+        //Update image in UI
+        Bitmap bitmap = PictureUtil.scaleBitmap(userHolder.profPicPath, this);
+        profilePicture.setImageBitmap(bitmap);
 
-                                Snackbar.make(userHolder.disNameEditButton.getRootView(),
-                                        "Your photo has been updated in your account profile",
-                                        Snackbar.LENGTH_LONG).show();
+        /* Update the reference to save location of image in the users Firebase Profile */
+        UserProfileChangeRequest.Builder crBuilder = new UserProfileChangeRequest.Builder();
+        crBuilder.setPhotoUri(fileUri);
+        UserProfileChangeRequest changeRequest = crBuilder.build();
 
+        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (fUser != null) {
+            fUser.updateProfile(changeRequest)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
 
-                            } else {
-                                DialogUtil.makeAndShow(UpdateProfileActivity.this,
-                                        "Something Went Wrong",
-                                        "We couldn't update your picture on Firebase",
-                                        "Acknowledge",
-                                        "Ok",
-                                        () -> {
-
-                                        });
-                            }
-                        });
-            }
-
-        });
+                            Snackbar.make(userHolder.disNameEditButton.getRootView(),
+                                    "Your photo has been successfully updated in your account profile",
+                                    Snackbar.LENGTH_LONG).show();
 
 
+                        } else {
+                            DialogUtil.makeAndShowBasicError(UpdateProfileActivity.this, "Something went wrong and we couldn't " +
+                                    "update your profile picture for your account. Please confirm you have internet access.");
+                        }
+                    });
+        }
     }
-
 
     private void takePicture() throws Exception {
         try {
@@ -539,7 +527,7 @@ public class UpdateProfileActivity extends BaseActivity {
                     FileUtil.PHOTO,
                     UpdateProfileActivity.this));
 
-            Uri saveLocationUri = FileProvider.getUriForFile(UpdateProfileActivity.this,
+            Uri contentUri = FileProvider.getUriForFile(UpdateProfileActivity.this,
                     FileUtil.FILE_AUTHORITY,
                     userHolder.profPicFile);
 
@@ -547,7 +535,7 @@ public class UpdateProfileActivity extends BaseActivity {
             Intent capturePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (capturePicture.resolveActivity(getPackageManager()) != null) {
 
-                capturePicture.putExtra(MediaStore.EXTRA_OUTPUT, saveLocationUri);
+                capturePicture.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
                 startActivityForResult(capturePicture, CAMERA_REQUEST_CODE);
             }
 
