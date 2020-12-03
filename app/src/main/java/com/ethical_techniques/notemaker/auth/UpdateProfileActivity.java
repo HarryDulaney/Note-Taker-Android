@@ -115,24 +115,17 @@ public class UpdateProfileActivity extends BaseActivity {
         userHolder.currEmail = email;
 
         if (firebaseUser.getPhotoUrl() != null) {
-            userHolder.profPicPath = firebaseUser.getPhotoUrl().toString();
-            Log.e(TAG, "Picture Path in initUserProfile:" + userHolder.profPicPath);
+            if (firebaseUser.getPhotoUrl().getPath() != null) {
+                File picFile = new File(firebaseUser.getPhotoUrl().getPath());
+                userHolder.setProfilePicFile(picFile);
+                Log.e(TAG, "Picture Path in initUserProfile:" + userHolder.profPicPath);
+                setPicOnUi(userHolder.profPicPath);
+
+            }
+
+
         }
 
-        try {
-
-            profPicStorageRef.getFile(userHolder.profPicFile)
-                    .addOnSuccessListener(taskSnapshot -> Log.e(TAG, "Downloaded user profile picture to temp file"))
-                    .addOnFailureListener(e -> {
-                        e.printStackTrace();
-                        Log.e(TAG, "Failed to download the users profile picture from Firebase cloud storage" +
-                                " to the local temp file.");
-
-
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         /* Store view references in the userHolder for view switching */
         userHolder.txtInEdiTxtDisName = txtInEdiTxtDisName;
@@ -505,11 +498,16 @@ public class UpdateProfileActivity extends BaseActivity {
         }
     }
 
-    private void updateProfilePicture(Uri fileUri) {
+    private void setPicOnUi(String picturePath) {
         //Update image in UI
-        Bitmap bitmap = PictureUtil.scaleBitmap(userHolder.profPicPath, this);
+        Bitmap bitmap = PictureUtil.scaleBitmap(picturePath, this);
         profilePicture.setImageBitmap(bitmap);
 
+
+    }
+
+    private void updateProfilePicture(Uri fileUri) {
+        setPicOnUi(userHolder.profPicPath);
         /* Update the reference to save location of image in the users Firebase Profile */
         UserProfileChangeRequest.Builder crBuilder = new UserProfileChangeRequest.Builder();
         crBuilder.setPhotoUri(fileUri);
