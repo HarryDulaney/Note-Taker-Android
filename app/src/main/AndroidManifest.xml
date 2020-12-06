@@ -43,7 +43,7 @@
         <!-- Application Flow Delegation Activity -->
         <activity
             android:name=".auth.AppFlowActivity"
-            android:launchMode="singleInstance">
+            android:launchMode="standard">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -111,8 +111,7 @@
         <activity
             android:name=".CreateCategoryActivity"
             android:label="New Category"
-            android:parentActivityName=".CategoryListActivity"
-            android:theme="@android:style/Theme.Holo.Dialog">
+            android:parentActivityName=".CategoryListActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

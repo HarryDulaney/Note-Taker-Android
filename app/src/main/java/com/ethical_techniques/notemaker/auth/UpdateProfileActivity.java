@@ -61,6 +61,7 @@ public class UpdateProfileActivity extends BaseActivity {
     private ViewGroup emailUpdateLayout;
     private UserHolder userHolder;
     private boolean emailUpdateScreen;
+    private boolean editDisNameIsActive;
     private Menu menu;
     private final int PERMISSION_REQUEST_CAMERA = 103;
     private final int CAMERA_REQUEST_CODE = 1888;
@@ -152,7 +153,7 @@ public class UpdateProfileActivity extends BaseActivity {
 
         txtInpLayDisName.setEndIconOnClickListener(v -> {
             updateName(userHolder.currDisName, firebaseUser);
-            toggleDisplayNameInput(userHolder.disNameTextView.getRootView());
+            toggleDisplayNameInput();
         });
 
         TextView emailView = findViewById(R.id.emailAddressDisplay);
@@ -370,8 +371,13 @@ public class UpdateProfileActivity extends BaseActivity {
     public void onBackPressed() {
         if (emailUpdateScreen) {
             reInitMainLayout();
+        } else if (editDisNameIsActive) {
+            updateName(userHolder.currDisName, FirebaseAuth.getInstance().getCurrentUser());
+            toggleDisplayNameInput();
+
         } else {
             super.onBackPressed();
+
         }
 
     }
@@ -446,11 +452,9 @@ public class UpdateProfileActivity extends BaseActivity {
 
         if (resultCode != Activity.RESULT_OK) {
             Log.e(TAG, "onActivityResult called but resultCode was not equal to RESULT_OK :(");
-            return;
 
         } else if (requestCode == PICK_PHOTO_REQUEST_CODE) {
             if (data != null) {
-
                 Uri pictureUri = data.getData();
 
                 if (pictureUri != null) {
@@ -641,10 +645,10 @@ public class UpdateProfileActivity extends BaseActivity {
      *
      * @param view the view
      */
-    public void handleSubmitButton(View view) {
+    public void handleDoneButton(View view) {
         hideKeyboard(this, findViewById(R.id.handleDoneButton).getRootView());
         //Submit update account user profile
-        onBackPressed();
+        this.onBackPressed();
     }
 
     /**
@@ -653,22 +657,25 @@ public class UpdateProfileActivity extends BaseActivity {
      * @param view the view clicked
      */
     public void handleShowEditDisplayName(View view) {
-        toggleDisplayNameInput(view);
+        toggleDisplayNameInput();
 
     }
 
-    private void toggleDisplayNameInput(View view) {
+    private void toggleDisplayNameInput() {
         if (userHolder.disNameTextView.getVisibility() == View.VISIBLE) {
 
             userHolder.disNameTextView.setVisibility(View.GONE);
             userHolder.disNameEditButton.setVisibility(View.GONE);
             userHolder.txtInpLayDisName.setVisibility(View.VISIBLE);
+            editDisNameIsActive = true;
 
         } else if (userHolder.disNameTextView.getVisibility() == View.GONE) {
 
             userHolder.txtInpLayDisName.setVisibility(View.GONE);
             userHolder.disNameTextView.setVisibility(View.VISIBLE);
             userHolder.disNameEditButton.setVisibility(View.VISIBLE);
+            editDisNameIsActive = false;
+
         }
 
     }

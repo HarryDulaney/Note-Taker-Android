@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/side_nav_bar"
@@ -63,31 +62,33 @@
         android:background="?android:attr/listDivider"
         app:layout_anchorGravity="center" />
 
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/navDrawerUserProfile"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:orientation="horizontal">-->
-
-    <!--        <ImageView-->
-    <!--            android:layout_width="@android:dimen/notification_large_icon_width"-->
-    <!--            android:layout_height="@android:dimen/notification_large_icon_height"-->
-    <!--            android:layout_marginTop="@dimen/smallMargin"-->
-    <!--            android:contentDescription="@string/avatar_icon"-->
-    <!--            android:src="@drawable/ic_account_circle_black_48dp" />-->
-
-    <TextView
-        android:id="@+id/textViewUserNameDrawer"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/navDrawerUserProfile"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/smallMargin"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="@dimen/largeMargin"
-        android:text="@string/signed_out"
-        android:textAlignment="gravity"
-        android:textSize="14sp"
-        android:textStyle="bold" />
-    <!--    </LinearLayout>-->
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@android:dimen/notification_large_icon_width"
+            android:layout_height="@android:dimen/notification_large_icon_height"
+            android:id="@+id/userPic"
+            android:layout_marginTop="@dimen/smallMargin"
+            android:contentDescription="@string/avatar_icon"
+            android:src="@drawable/ic_account_circle_black_48dp" />
+
+        <TextView
+            android:id="@+id/textViewUserNameDrawer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/smallMargin"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="@dimen/largeMargin"
+            android:text="@string/signed_out"
+            android:textAlignment="gravity"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
 
     <View
         android:id="@+id/divider_navHeader"

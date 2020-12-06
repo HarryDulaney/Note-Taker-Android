@@ -122,8 +122,8 @@ public class DialogUtil {
                 .show();
     }
 
-    public static void makeAndShowCustom(final View rootView, final View customContent, final Context context) {
-        FrameLayout frameLayout = rootView.findViewById(android.R.id.custom);
+    public static void makeAndShowCustom(final View customContent, final Context context,
+                                         FrameLayout frameLayout) {
         frameLayout.addView(customContent, new FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
         final AlertDialog alertDialog = new AlertDialog.Builder(context)
                 .create();

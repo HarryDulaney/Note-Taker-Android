@@ -27,8 +27,9 @@ public class AppFlowActivity extends BaseActivity {
 
         checkEnvFeatures();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkEnvAPIDependentFeatures();
+        }
     }
 
 

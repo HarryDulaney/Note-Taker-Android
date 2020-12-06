@@ -28,7 +28,7 @@
 
     <!--Category  Sort By Preference -->
     <string-array name="category_pref_sort_by_entries">
-        <item>Date</item>
+        <item>No Sort Preference</item>
         <item>Title</item>
     </string-array>
 

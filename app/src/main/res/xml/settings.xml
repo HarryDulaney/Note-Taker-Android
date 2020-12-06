@@ -39,7 +39,7 @@
         <ListPreference
             app:entries="@array/show_default_category_entries"
             app:entryValues="@array/show_default_category_values"
-            app:key="@string/SORT_CATEGORY_BY_PREF_ID"
+            app:key="@string/CATEGORY_DEFAULT_VISIBLE_IN_LIST"
             app:title="Show 'All Notes' Category in Categories List"
             app:useSimpleSummaryProvider="true" />
 

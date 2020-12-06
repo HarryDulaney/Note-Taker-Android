@@ -1,5 +1,6 @@
 package com.ethical_techniques.notemaker.frags;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,14 @@ public class NotePopUpFragment extends DialogFragment {
     public static NotePopUpFragment newInstance(Note note) {
 
         return new NotePopUpFragment(note);
+    }
+    public NotePopUpFragment(){}
+
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        return super.onCreateDialog(savedInstanceState);
     }
 
     private NotePopUpFragment(Note note) {

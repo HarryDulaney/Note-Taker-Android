@@ -11,10 +11,15 @@ public class PictureUtil {
         Point size = new Point();
         activity.getWindowManager().getDefaultDisplay()
                 .getSize(size);
-        return getScaledBitmap(path, size.x, size.y);
+        return scale(path, size.x, size.y);
     }
 
-    private static Bitmap getScaledBitmap(String path, int destWidth, int destHeight) {
+    public static Bitmap getScaledBitmap(Bitmap srcBitmap, int width, int height) {
+        return Bitmap.createScaledBitmap(srcBitmap, width, height, true);
+
+    }
+
+    private static Bitmap scale(String path, int destWidth, int destHeight) {
         // Read in the dimensions of the image on disk
         BitmapFactory.Options options = new BitmapFactory.Options();
 
@@ -43,7 +48,11 @@ public class PictureUtil {
 
     public static Bitmap scaleBitmap(String filePath, Activity activity) {
         return getScaledBitmap(filePath, activity);
+    }
 
+    public static Bitmap getRawBitmapFromFile(String filePath) {
+        return BitmapFactory.decodeFile(filePath);
 
     }
+
 }

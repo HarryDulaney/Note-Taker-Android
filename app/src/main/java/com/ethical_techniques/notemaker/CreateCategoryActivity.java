@@ -105,8 +105,6 @@ public class CreateCategoryActivity extends BaseActivity {
         if (currentNoteCategory.getColor() != Color.TRANSPARENT) {
             colorPickButton.getDrawable().setTint(currentNoteCategory.getColor());
 
-        } else {
-
         }
 
         setListeners();
@@ -122,7 +120,6 @@ public class CreateCategoryActivity extends BaseActivity {
                         .okTitle("Choose")
                         .cancelTitle("Cancel")
                         .showIndicator(true)
-                        .showValue(true)
                         .build()
                         .show(v, new ColorPickerPopup.ColorPickerObserver() {
                             @Override

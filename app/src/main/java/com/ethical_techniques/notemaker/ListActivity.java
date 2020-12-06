@@ -2,7 +2,8 @@ package com.ethical_techniques.notemaker;
 
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -25,7 +26,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ethical_techniques.notemaker.DAL.DBUtil;
@@ -33,16 +33,19 @@ import com.ethical_techniques.notemaker.adapters.NoteRecycleAdapter;
 import com.ethical_techniques.notemaker.auth.BaseActivity;
 import com.ethical_techniques.notemaker.auth.UpdateProfileActivity;
 import com.ethical_techniques.notemaker.auth.UserLoginActivity;
+import com.ethical_techniques.notemaker.exceptions.NullHandlerException;
 import com.ethical_techniques.notemaker.model.Note;
 import com.ethical_techniques.notemaker.model.NoteCategory;
 import com.ethical_techniques.notemaker.model.PRIORITY;
 import com.ethical_techniques.notemaker.utils.DialogUtil;
+import com.ethical_techniques.notemaker.utils.PictureUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,9 +73,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
     private Spinner spinner;
     private NoteCategory activeNoteCategory;
     private String CURRENT_CATEGORY_KEY;
-    private String SORT_BY_PREFERENCE;
-    private String SORT_ORDER_PREFERENCE;
-    private SharedPreferences sharedPreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,17 +81,7 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
         setContentView(R.layout.drawer_layout_list);
 
         CURRENT_CATEGORY_KEY = getString(R.string.CURR_CATEGORY_IN_LIST_KEY);
-        String NOTE_SORT_BY_PREF_KEY = getString(R.string.SORT_BY_PREF_ID);
-        String NOTE_ORDER_PREF_KEY = getString(R.string.SORT_ORDER_PREF_ID);
-        String SORT_BY_DEFAULT = getString(R.string.SORT_BY_DATE);
-        String SORT_ORDER_DEFAULT = getString(R.string.SORT_ORDER_HIGH_TO_LOW);
 
-        //Initialize SharedPreferences
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        //Retrieve Sort By from sp
-        SORT_BY_PREFERENCE = sharedPreferences.getString(NOTE_SORT_BY_PREF_KEY, SORT_BY_DEFAULT);
-        //Retrieves Sort Order from sp
-        SORT_ORDER_PREFERENCE = sharedPreferences.getString(NOTE_ORDER_PREF_KEY, SORT_ORDER_DEFAULT);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -200,29 +191,37 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelable(CURRENT_CATEGORY_KEY, activeNoteCategory);
-        super.onSaveInstanceState(outState);
-
-    }
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        outState.putParcelable(CURRENT_CATEGORY_KEY, activeNoteCategory);
+//        super.onSaveInstanceState(outState);
+//
+//    }
 
     private void initUserAvatar(FirebaseUser fUser, NavigationView nv) {
-        ImageView imageView = new ImageView(this);
-        if (fUser.getPhotoUrl() != null && !fUser.getPhotoUrl().toString().isEmpty()) {
-        }
+        final int proPicWidth = 48;
+        final int proPicHeight = 48;
 
         View navHeaderView = nv.getHeaderView(0);
         TextView displayName = navHeaderView.findViewById(R.id.textViewUserNameDrawer);
+        ImageView profPicImageView = navHeaderView.findViewById(R.id.userPic);
 
-        findViewById(R.id.textViewUserNameDrawer);
-        displayName.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_account_circle_black_48dp, 0, 0, 0);
+        if (fUser.getPhotoUrl() != null && fUser.getPhotoUrl().getPath() != null) {
+            profPicImageView.getDrawable().mutate();
+
+            File picFile = new File(fUser.getPhotoUrl().getPath());
+            Bitmap unscaledBitmap = BitmapFactory.decodeFile(picFile.getAbsolutePath());
+            Bitmap scaledBitmap = PictureUtil.getScaledBitmap(unscaledBitmap, proPicWidth, proPicHeight);
+
+            profPicImageView.setImageBitmap(scaledBitmap);
+        }
 
         if (fUser.getDisplayName() != null && !fUser.getDisplayName().isEmpty()) {
             displayName.setText(fUser.getDisplayName());
         } else {
             displayName.setText(R.string.nav_drawer_username_default);
         }
+
     }
 
     /**
@@ -280,13 +279,14 @@ public class ListActivity extends BaseActivity implements NavigationView.OnNavig
 
             int noteId = (int) noteRecycleAdapter.getItemId(position);
             NoteRecycleAdapter.ViewHolder viewHolder = (NoteRecycleAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(noteId);
-            FragmentManager fragManager = getSupportFragmentManager();
-            String fragmentTag = viewHolder.noteViewPopupDialog.getTag();
-            viewHolder.noteViewPopupDialog.show(fragManager, fragmentTag);
+            if (viewHolder != null) {
+                FragmentManager fragManager = getSupportFragmentManager();
+                String fragmentTag = viewHolder.noteViewPopupDialog.getTag();
+                viewHolder.noteViewPopupDialog.show(fragManager, fragmentTag);
+            } else {
+                throw new NullHandlerException("NoteRecycleAdapter.ViewHolder was not instantiated.", TAG);
+            }
 
-//            Intent intent = new Intent(ListActivity.this, NoteActivity.class);
-//            intent.putExtra(getString(R.string.NOTE_ID_KEY), noteId);
-//            ListActivity.this.startActivity(intent);
         });
 
         /* Set listener event behavior for regular (short) click on list item */

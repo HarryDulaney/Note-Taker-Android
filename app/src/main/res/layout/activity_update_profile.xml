@@ -45,8 +45,8 @@
             android:id="@+id/userProfileImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/smallMargin"
-            android:layoutDirection="ltr">
+            android:layout_marginTop="@dimen/extraLrgMargin"
+            android:layoutDirection="ltr" >
 
             <ImageView
                 android:id="@+id/imageView"
@@ -141,7 +141,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/rlEmailAddress"
-            android:layout_alignEnd="@id/rlEmailAddress"
+            android:layout_centerHorizontal="true"
             android:layout_marginEnd="@dimen/smallMargin"
             android:onClick="handleVerifyEmailAddress"
             android:text="@string/verify"
@@ -163,7 +163,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/mediumMargin"
-                android:onClick="handleSubmitButton"
+                android:onClick="handleDoneButton"
                 android:text="@string/done"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                 android:theme="@style/MaterialDesignButton" />
