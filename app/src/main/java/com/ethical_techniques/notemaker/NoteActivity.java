@@ -100,7 +100,21 @@ public class NoteActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        backClickedSavePrompt();
+        boolean success = saveNote(currentNote);
+        if (success) {
+            Toast.makeText(this, "Success, Your new note was saved. " +
+                            "\nClick on the List icon on the navigation bar to manage your notes. ",
+                    Toast.LENGTH_LONG).show();
+
+        } else {
+            Toast.makeText(this, "Something went wrong, Your note could not be saved. " +
+                            "\nClick on the List icon on the navigation bar to manage your notes. ",
+                    Toast.LENGTH_LONG).show();
+
+        }
+
+        Intent intent2 = new Intent(NoteActivity.this, ListActivity.class);
+        startActivity(intent2);
     }
 
     /**
@@ -312,27 +326,33 @@ public class NoteActivity extends BaseActivity {
     public void handleSaveNote() {
         hideKeyboard(this, findViewById(R.id.editTitle), findViewById(R.id.editNotes));
 
-        if (currentNote.getNoteName() == null || currentNote.getContent() == null) {
-            Toast.makeText(NoteActivity.this, "Make sure to fill in the name and the " +
-                    "\n note content fields of the note before saving", Toast.LENGTH_LONG).show();
+        boolean success = saveNote(currentNote);
+
+        if (success) {
+            Toast.makeText(this, "Success, Your new note was saved. " +
+                            "\nClick on the List icon on the navigation bar to manage your notes. ",
+                    Toast.LENGTH_LONG).show();
         } else {
-            currentNote.setDateCreated(Calendar.getInstance());
-
-            boolean success = false;
-            try {
-                success = DBUtil.saveNote(NoteActivity.this, currentNote);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (success) {
-                Toast.makeText(this, "Success, Your new note was saved. " +
-                                "\nClick on the List icon on the navigation bar to manage your notes. ",
-                        Toast.LENGTH_LONG).show();
-
-                Intent intent2 = new Intent(NoteActivity.this, ListActivity.class);
-                startActivity(intent2);
-            }
+            Toast.makeText(this, "Something went wrong while saving the note. " +
+                            "\nPlease try again by creating a new note. ",
+                    Toast.LENGTH_LONG).show();
         }
+        Intent intent2 = new Intent(NoteActivity.this, ListActivity.class);
+        startActivity(intent2);
+    }
+
+    private boolean saveNote(Note note) {
+        note.setDateCreated(Calendar.getInstance());
+
+        boolean success = false;
+        try {
+            success = DBUtil.saveNote(NoteActivity.this, note);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return success;
+
     }
 }
