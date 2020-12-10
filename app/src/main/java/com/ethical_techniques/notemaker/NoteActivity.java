@@ -241,6 +241,7 @@ public class NoteActivity extends BaseActivity {
     /**
      * Switches the priority star on and off
      */
+    @SuppressWarnings("deprecation")
     private void handleTogglePriorityStar(MenuItem item, boolean colorTheStar) {
         Drawable starDrawable = item.getIcon();
         if (starDrawable != null) {

@@ -1,6 +1,7 @@
 # _Notes For Android_
 ### A modern note-taking application for Android, with a simple and elegant user interface. 
 ____
+
 ## Features:
 * _Notes:_
     * Take
