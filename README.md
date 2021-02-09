@@ -4,8 +4,9 @@ ____
 
 <span align="center">
 <img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note_App_list.png" width="150px" height="310px"/>
-   <span width="150px"><span/>
+   <span width="250px"></span>
 <img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note_List_2.png" width="150px" height="310px"/>
+   <span width="250px"></span>
 
 <img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note-Screen.png" width="150px" height="310px" />
 </span>   
