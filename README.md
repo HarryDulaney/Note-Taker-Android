@@ -3,11 +3,11 @@
 ____
 
 <span align="center">
-<img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note_App_list.png" width="150px" height="310px"/>
+<img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note_App_list.png" width="150px" height="310px" hspace="7"/>
    
-<img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note_List_2.png" width="150px" height="310px"/>
+<img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note_List_2.png" width="150px" height="310px" hspace="7"/>
 
-<img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note-Screen.png" width="150px" height="310px" />
+<img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note-Screen.png" width="150px" height="310px" hspace="7" />
 </span>   
 
 
@@ -37,6 +37,4 @@ ____
         * Login Credentials
     * Sync notes with Firebase:
         * Access notes from differnt devices and platforms
-        * Backup notes securly in the cloud 
-        
-       
+        * Backup notes securly in the cloud
