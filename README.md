@@ -1,6 +1,6 @@
-# _Notes For Android_
-### A modern note-taking application for Android. 
-____
+<div align="center"><h1><strong>Notes For Android</strong></h1>
+<h3> A modern note-taking application for Android.</h3></div>
+<hr>
 
 <div align="center">
 <img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note_App_list.png" width="150px" height="310px" hspace="20"/>
@@ -8,11 +8,8 @@ ____
 <img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note_List_2.png" width="150px" height="310px" hspace="20"/>
 
 <img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note-Screen.png" width="150px" height="310px" hspace="20" />
-</div>   
-
-
-____      
-
+</div>
+<hr>
 
 ## Features:
 * _Notes:_
