@@ -3,11 +3,11 @@
 <hr>
 
 <div align="center">
-<img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note_App_list.png" width="150px" height="310px" hspace="20"/>
+<img src="https://raw.githubusercontent.com/HarryDulaney/notes-android-app/master/doc-resources/Note_App_list.png" width="150px" height="310px" hspace="20"/>
    
-<img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note_List_2.png" width="150px" height="310px" hspace="20"/>
+<img src="https://raw.githubusercontent.com/HarryDulaney/notes-android-app/master/doc-resources/Note_List_2.png" width="150px" height="310px" hspace="20"/>
 
-<img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note-Screen.png" width="150px" height="310px" hspace="20" />
+<img src="https://raw.githubusercontent.com/HarryDulaney/notes-android-app/master/doc-resources/Note-Screen.png" width="150px" height="310px" hspace="20" />
 </div>
 <hr>
 
