@@ -1,37 +1,37 @@
-## Welcome to GitHub Pages
+<div align="center"><h1><strong>Notes For Android</strong></h1>
+<h3> A modern note-taking application for Android.</h3></div>
+<hr>
 
-You can use the [editor on GitHub](https://github.com/HarryDulaney/notes-android-app/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+<div align="center">
+<img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note_App_list.png" width="150px" height="310px" hspace="20"/>
+   
+<img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note_List_2.png" width="150px" height="310px" hspace="20"/>
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+<img src="https://github.com/HarryDulaney/notes-android-app/blob/master/doc-resources/Note-Screen.png" width="150px" height="310px" hspace="20" />
+</div>
+<hr>
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/HarryDulaney/notes-android-app/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+## Features:
+* _Notes:_
+    * Take
+    * Save
+    * Edit
+    * Delete
+    * Categorize
+    * List based on Note Category
+    * List All Notes
+    * Prioritize
+    * Sync notes across multiple devices 
+    * Register using Email and Pword
+    * Verfity Email Address
+    * Drawer Layout for Navigation View
+* _Firebase Features_
+    * Create account with user profile 
+    * Edit account info and profile in app 
+        * Change Display Name
+        * Take a Profile Pic or choose from filesystem
+        * Email (must verify)
+        * Login Credentials
+    * Sync notes with Firebase:
+        * Access notes from differnt devices and platforms
+        * Backup notes securly in the cloud
